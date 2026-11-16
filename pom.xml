@@ -40,6 +40,7 @@
         <argLine>-Xms32m -Xmx320m -XX:MaxMetaspaceSize=256m</argLine>
         <bouncycastle.version>1.87</bouncycastle.version>
         <springdoc.version>3.2.0</springdoc.version>
+        <openapi-generator.version>7.27.0</openapi-generator.version>
         <jacoco-maven-plugin.version>0.8.16</jacoco-maven-plugin.version>
         <coverage.minimum.branch>0.90</coverage.minimum.branch>
         <dependency-check-maven.version>13.0.0</dependency-check-maven.version>
@@ -197,4 +198,45 @@
             </plugin>
         </plugins>
     </build>
+
+    <profiles>
+        <profile>
+            <!-- Gera o cliente HTTP do Angular a partir do contrato: ./mvnw -N -Pgenerate-client generate-sources -->
+            <id>generate-client</id>
+            <build>
+                <plugins>
+                    <plugin>
+                        <groupId>org.openapitools</groupId>
+                        <artifactId>openapi-generator-maven-plugin</artifactId>
+                        <version>${openapi-generator.version}</version>
+                        <executions>
+                            <execution>
+                                <id>angular-client</id>
+                                <phase>generate-sources</phase>
+                                <goals>
+                                    <goal>generate</goal>
+                                </goals>
+                                <configuration>
+                                    <inputSpec>${project.basedir}/openapi/openapi.json</inputSpec>
+                                    <generatorName>typescript-angular</generatorName>
+                                    <output>${project.basedir}/frontend/src/app/api</output>
+                                    <generateApiTests>false</generateApiTests>
+                                    <generateModelTests>false</generateModelTests>
+                                    <generateApiDocumentation>false</generateApiDocumentation>
+                                    <generateModelDocumentation>false</generateModelDocumentation>
+                                    <skipValidateSpec>false</skipValidateSpec>
+                                    <configOptions>
+                                        <providedIn>root</providedIn>
+                                        <stringEnums>true</stringEnums>
+                                        <fileNaming>kebab-case</fileNaming>
+                                        <withInterfaces>false</withInterfaces>
+                                    </configOptions>
+                                </configuration>
+                            </execution>
+                        </executions>
+                    </plugin>
+                </plugins>
+            </build>
+        </profile>
+    </profiles>
 </project>

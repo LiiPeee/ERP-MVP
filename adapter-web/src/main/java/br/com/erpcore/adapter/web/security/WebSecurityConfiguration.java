@@ -72,6 +72,7 @@ class WebSecurityConfiguration {
                         .requireCsrfProtectionMatcher(cookieAuthenticated))
                 .authorizeHttpRequests(requests -> {
                     PublicRoutes.ALL.forEach(route -> requests.requestMatchers(route.method(), route.pattern()).permitAll());
+                    PublicRoutes.FRONTEND.forEach(route -> requests.requestMatchers(route.method(), route.pattern()).permitAll());
                     if (apiDocsEnabled) {
                         // O contrato OpenAPI só é público quando alguém o liga de propósito (testes e geração do cliente).
                         requests.requestMatchers(HttpMethod.GET, "/v3/api-docs", "/v3/api-docs/**").permitAll();
@@ -103,10 +104,14 @@ class WebSecurityConfiguration {
         return http.build();
     }
 
-    /** O cookie XSRF-TOKEN: o JavaScript do próprio site o lê e o devolve no cabeçalho X-XSRF-TOKEN. */
+    /**
+     * O cookie XSRF-TOKEN: o JavaScript do próprio site o lê e o devolve no cabeçalho X-XSRF-TOKEN. Precisa de
+     * Path=/ para a página (que vive em /) enxergá-lo; sozinho ele não autentica ninguém (só vale em refresh/logout
+     * junto do cookie HttpOnly do refresh token).
+     */
     private static CookieCsrfTokenRepository csrfCookie(WebProperties properties) {
         CookieCsrfTokenRepository repository = CookieCsrfTokenRepository.withHttpOnlyFalse();
-        repository.setCookiePath("/api/auth");
+        repository.setCookiePath("/");
         repository.setCookieCustomizer(cookie -> cookie.secure(properties.cookieSecure()).sameSite("Strict"));
         return repository;
     }

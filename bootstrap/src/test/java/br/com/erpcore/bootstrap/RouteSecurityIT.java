@@ -180,6 +180,22 @@ class RouteSecurityIT {
     }
 
     @Test
+    void givenTheFrontendRoutes_whenCalledAnonymously_thenOnlyReadingTheDeclaredStaticPathsIsAllowed() {
+        HttpApi api = new HttpApi(port);
+
+        // Sem os arquivos do frontend (nos testes) a resposta é 404: o que importa é que NÃO é 401.
+        for (PublicRoutes.Route route : PublicRoutes.FRONTEND) {
+            String path = route.pattern().replace("*", "app");
+            assertThat(api.get(path, Map.of()).status()).as("GET %s", path).isNotEqualTo(401);
+            if (!path.equals("/")) {
+                assertThat(api.post(path, "{}", Map.of()).status()).as("POST %s", path).isEqualTo(401);
+            }
+        }
+        assertThat(api.get("/assets/segredo.txt", Map.of()).status()).isEqualTo(401);
+        assertThat(api.get("/app.map", Map.of()).status()).isEqualTo(401);
+    }
+
+    @Test
     void givenRoutesThatDoNotExist_whenCalled_thenAnonymousGetsUnauthorizedAndAnAuthenticatedUserGetsNothingInternal() {
         Account ana = registerAccount("ana");
         HttpApi api = new HttpApi(port);

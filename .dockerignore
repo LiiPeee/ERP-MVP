@@ -4,7 +4,8 @@
 .env.*
 **/target
 **/node_modules
-frontend
+frontend/dist
+frontend/.angular
 docs
 infra
 *.md

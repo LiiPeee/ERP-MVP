@@ -100,7 +100,8 @@ class AuthenticationFlowIT {
         assertThat(reply.setCookie(REFRESH_COOKIE)).contains("HttpOnly").contains("Secure").contains("SameSite=Strict")
                 .contains("Path=/api/auth").containsPattern("Max-Age=(60479\\d|604800)").doesNotContain("Domain");
         assertThat(reply.setCookies()).as("cookies enviados no login").anyMatch(cookie -> cookie.startsWith(CSRF_COOKIE + "="));
-        assertThat(reply.setCookie(CSRF_COOKIE)).contains("SameSite=Strict").contains("Secure").doesNotContain("HttpOnly");
+        assertThat(reply.setCookie(CSRF_COOKIE)).contains("SameSite=Strict").contains("Secure").doesNotContain("HttpOnly")
+                .contains("Path=/;");
         assertThat(reply.header("Cache-Control")).contains("no-store");
     }
 

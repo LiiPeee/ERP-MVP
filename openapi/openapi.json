@@ -133,7 +133,7 @@
           }
         },
         "summary" : "Entra com e-mail e senha: devolve o token de acesso e grava o refresh token em cookie",
-        "tags" : [ "Autenticação" ]
+        "tags" : [ "Auth" ]
       }
     },
     "/api/auth/logout" : {
@@ -153,7 +153,7 @@
           }
         },
         "summary" : "Encerra a sessão e apaga o cookie (exige o cabeçalho CSRF)",
-        "tags" : [ "Autenticação" ]
+        "tags" : [ "Auth" ]
       }
     },
     "/api/auth/refresh" : {
@@ -180,7 +180,7 @@
           }
         },
         "summary" : "Renova a sessão com o refresh token do cookie (exige o cabeçalho CSRF)",
-        "tags" : [ "Autenticação" ]
+        "tags" : [ "Auth" ]
       }
     },
     "/api/auth/register" : {
@@ -209,7 +209,7 @@
           }
         },
         "summary" : "Cadastra uma empresa e o usuário dono",
-        "tags" : [ "Autenticação" ]
+        "tags" : [ "Auth" ]
       }
     },
     "/api/me" : {
@@ -231,7 +231,7 @@
           "bearerAuth" : [ ]
         } ],
         "summary" : "Quem sou eu: usuário, empresa e papel",
-        "tags" : [ "Contexto" ]
+        "tags" : [ "Me" ]
       }
     }
   }

@@ -33,7 +33,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 @RestController
 @RequestMapping("/api/auth")
-@Tag(name = "Autenticação")
+@Tag(name = "Auth")
 final class AuthController {
 
     private final RegisterCompanyAndOwnerUseCase registerUseCase;

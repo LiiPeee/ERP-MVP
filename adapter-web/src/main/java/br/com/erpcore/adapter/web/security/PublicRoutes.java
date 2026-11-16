@@ -20,6 +20,20 @@ public final class PublicRoutes {
             new Route(HttpMethod.GET, "/actuator/health"),
             new Route(HttpMethod.GET, "/actuator/health/**"));
 
+    /**
+     * O frontend (Angular) servido pela própria aplicação: só leitura (GET) de arquivos estáticos e das rotas da
+     * tela. O conteúdo do usuário continua atrás de /api/**, que exige token.
+     */
+    public static final List<Route> FRONTEND = List.of(
+            new Route(HttpMethod.GET, "/"),
+            new Route(HttpMethod.GET, "/index.html"),
+            new Route(HttpMethod.GET, "/login"),
+            new Route(HttpMethod.GET, "/register"),
+            new Route(HttpMethod.GET, "/me"),
+            new Route(HttpMethod.GET, "/*.js"),
+            new Route(HttpMethod.GET, "/*.css"),
+            new Route(HttpMethod.GET, "/*.ico"));
+
     private PublicRoutes() {
     }
 }
