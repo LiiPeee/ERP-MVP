@@ -16,6 +16,18 @@ spring:
       ddl-auto: none
 
 logging:
+  level:
+    # Estes pacotes imprimem o conteúdo de entidades, parâmetros e SQL quando em DEBUG/TRACE: ficam travados em
+    # WARN para dado pessoal nunca ir para o log, mesmo que alguém aumente o nível raiz. Um teste confere.
+    org.hibernate: warn
+    org.springframework.orm: warn
+    org.springframework.jdbc: warn
+    org.springframework.data: warn
+    # Em DEBUG estes registram a URL com a query string (que pode ter e-mail, CPF...).
+    org.springframework.security: info
+    org.springframework.web: info
+    org.apache: info
+    com.zaxxer.hikari: info
   structured:
     format:
       console: logstash

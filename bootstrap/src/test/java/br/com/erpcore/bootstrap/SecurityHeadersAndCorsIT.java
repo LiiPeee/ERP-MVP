@@ -60,7 +60,7 @@ class SecurityHeadersAndCorsIT {
 
         assertThat(reply.header("Access-Control-Allow-Origin")).isNull();
         assertThat(reply.header("Access-Control-Allow-Credentials")).isNull();
-        assertThat(reply.status()).isNotBetween(200, 299);
+        assertThat(reply.status() / 100).isNotEqualTo(2);
     }
 
     @Test

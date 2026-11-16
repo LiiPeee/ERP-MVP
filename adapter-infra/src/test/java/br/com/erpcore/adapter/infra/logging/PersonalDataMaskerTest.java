@@ -59,6 +59,9 @@ class PersonalDataMaskerTest {
     @ParameterizedTest
     @ValueSource(strings = {
             "correlation_id=3f2b8c1e-6a4d-4e0b-9d5a-7c1f2e3a4b5c",
+            "id 2848f2cd-ba32-4fa5-9e6b-47196187436d",
+            "id 00000000-0000-0000-0000-000000000011",
+            "id 12345678-1234-1234-1234-12345678901a",
             "2026-07-01T12:00:00.123456Z",
             "HTTP 401 em POST /api/auth/login em 12 ms",
             "usuário 42 acessou a empresa 7",

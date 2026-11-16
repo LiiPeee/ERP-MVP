@@ -19,7 +19,7 @@ import org.springframework.test.context.TestPropertySource;
 @ApplicationHttpTest
 @TestPropertySource(properties = {
         "erp.web.rate-limit.login-per-ip=3",
-        "erp.web.rate-limit.login-per-email=2",
+        "erp.web.rate-limit.login-per-email=1",
         "erp.web.rate-limit.register-per-ip=2",
         "erp.web.rate-limit.refresh-per-ip=2"})
 @DirtiesContext(classMode = ClassMode.BEFORE_EACH_TEST_METHOD)
@@ -45,7 +45,6 @@ class RateLimitIT {
         HttpApi api = new HttpApi(port);
         String email = uniqueEmail("alvo");
 
-        assertThat(login(api, email).status()).isEqualTo(401);
         assertThat(login(api, email).status()).isEqualTo(401);
         assertLimited(login(api, email));
 
