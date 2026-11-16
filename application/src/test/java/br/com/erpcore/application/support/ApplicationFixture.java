@@ -1,7 +1,9 @@
 package br.com.erpcore.application.support;
 
 import br.com.erpcore.application.audit.AuditRecorder;
+import br.com.erpcore.application.identity.GetCurrentContextUseCase;
 import br.com.erpcore.application.identity.LoginCommand;
+import br.com.erpcore.application.identity.LogoutUseCase;
 import br.com.erpcore.application.identity.LoginUseCase;
 import br.com.erpcore.application.identity.RefreshSessionUseCase;
 import br.com.erpcore.application.identity.RegisterCompanyAndOwnerCommand;
@@ -60,6 +62,14 @@ public final class ApplicationFixture {
     public RefreshSessionUseCase refreshUseCase() {
         return new RefreshSessionUseCase(unitOfWork, refreshTokens, memberships, refreshCodec, sessionIssuer,
                 auditRecorder, clock);
+    }
+
+    public LogoutUseCase logoutUseCase() {
+        return new LogoutUseCase(unitOfWork, refreshTokens, refreshCodec, auditRecorder, clock);
+    }
+
+    public GetCurrentContextUseCase currentContextUseCase() {
+        return new GetCurrentContextUseCase(unitOfWork, users, companies, memberships, auditRecorder);
     }
 
     public static RegisterCompanyAndOwnerCommand validRegistration() {
