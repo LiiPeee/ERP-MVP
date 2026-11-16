@@ -1,0 +1,22 @@
+# Build
+target/
+
+# Segredos: só o .env.example entra no repositório
+.env
+.env.*
+!.env.example
+
+# Logs
+*.log
+
+# IDEs
+.idea/
+.vscode/
+*.iml
+
+# Frontend
+node_modules/
+dist/
+.angular/
+playwright-report/
+test-results/
