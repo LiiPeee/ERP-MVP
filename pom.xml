@@ -37,6 +37,8 @@
 
         <archunit.version>1.5.1</archunit.version>
         <maven-toolchains-plugin.version>3.3.0</maven-toolchains-plugin.version>
+        <bouncycastle.version>1.87</bouncycastle.version>
+        <springdoc.version>3.2.0</springdoc.version>
         <jacoco-maven-plugin.version>0.8.16</jacoco-maven-plugin.version>
         <coverage.minimum.branch>0.90</coverage.minimum.branch>
         <dependency-check-maven.version>13.0.0</dependency-check-maven.version>
