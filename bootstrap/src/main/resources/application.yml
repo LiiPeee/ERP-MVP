@@ -15,6 +15,20 @@ spring:
     hibernate:
       ddl-auto: none
 
+logging:
+  structured:
+    format:
+      console: logstash
+    json:
+      customizer: br.com.erpcore.adapter.infra.logging.PersonalDataMaskingCustomizer
+
+# O contrato OpenAPI só é exposto quando ligado de propósito (testes e geração do cliente).
+springdoc:
+  api-docs:
+    enabled: false
+  swagger-ui:
+    enabled: false
+
 server:
   error:
     include-stacktrace: never

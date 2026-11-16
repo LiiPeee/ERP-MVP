@@ -96,6 +96,14 @@
         <pluginManagement>
             <plugins>
                 <plugin>
+                    <!-- Limita a memória do processo de teste: a máquina de desenvolvimento é pequena e divide a RAM com o Docker. -->
+                    <groupId>org.apache.maven.plugins</groupId>
+                    <artifactId>maven-failsafe-plugin</artifactId>
+                    <configuration>
+                        <argLine>-Xms64m -Xmx640m -XX:MaxMetaspaceSize=256m</argLine>
+                    </configuration>
+                </plugin>
+                <plugin>
                     <groupId>org.jacoco</groupId>
                     <artifactId>jacoco-maven-plugin</artifactId>
                     <version>${jacoco-maven-plugin.version}</version>

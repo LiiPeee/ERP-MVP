@@ -3,6 +3,7 @@ package br.com.erpcore.bootstrap;
 import static org.assertj.core.api.Assertions.assertThat;
 
 import br.com.erpcore.adapter.persistence.support.PostgresTestDatabase;
+import br.com.erpcore.bootstrap.support.ApplicationHttpTest;
 import java.net.URI;
 import java.net.http.HttpClient;
 import java.net.http.HttpRequest;
@@ -11,29 +12,13 @@ import java.util.Map;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.boot.test.context.SpringBootTest.WebEnvironment;
-import org.springframework.boot.test.util.TestPropertyValues;
-import org.springframework.context.ApplicationContextInitializer;
-import org.springframework.context.ConfigurableApplicationContext;
 import org.springframework.jdbc.core.simple.JdbcClient;
-import org.springframework.test.context.ContextConfiguration;
 
 /** A aplicação inteira sobe com o papel real da aplicação, migra com o papel migrador e atende /actuator/health. */
-@SpringBootTest(webEnvironment = WebEnvironment.RANDOM_PORT)
-@ContextConfiguration(initializers = ApplicationStartupIT.DatabaseInitializer.class)
+@ApplicationHttpTest
 class ApplicationStartupIT {
 
     private static final int HTTP_OK = 200;
-
-    static final class DatabaseInitializer implements ApplicationContextInitializer<ConfigurableApplicationContext> {
-
-        @Override
-        public void initialize(ConfigurableApplicationContext context) {
-            TestPropertyValues.of(PostgresTestDatabase.applicationRoleProperties().toArray(String[]::new))
-                    .applyTo(context);
-        }
-    }
 
     @Value("${local.server.port}")
     private int port;
