@@ -8,6 +8,12 @@ spring:
   flyway:
     user: ${ERP_DB_MIGRATOR_USER}
     password: ${ERP_DB_MIGRATOR_PASSWORD}
+    placeholders:
+      app_role: ${ERP_DB_APP_USER}
+  jpa:
+    open-in-view: false
+    hibernate:
+      ddl-auto: none
 
 server:
   error:

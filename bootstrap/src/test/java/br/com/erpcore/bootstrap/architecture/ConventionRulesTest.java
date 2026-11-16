@@ -5,11 +5,10 @@ import static com.tngtech.archunit.lang.syntax.ArchRuleDefinition.methods;
 import static com.tngtech.archunit.lang.syntax.ArchRuleDefinition.noClasses;
 import static com.tngtech.archunit.library.dependencies.SlicesRuleDefinition.slices;
 
+import br.com.erpcore.application.shared.port.out.UnitOfWork;
 import br.com.erpcore.domain.shared.DomainException;
 import com.tngtech.archunit.core.domain.JavaClasses;
 import com.tngtech.archunit.core.domain.JavaModifier;
-import com.tngtech.archunit.core.importer.ClassFileImporter;
-import com.tngtech.archunit.core.importer.ImportOption;
 import java.time.Instant;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
@@ -24,10 +23,10 @@ class ConventionRulesTest {
     private static final String DOMAIN_PACKAGE = ROOT_PACKAGE + ".domain..";
     private static final String APPLICATION_PACKAGE = ROOT_PACKAGE + ".application..";
     private static final String OUTBOUND_PORT_PACKAGE = "..port.out..";
+    private static final String PERSISTENCE_PACKAGE = ROOT_PACKAGE + ".adapter.persistence";
+    private static final String ACCESS_SCOPE = "br.com.erpcore.application.shared.port.out.AccessScope";
 
-    private static final JavaClasses PRODUCTION_CLASSES = new ClassFileImporter()
-            .withImportOption(ImportOption.Predefined.DO_NOT_INCLUDE_TESTS)
-            .importPackages(ROOT_PACKAGE);
+    private static final JavaClasses PRODUCTION_CLASSES = ProductionClasses.ALL;
 
     @Test
     void givenUseCases_whenCheckingTheirShape_thenEachIsAPublicFinalClassInTheApplication() {
@@ -78,6 +77,46 @@ class ConventionRulesTest {
                 .orShould().callMethod(ZonedDateTime.class, "now")
                 .orShould().callMethod(UUID.class, "randomUUID")
                 .orShould().callMethod(System.class, "currentTimeMillis")
+                .check(PRODUCTION_CLASSES);
+    }
+
+    @Test
+    void givenJpaEntities_whenCheckingWhereTheyLive_thenTheyAreNamedJpaEntityAndStayInThePersistenceAdapter() {
+        classes()
+                .that().areAnnotatedWith("jakarta.persistence.Entity")
+                .should().haveSimpleNameEndingWith("JpaEntity")
+                .andShould().resideInAPackage(PERSISTENCE_PACKAGE + "..")
+                .check(PRODUCTION_CLASSES);
+    }
+
+    @Test
+    void givenThePreTenantAccessScopes_whenCheckingWhoUsesThem_thenOnlyIdentityUseCasesAndTheTransactionPointDo() {
+        noClasses()
+                .that().resideOutsideOfPackages(ROOT_PACKAGE + ".application.identity..",
+                        ROOT_PACKAGE + ".application.shared..", PERSISTENCE_PACKAGE + ".tenancy..")
+                .should().dependOnClassesThat().haveFullyQualifiedName(ACCESS_SCOPE + "$Anonymous")
+                .orShould().dependOnClassesThat().haveFullyQualifiedName(ACCESS_SCOPE + "$Registration")
+                .orShould().dependOnClassesThat().haveFullyQualifiedName(ACCESS_SCOPE + "$CredentialLookup")
+                .orShould().dependOnClassesThat().haveFullyQualifiedName(ACCESS_SCOPE + "$RefreshTokenLookup")
+                .check(PRODUCTION_CLASSES);
+    }
+
+    @Test
+    void givenHandWrittenSql_whenCheckingWhoRunsIt_thenOnlyTheTenancyPackageUsesJdbcDirectly() {
+        noClasses()
+                .that().resideInAPackage(PERSISTENCE_PACKAGE + "..")
+                .and().resideOutsideOfPackage(PERSISTENCE_PACKAGE + ".tenancy..")
+                .and().doNotHaveSimpleName("PersistenceConfiguration")
+                .should().dependOnClassesThat().haveFullyQualifiedName("org.springframework.jdbc.core.simple.JdbcClient")
+                .orShould().dependOnClassesThat().haveFullyQualifiedName("org.springframework.jdbc.core.JdbcTemplate")
+                .check(PRODUCTION_CLASSES);
+    }
+
+    @Test
+    void givenUnitsOfWork_whenCheckingTheirImplementations_thenThereIsExactlyOneProductionImplementation() {
+        classes()
+                .that().implement(UnitOfWork.class)
+                .should().haveSimpleName("PostgresUnitOfWork")
                 .check(PRODUCTION_CLASSES);
     }
 

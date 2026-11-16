@@ -2,7 +2,7 @@ package br.com.erpcore.bootstrap;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
-import br.com.erpcore.bootstrap.support.PostgresTestDatabase;
+import br.com.erpcore.adapter.persistence.support.PostgresTestDatabase;
 import java.net.URI;
 import java.net.http.HttpClient;
 import java.net.http.HttpRequest;
@@ -13,32 +13,33 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.context.SpringBootTest.WebEnvironment;
+import org.springframework.boot.test.util.TestPropertyValues;
+import org.springframework.context.ApplicationContextInitializer;
+import org.springframework.context.ConfigurableApplicationContext;
 import org.springframework.jdbc.core.simple.JdbcClient;
-import org.springframework.test.context.DynamicPropertyRegistry;
-import org.springframework.test.context.DynamicPropertySource;
-import org.testcontainers.junit.jupiter.Container;
-import org.testcontainers.junit.jupiter.Testcontainers;
-import org.testcontainers.postgresql.PostgreSQLContainer;
+import org.springframework.test.context.ContextConfiguration;
 
-@Testcontainers
+/** A aplicação inteira sobe com o papel real da aplicação, migra com o papel migrador e atende /actuator/health. */
 @SpringBootTest(webEnvironment = WebEnvironment.RANDOM_PORT)
+@ContextConfiguration(initializers = ApplicationStartupIT.DatabaseInitializer.class)
 class ApplicationStartupIT {
 
     private static final int HTTP_OK = 200;
 
-    @Container
-    private static final PostgreSQLContainer POSTGRES = PostgresTestDatabase.newContainer();
+    static final class DatabaseInitializer implements ApplicationContextInitializer<ConfigurableApplicationContext> {
+
+        @Override
+        public void initialize(ConfigurableApplicationContext context) {
+            TestPropertyValues.of(PostgresTestDatabase.applicationRoleProperties().toArray(String[]::new))
+                    .applyTo(context);
+        }
+    }
 
     @Value("${local.server.port}")
     private int port;
 
     @Autowired
     private JdbcClient jdbcClient;
-
-    @DynamicPropertySource
-    static void databaseProperties(DynamicPropertyRegistry registry) {
-        PostgresTestDatabase.registerProperties(POSTGRES, registry);
-    }
 
     @Test
     void givenRunningDatabase_whenApplicationStarts_thenHealthEndpointReportsUp() throws Exception {
@@ -78,15 +79,9 @@ class ApplicationStartupIT {
     }
 
     @Test
-    void givenMigratorRole_whenInspectingTheDatabase_thenItOwnsTheDatabaseInsteadOfTheApplicationRole() {
-        String databaseOwner = jdbcClient.sql("""
-                        SELECT pg_get_userbyid(datdba)
-                          FROM pg_database
-                         WHERE datname = current_database()
-                        """)
-                .query(String.class)
-                .single();
+    void givenMigratedDatabase_whenTheApplicationRoleReadsWithoutAScope_thenRowLevelSecurityShowsNothing() {
+        Integer companies = jdbcClient.sql("SELECT count(*) FROM company").query(Integer.class).single();
 
-        assertThat(databaseOwner).isEqualTo(PostgresTestDatabase.MIGRATOR_ROLE);
+        assertThat(companies).isZero();
     }
 }
