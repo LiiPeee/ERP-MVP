@@ -3,6 +3,7 @@ package br.com.erpcore.adapter.web.security;
 import br.com.erpcore.adapter.web.WebProperties;
 import br.com.erpcore.adapter.web.error.ProblemJson;
 import java.util.List;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.http.HttpHeaders;
@@ -48,7 +49,8 @@ class WebSecurityConfiguration {
     private static final long HSTS_SECONDS = 31_536_000;
 
     @Bean
-    SecurityFilterChain apiSecurity(HttpSecurity http, JwtDecoder jwtDecoder, WebProperties properties) throws Exception {
+    SecurityFilterChain apiSecurity(HttpSecurity http, JwtDecoder jwtDecoder, WebProperties properties,
+                                    @Value("${springdoc.api-docs.enabled:false}") boolean apiDocsEnabled) throws Exception {
         AuthenticationEntryPoint unauthenticated = (request, response, error) -> {
             response.setHeader(HttpHeaders.WWW_AUTHENTICATE, "Bearer");
             ProblemJson.write(response, 401, "UNAUTHENTICATED", "Não autenticado");
@@ -70,6 +72,10 @@ class WebSecurityConfiguration {
                         .requireCsrfProtectionMatcher(cookieAuthenticated))
                 .authorizeHttpRequests(requests -> {
                     PublicRoutes.ALL.forEach(route -> requests.requestMatchers(route.method(), route.pattern()).permitAll());
+                    if (apiDocsEnabled) {
+                        // O contrato OpenAPI só é público quando alguém o liga de propósito (testes e geração do cliente).
+                        requests.requestMatchers(HttpMethod.GET, "/v3/api-docs", "/v3/api-docs/**").permitAll();
+                    }
                     requests.requestMatchers("/api/**").authenticated();
                     requests.anyRequest().denyAll();
                 })

@@ -8,11 +8,13 @@ import java.lang.annotation.Target;
 import java.util.ArrayList;
 import java.util.Base64;
 import java.util.List;
+import java.util.Map;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.context.SpringBootTest.WebEnvironment;
 import org.springframework.boot.test.util.TestPropertyValues;
 import org.springframework.context.ApplicationContextInitializer;
 import org.springframework.context.ConfigurableApplicationContext;
+import org.springframework.core.env.MapPropertySource;
 import org.springframework.test.context.ContextConfiguration;
 
 /**
@@ -35,11 +37,13 @@ public @interface ApplicationHttpTest {
             List<String> properties = new ArrayList<>(PostgresTestDatabase.applicationRoleProperties());
             properties.add("erp.security.jwt.active-key-id=" + ACTIVE_KEY_ID);
             properties.add("erp.security.jwt.keys." + ACTIVE_KEY_ID + "=" + Base64.getEncoder().encodeToString(ACTIVE_SECRET));
-            properties.add("erp.web.rate-limit.login-per-ip=1000");
-            properties.add("erp.web.rate-limit.login-per-email=1000");
-            properties.add("erp.web.rate-limit.register-per-ip=1000");
-            properties.add("erp.web.rate-limit.refresh-per-ip=1000");
             TestPropertyValues.of(properties.toArray(String[]::new)).applyTo(context);
+            // Limites altos por padrão, com a menor precedência: um @TestPropertySource consegue baixá-los.
+            context.getEnvironment().getPropertySources().addLast(new MapPropertySource("high-rate-limits", Map.of(
+                    "erp.web.rate-limit.login-per-ip", "1000",
+                    "erp.web.rate-limit.login-per-email", "1000",
+                    "erp.web.rate-limit.register-per-ip", "1000",
+                    "erp.web.rate-limit.refresh-per-ip", "1000")));
         }
     }
 }

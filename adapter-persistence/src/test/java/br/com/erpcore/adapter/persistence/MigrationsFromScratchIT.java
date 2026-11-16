@@ -47,6 +47,16 @@ class MigrationsFromScratchIT {
     }
 
     @Test
+    void givenTheAuditTrail_whenCheckingConstraints_thenItHasNoForeignKeysSoItNeverBlocksAWriteOrADeletion() {
+        var foreignKeys = PostgresTestDatabase.superuserJdbc().sql("""
+                SELECT conname FROM pg_constraint
+                 WHERE conrelid = 'public.audit_event'::regclass AND contype = 'f'
+                """).query(String.class).list();
+
+        assertThat(foreignKeys).isEmpty();
+    }
+
+    @Test
     void givenTheMigratedDatabase_whenCheckingPrimaryKeys_thenEveryTableUsesAUuid() {
         var nonUuidKeys = PostgresTestDatabase.superuserJdbc().sql("""
                 SELECT c.table_name
