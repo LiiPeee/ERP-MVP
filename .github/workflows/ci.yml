@@ -115,7 +115,7 @@ jobs:
       - uses: actions/setup-node@949feb2413d6458794dcd2491c4babbbce0c15c1 # v7.1.0
         with:
           node-version: "24.22.3"
-      - name: Subir a aplicação completa (limites altos: o teste cria várias contas)
+      - name: "Subir a aplicação completa (limites altos porque o teste cria várias contas)"
         env:
           ERP_WEB_RATE_LIMIT_REGISTER_PER_IP: "1000"
           ERP_WEB_RATE_LIMIT_LOGIN_PER_IP: "1000"
