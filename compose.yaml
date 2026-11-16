@@ -42,6 +42,10 @@ services:
       ERP_DB_MIGRATOR_PASSWORD: ${ERP_DB_MIGRATOR_PASSWORD}
       ERP_DB_APP_USER: ${ERP_DB_APP_USER}
       ERP_DB_APP_PASSWORD: ${ERP_DB_APP_PASSWORD}
+      # Sem estas chaves a aplicação não sobe. Para trocar a chave sem derrubar sessões, adicione a nova
+      # (ERP_SECURITY_JWT_KEYS_K2), aponte a ativa para ela e remova a antiga quando os tokens antigos expirarem.
+      ERP_SECURITY_JWT_ACTIVE_KEY_ID: ${ERP_SECURITY_JWT_ACTIVE_KEY_ID:?defina ERP_SECURITY_JWT_ACTIVE_KEY_ID no .env}
+      ERP_SECURITY_JWT_KEYS_K1: ${ERP_SECURITY_JWT_KEYS_K1:?defina ERP_SECURITY_JWT_KEYS_K1 no .env}
     ports:
       - "127.0.0.1:8080:8080"
     healthcheck:

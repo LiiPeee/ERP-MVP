@@ -4,6 +4,8 @@ import static com.tngtech.archunit.lang.syntax.ArchRuleDefinition.classes;
 import static com.tngtech.archunit.lang.syntax.ArchRuleDefinition.noClasses;
 import static com.tngtech.archunit.library.Architectures.layeredArchitecture;
 
+import br.com.erpcore.domain.shared.DomainException;
+import com.tngtech.archunit.core.domain.JavaClass;
 import com.tngtech.archunit.core.domain.JavaClasses;
 import org.junit.jupiter.api.Test;
 
@@ -33,7 +35,9 @@ class ModuleDependencyRulesTest {
     void givenAllModules_whenCheckingDependencies_thenEachModuleOnlyAccessesAllowedModules() {
         layeredArchitecture()
                 .consideringOnlyDependenciesInLayers()
-                .withOptionalLayers(true)
+                // O adaptador web traduz exceções de domínio para HTTP: só elas, e a regra do ConventionRulesTest garante.
+                .ignoreDependency(JavaClass.Predicates.resideInAPackage(ADAPTER_WEB_PACKAGE),
+                        JavaClass.Predicates.assignableTo(DomainException.class))
                 .layer(DOMAIN).definedBy(DOMAIN_PACKAGE)
                 .layer(APPLICATION).definedBy(APPLICATION_PACKAGE)
                 .layer(ADAPTER_WEB).definedBy(ADAPTER_WEB_PACKAGE)

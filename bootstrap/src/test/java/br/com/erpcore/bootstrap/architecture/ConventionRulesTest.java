@@ -7,6 +7,8 @@ import static com.tngtech.archunit.library.dependencies.SlicesRuleDefinition.sli
 
 import br.com.erpcore.application.shared.port.out.UnitOfWork;
 import br.com.erpcore.domain.shared.DomainException;
+import com.tngtech.archunit.base.DescribedPredicate;
+import com.tngtech.archunit.core.domain.JavaClass;
 import com.tngtech.archunit.core.domain.JavaClasses;
 import com.tngtech.archunit.core.domain.JavaModifier;
 import java.time.Instant;
@@ -24,6 +26,7 @@ class ConventionRulesTest {
     private static final String APPLICATION_PACKAGE = ROOT_PACKAGE + ".application..";
     private static final String OUTBOUND_PORT_PACKAGE = "..port.out..";
     private static final String PERSISTENCE_PACKAGE = ROOT_PACKAGE + ".adapter.persistence";
+    private static final String WEB_PACKAGE = ROOT_PACKAGE + ".adapter.web..";
     private static final String ACCESS_SCOPE = "br.com.erpcore.application.shared.port.out.AccessScope";
 
     private static final JavaClasses PRODUCTION_CLASSES = ProductionClasses.ALL;
@@ -117,6 +120,31 @@ class ConventionRulesTest {
         classes()
                 .that().implement(UnitOfWork.class)
                 .should().haveSimpleName("PostgresUnitOfWork")
+                .check(PRODUCTION_CLASSES);
+    }
+
+    @Test
+    void givenTheWebAdapter_whenCheckingItsDomainDependencies_thenItUsesOnlyDomainExceptions() {
+        noClasses()
+                .that().resideInAPackage(WEB_PACKAGE)
+                .should().dependOnClassesThat(JavaClass.Predicates.resideInAPackage(DOMAIN_PACKAGE)
+                        .and(DescribedPredicate.not(JavaClass.Predicates.assignableTo(DomainException.class))))
+                .check(PRODUCTION_CLASSES);
+    }
+
+    @Test
+    void givenTheWebAdapter_whenCheckingItsDependencies_thenItNeverTouchesOutboundPortsDirectly() {
+        noClasses()
+                .that().resideInAPackage(WEB_PACKAGE)
+                .should().dependOnClassesThat().resideInAPackage(OUTBOUND_PORT_PACKAGE)
+                .check(PRODUCTION_CLASSES);
+    }
+
+    @Test
+    void givenControllers_whenCheckingWhereTheyLive_thenOnlyTheWebAdapterHasThem() {
+        classes()
+                .that().areAnnotatedWith("org.springframework.web.bind.annotation.RestController")
+                .should().resideInAPackage(WEB_PACKAGE)
                 .check(PRODUCTION_CLASSES);
     }
 
