@@ -1,0 +1,12 @@
+{
+  "name": "erp-core-e2e",
+  "version": "0.0.0",
+  "private": true,
+  "description": "Testes de ponta a ponta (Playwright) do fluxo cadastrar, entrar, ver o contexto e sair.",
+  "scripts": {
+    "test": "playwright test"
+  },
+  "devDependencies": {
+    "@playwright/test": "1.65.1"
+  }
+}

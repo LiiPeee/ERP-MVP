@@ -67,7 +67,7 @@ class WebSecurityConfiguration {
                 .httpBasic(AbstractHttpConfigurer::disable)
                 .logout(AbstractHttpConfigurer::disable)
                 .csrf(csrf -> csrf
-                        .csrfTokenRepository(csrfCookie(properties))
+                        .csrfTokenRepository(new KeepingCsrfTokenRepository(csrfCookie(properties)))
                         .csrfTokenRequestHandler(new CsrfTokenRequestAttributeHandler())
                         .requireCsrfProtectionMatcher(cookieAuthenticated))
                 .authorizeHttpRequests(requests -> {

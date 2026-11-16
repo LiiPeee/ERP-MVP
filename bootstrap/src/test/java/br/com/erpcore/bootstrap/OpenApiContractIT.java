@@ -54,6 +54,19 @@ class OpenApiContractIT {
     }
 
     @Test
+    void givenTheResponsesWithABody_whenReadingTheirMediaType_thenTheyAreDeclaredAsJsonSoTheGeneratedClientParsesThem() {
+        JsonNode paths = spec().get("paths");
+
+        for (String operation : new String[] {"/api/auth/register:post:201", "/api/auth/login:post:200",
+                "/api/auth/refresh:post:200", "/api/me:get:200"}) {
+            String[] parts = operation.split(":");
+            JsonNode content = paths.get(parts[0]).get(parts[1]).get("responses").get(parts[2]).get("content");
+            assertThat(content.has("application/json")).as("%s declara application/json", operation).isTrue();
+            assertThat(content.has("*/*")).as("%s não declara */*", operation).isFalse();
+        }
+    }
+
+    @Test
     void givenTheContract_whenLookingAtSecurity_thenOnlyTheContextRouteDeclaresTheBearerToken() {
         JsonNode paths = spec().get("paths");
 

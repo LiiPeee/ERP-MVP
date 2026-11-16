@@ -46,6 +46,10 @@ services:
       # (ERP_SECURITY_JWT_KEYS_K2), aponte a ativa para ela e remova a antiga quando os tokens antigos expirarem.
       ERP_SECURITY_JWT_ACTIVE_KEY_ID: ${ERP_SECURITY_JWT_ACTIVE_KEY_ID:?defina ERP_SECURITY_JWT_ACTIVE_KEY_ID no .env}
       ERP_SECURITY_JWT_KEYS_K1: ${ERP_SECURITY_JWT_KEYS_K1:?defina ERP_SECURITY_JWT_KEYS_K1 no .env}
+      # Limites das rotas públicas (padrões seguros). Os testes ponta a ponta criam várias contas e sobem estes valores.
+      ERP_WEB_RATE_LIMIT_REGISTER_PER_IP: ${ERP_WEB_RATE_LIMIT_REGISTER_PER_IP:-5}
+      ERP_WEB_RATE_LIMIT_LOGIN_PER_IP: ${ERP_WEB_RATE_LIMIT_LOGIN_PER_IP:-10}
+      ERP_WEB_RATE_LIMIT_LOGIN_PER_EMAIL: ${ERP_WEB_RATE_LIMIT_LOGIN_PER_EMAIL:-5}
     ports:
       - "127.0.0.1:8080:8080"
     healthcheck:

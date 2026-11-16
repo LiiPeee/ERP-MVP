@@ -123,7 +123,7 @@
         "responses" : {
           "200" : {
             "content" : {
-              "*/*" : {
+              "application/json" : {
                 "schema" : {
                   "$ref" : "#/components/schemas/SessionResponse"
                 }
@@ -148,8 +148,8 @@
           }
         } ],
         "responses" : {
-          "200" : {
-            "description" : "OK"
+          "204" : {
+            "description" : "No Content"
           }
         },
         "summary" : "Encerra a sessão e apaga o cookie (exige o cabeçalho CSRF)",
@@ -170,7 +170,7 @@
         "responses" : {
           "200" : {
             "content" : {
-              "*/*" : {
+              "application/json" : {
                 "schema" : {
                   "$ref" : "#/components/schemas/SessionResponse"
                 }
@@ -197,15 +197,15 @@
           "required" : true
         },
         "responses" : {
-          "200" : {
+          "201" : {
             "content" : {
-              "*/*" : {
+              "application/json" : {
                 "schema" : {
                   "$ref" : "#/components/schemas/RegisterResponse"
                 }
               }
             },
-            "description" : "OK"
+            "description" : "Created"
           }
         },
         "summary" : "Cadastra uma empresa e o usuário dono",
@@ -218,7 +218,7 @@
         "responses" : {
           "200" : {
             "content" : {
-              "*/*" : {
+              "application/json" : {
                 "schema" : {
                   "$ref" : "#/components/schemas/MeResponse"
                 }

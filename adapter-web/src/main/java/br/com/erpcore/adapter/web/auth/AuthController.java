@@ -24,15 +24,17 @@ import jakarta.servlet.http.HttpServletResponse;
 import jakarta.validation.Valid;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.CookieValue;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
-@RequestMapping("/api/auth")
+@RequestMapping(path = "/api/auth", produces = MediaType.APPLICATION_JSON_VALUE)
 @Tag(name = "Auth")
 final class AuthController {
 
@@ -56,11 +58,12 @@ final class AuthController {
 
     @PostMapping("/register")
     @Operation(summary = "Cadastra uma empresa e o usuário dono")
-    ResponseEntity<RegisterResponse> register(@Valid @RequestBody RegisterRequest body, HttpServletRequest request) {
+    @ResponseStatus(HttpStatus.CREATED)
+    RegisterResponse register(@Valid @RequestBody RegisterRequest body, HttpServletRequest request) {
         rateLimits.checkRegister(request.getRemoteAddr());
         RegisterCompanyAndOwnerResult result = registerUseCase.execute(new RegisterCompanyAndOwnerCommand(
                 body.companyName(), body.ownerName(), body.email(), body.password(), CorrelationIds.current()));
-        return ResponseEntity.status(HttpStatus.CREATED).body(new RegisterResponse(result.companyId(), result.userId()));
+        return new RegisterResponse(result.companyId(), result.userId());
     }
 
     @PostMapping("/login")
@@ -87,11 +90,11 @@ final class AuthController {
 
     @PostMapping("/logout")
     @Operation(summary = "Encerra a sessão e apaga o cookie (exige o cabeçalho CSRF)")
-    ResponseEntity<Void> logout(@CookieValue(name = RefreshCookies.NAME, required = false) String refreshToken,
-                                HttpServletResponse response) {
+    @ResponseStatus(HttpStatus.NO_CONTENT)
+    void logout(@CookieValue(name = RefreshCookies.NAME, required = false) String refreshToken,
+                HttpServletResponse response) {
         logoutUseCase.execute(new LogoutCommand(refreshToken, CorrelationIds.current()));
         response.addHeader(HttpHeaders.SET_COOKIE, cookies.clear().toString());
-        return ResponseEntity.noContent().build();
     }
 
     /**

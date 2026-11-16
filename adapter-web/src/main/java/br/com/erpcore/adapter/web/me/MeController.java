@@ -10,6 +10,7 @@ import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import java.util.UUID;
+import org.springframework.http.MediaType;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.oauth2.jwt.Jwt;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -26,7 +27,7 @@ final class MeController {
     }
 
     /** O usuário e a empresa vêm só do token já validado; nenhum parâmetro da requisição escolhe o tenant. */
-    @GetMapping("/api/me")
+    @GetMapping(path = "/api/me", produces = MediaType.APPLICATION_JSON_VALUE)
     @Operation(summary = "Quem sou eu: usuário, empresa e papel")
     @SecurityRequirement(name = "bearerAuth")
     MeResponse me(@AuthenticationPrincipal Jwt token) {

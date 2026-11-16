@@ -138,6 +138,20 @@ class AuthenticationFlowIT {
     }
 
     @Test
+    void givenAnAuthenticatedRequestCarryingTheCsrfCookie_whenAnswering_thenTheCsrfCookieIsNotCleared() {
+        register();
+        Reply login = login(PASSWORD);
+        String accessToken = login.json().get("accessToken").asString();
+
+        Reply me = api.get("/api/me", Map.of("Authorization", "Bearer " + accessToken,
+                "Cookie", CSRF_COOKIE + "=" + login.cookieValue(CSRF_COOKIE)));
+
+        assertThat(me.status()).isEqualTo(200);
+        assertThat(me.setCookies()).as("o navegador precisa continuar com o cookie para mandar o cabeçalho")
+                .noneMatch(cookie -> cookie.startsWith(CSRF_COOKIE + "=;") || cookie.contains("Max-Age=0"));
+    }
+
+    @Test
     void givenNoAccessToken_whenReadingTheContext_thenItIsUnauthorizedWithAGenericAnswer() {
         Reply reply = api.get("/api/me", Map.of());
 
