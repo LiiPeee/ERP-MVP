@@ -59,7 +59,6 @@ class ModuleDependencyRulesTest {
                 .that().resideInAnyPackage(DOMAIN_PACKAGE, APPLICATION_PACKAGE)
                 .should().dependOnClassesThat()
                 .resideOutsideOfPackages(JDK_PACKAGE, DOMAIN_PACKAGE, APPLICATION_PACKAGE)
-                .allowEmptyShould(true)
                 .check(PRODUCTION_CLASSES);
     }
 
