@@ -1,0 +1,25 @@
+spring:
+  application:
+    name: erp-core
+  datasource:
+    url: ${ERP_DB_URL}
+    username: ${ERP_DB_APP_USER}
+    password: ${ERP_DB_APP_PASSWORD}
+  flyway:
+    user: ${ERP_DB_MIGRATOR_USER}
+    password: ${ERP_DB_MIGRATOR_PASSWORD}
+
+server:
+  error:
+    include-stacktrace: never
+    include-message: never
+    include-binding-errors: never
+
+management:
+  endpoints:
+    web:
+      exposure:
+        include: health
+  endpoint:
+    health:
+      show-details: never
