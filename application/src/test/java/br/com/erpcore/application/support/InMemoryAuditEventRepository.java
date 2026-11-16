@@ -26,6 +26,11 @@ public final class InMemoryAuditEventRepository implements AuditEventRepository 
         return List.copyOf(storage);
     }
 
+    public AuditEvent last() {
+        assertThat(storage).isNotEmpty();
+        return storage.get(storage.size() - 1);
+    }
+
     /** O evento único que o teste espera; falha se houver zero ou mais de um. */
     public AuditEvent only() {
         assertThat(storage).hasSize(1);
