@@ -1,0 +1,11 @@
+.git
+.github
+.env
+.env.*
+**/target
+**/node_modules
+frontend
+docs
+infra
+*.md
+*.log

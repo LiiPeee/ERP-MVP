@@ -1,0 +1,55 @@
+name: erp-core
+
+services:
+  postgres:
+    image: postgres:18.7-alpine
+    environment:
+      POSTGRES_DB: ${ERP_DB_NAME:?defina ERP_DB_NAME no .env}
+      POSTGRES_USER: ${ERP_DB_SUPERUSER:?defina ERP_DB_SUPERUSER no .env}
+      POSTGRES_PASSWORD: ${ERP_DB_SUPERUSER_PASSWORD:?defina ERP_DB_SUPERUSER_PASSWORD no .env}
+      ERP_DB_MIGRATOR_USER: ${ERP_DB_MIGRATOR_USER:?defina ERP_DB_MIGRATOR_USER no .env}
+      ERP_DB_MIGRATOR_PASSWORD: ${ERP_DB_MIGRATOR_PASSWORD:?defina ERP_DB_MIGRATOR_PASSWORD no .env}
+      ERP_DB_APP_USER: ${ERP_DB_APP_USER:?defina ERP_DB_APP_USER no .env}
+      ERP_DB_APP_PASSWORD: ${ERP_DB_APP_PASSWORD:?defina ERP_DB_APP_PASSWORD no .env}
+    volumes:
+      - postgres-data:/var/lib/postgresql
+      - ./infra/postgres/init:/docker-entrypoint-initdb.d:ro
+    ports:
+      - "127.0.0.1:5432:5432"
+    healthcheck:
+      # Via TCP de propósito: durante a inicialização o servidor temporário só escuta no socket local.
+      test: ["CMD-SHELL", "pg_isready --host 127.0.0.1 --username \"$$POSTGRES_USER\" --dbname \"$$POSTGRES_DB\""]
+      interval: 5s
+      timeout: 3s
+      retries: 20
+
+  mailpit:
+    image: axllent/mailpit:v1.33.1
+    ports:
+      - "127.0.0.1:1025:1025"
+      - "127.0.0.1:8025:8025"
+
+  app:
+    build: .
+    depends_on:
+      postgres:
+        condition: service_healthy
+      mailpit:
+        condition: service_started
+    environment:
+      ERP_DB_URL: jdbc:postgresql://postgres:5432/${ERP_DB_NAME}
+      ERP_DB_MIGRATOR_USER: ${ERP_DB_MIGRATOR_USER}
+      ERP_DB_MIGRATOR_PASSWORD: ${ERP_DB_MIGRATOR_PASSWORD}
+      ERP_DB_APP_USER: ${ERP_DB_APP_USER}
+      ERP_DB_APP_PASSWORD: ${ERP_DB_APP_PASSWORD}
+    ports:
+      - "127.0.0.1:8080:8080"
+    healthcheck:
+      test: ["CMD-SHELL", "curl --fail --silent http://localhost:8080/actuator/health || exit 1"]
+      interval: 10s
+      timeout: 3s
+      retries: 12
+      start_period: 30s
+
+volumes:
+  postgres-data:

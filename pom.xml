@@ -37,6 +37,8 @@
 
         <archunit.version>1.5.1</archunit.version>
         <maven-toolchains-plugin.version>3.3.0</maven-toolchains-plugin.version>
+        <dependency-check-maven.version>13.0.0</dependency-check-maven.version>
+        <dependency-check.fail-on-cvss>7</dependency-check.fail-on-cvss>
     </properties>
 
     <dependencyManagement>
@@ -75,6 +77,19 @@
     </dependencyManagement>
 
     <build>
+        <pluginManagement>
+            <plugins>
+                <plugin>
+                    <groupId>org.owasp</groupId>
+                    <artifactId>dependency-check-maven</artifactId>
+                    <version>${dependency-check-maven.version}</version>
+                    <configuration>
+                        <nvdApiKeyEnvironmentVariable>NVD_API_KEY</nvdApiKeyEnvironmentVariable>
+                        <failBuildOnCVSS>${dependency-check.fail-on-cvss}</failBuildOnCVSS>
+                    </configuration>
+                </plugin>
+            </plugins>
+        </pluginManagement>
         <plugins>
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
