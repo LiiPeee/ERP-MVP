@@ -57,6 +57,18 @@
             </dependency>
             <dependency>
                 <groupId>br.com.erpcore</groupId>
+                <artifactId>application</artifactId>
+                <version>${project.version}</version>
+                <type>test-jar</type>
+            </dependency>
+            <dependency>
+                <groupId>br.com.erpcore</groupId>
+                <artifactId>adapter-persistence</artifactId>
+                <version>${project.version}</version>
+                <type>test-jar</type>
+            </dependency>
+            <dependency>
+                <groupId>br.com.erpcore</groupId>
                 <artifactId>adapter-web</artifactId>
                 <version>${project.version}</version>
             </dependency>
