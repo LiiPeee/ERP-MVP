@@ -1,4 +1,4 @@
-FROM node:24.22.3-bookworm-slim AS frontend
+FROM node:26.13.1-bookworm-slim AS frontend
 WORKDIR /frontend
 ENV NG_CLI_ANALYTICS=false
 # O .npmrc bloqueia scripts de instalação de pacotes; npm ci instala exatamente o que está no package-lock.json.
