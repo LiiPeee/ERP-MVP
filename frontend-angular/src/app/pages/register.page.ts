@@ -61,7 +61,7 @@ export class RegisterPage {
     try {
       await this.session.register(companyName, ownerName, email, password);
       await this.session.login(email, password);
-      await this.router.navigateByUrl('/me');
+      await this.router.navigateByUrl('/fila');
     } catch (failure) {
       this.error.set(problemMessage(failure));
     } finally {

@@ -1,0 +1,429 @@
+// Telas da oficina (Fase 1). Mesma regra dos componentes base: estilo só aqui, na folha global, aninhado sob o
+// elemento da página, porque a CSP só aceita `style-src 'self'`. Celular primeiro: uma coluna, alvos de 48 px.
+
+main {
+  box-sizing: border-box;
+  max-width: 44rem;
+  margin: 0 auto;
+  padding: var(--space-4) var(--space-4) var(--space-6);
+
+  h1 {
+    margin: var(--space-4) 0 var(--space-3);
+    font-size: var(--text-xl);
+    line-height: 1.15;
+  }
+
+  h2 {
+    margin: var(--space-5) 0 var(--space-2);
+    font-size: var(--text-l);
+  }
+
+  h3 {
+    margin: var(--space-4) 0 var(--space-2);
+    font-size: var(--text-m);
+  }
+
+  a {
+    color: var(--color-ink);
+    text-underline-offset: 0.2em;
+  }
+
+  .hint {
+    margin: var(--space-1) 0;
+    color: var(--color-ink-muted);
+    font-size: var(--text-s);
+  }
+
+  // Telas de conta (entrar e cadastrar): os mesmos controles dos campos base.
+  app-login-page,
+  app-register-page {
+    form p {
+      display: flex;
+      flex-direction: column;
+      gap: var(--space-1);
+      margin: 0 0 var(--space-3);
+    }
+
+    label {
+      display: flex;
+      flex-direction: column;
+      gap: var(--space-1);
+      font-size: var(--text-s);
+      font-weight: var(--weight-strong);
+    }
+
+    input {
+      min-height: var(--control-height);
+      padding: 0 var(--space-3);
+      border: var(--line) solid var(--color-ink);
+      border-radius: var(--radius);
+      background: var(--color-paper);
+      color: var(--color-ink);
+      font: inherit;
+    }
+
+    button[type="submit"] {
+      min-height: var(--control-height);
+      padding: 0 var(--space-5);
+      border: var(--line) solid var(--color-ink);
+      border-radius: var(--radius);
+      background: var(--color-ink);
+      color: var(--color-paper);
+      font: inherit;
+      font-weight: var(--weight-strong);
+      cursor: pointer;
+    }
+
+    button[type="submit"]:disabled {
+      border-color: var(--color-ink-muted);
+      background: transparent;
+      color: var(--color-ink-muted);
+      cursor: not-allowed;
+    }
+  }
+}
+
+// Barra de cima das telas do dono: só texto, uma régua embaixo.
+.app-bar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--space-3);
+  max-width: 44rem;
+  margin: 0 auto;
+  padding: var(--space-2) var(--space-4);
+  border-bottom: var(--line) solid var(--color-rule);
+
+  .link-button {
+    min-height: var(--control-height);
+    padding: 0 var(--space-2);
+    border: 0;
+    background: transparent;
+    color: var(--color-ink-muted);
+    font: inherit;
+    font-weight: var(--weight-strong);
+    text-decoration: underline;
+    cursor: pointer;
+  }
+}
+
+// Cabeça de página com a ação principal à direita.
+.page-head {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: var(--space-3);
+
+  .action-link {
+    display: inline-flex;
+    align-items: center;
+    min-height: var(--control-height);
+    padding: 0 var(--space-4);
+    border-radius: var(--radius);
+    background: var(--color-ink);
+    color: var(--color-paper);
+    font-weight: var(--weight-strong);
+    text-decoration: none;
+  }
+}
+
+app-fila-page {
+  display: block;
+
+  h2 {
+    display: flex;
+    align-items: baseline;
+    gap: var(--space-2);
+    padding-bottom: var(--space-1);
+    border-bottom: var(--line-strong) solid var(--color-ink);
+    font-size: var(--text-m);
+  }
+
+  .count {
+    color: var(--color-ink-muted);
+    font-family: var(--font-number);
+    font-size: var(--text-s);
+  }
+
+  .queue {
+    margin: 0;
+    padding: 0;
+    list-style: none;
+
+    li {
+      border-bottom: var(--line) solid var(--color-rule);
+    }
+
+    a {
+      display: grid;
+      grid-template-columns: 1fr auto;
+      grid-template-areas:
+        "vehicle total"
+        "who status"
+        "when status";
+      column-gap: var(--space-3);
+      min-height: 3.5rem;
+      padding: var(--space-3) 0;
+      text-decoration: none;
+    }
+
+    a:hover {
+      background: var(--color-paper-sunk);
+    }
+
+    .vehicle {
+      grid-area: vehicle;
+      font-weight: var(--weight-strong);
+    }
+
+    .who {
+      grid-area: who;
+    }
+
+    .when {
+      grid-area: when;
+      color: var(--color-ink-muted);
+      font-size: var(--text-s);
+    }
+
+    .total {
+      grid-area: total;
+      text-align: right;
+      font-weight: var(--weight-strong);
+    }
+
+    erp-status-tag {
+      grid-area: status;
+      justify-self: end;
+      align-self: end;
+    }
+  }
+}
+
+app-novo-page {
+  display: block;
+
+  section {
+    padding-bottom: var(--space-3);
+    border-bottom: var(--line) solid var(--color-rule);
+  }
+
+  erp-text-field,
+  erp-select-field {
+    margin-bottom: var(--space-3);
+  }
+
+  .chosen {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--space-3);
+    margin: 0 0 var(--space-3);
+    font-weight: var(--weight-strong);
+  }
+
+  .inline-form {
+    display: flex;
+    gap: var(--space-3);
+    align-items: flex-end;
+
+    erp-text-field {
+      flex: 1;
+      margin-bottom: 0;
+    }
+  }
+
+  .pick-list {
+    margin: var(--space-3) 0;
+    padding: 0;
+    list-style: none;
+
+    button {
+      display: flex;
+      justify-content: space-between;
+      width: 100%;
+      min-height: 3rem;
+      padding: 0 var(--space-3);
+      border: 0;
+      border-bottom: var(--line) solid var(--color-rule);
+      background: transparent;
+      color: var(--color-ink);
+      font: inherit;
+      text-align: left;
+      align-items: center;
+      cursor: pointer;
+    }
+
+    button:hover {
+      background: var(--color-paper-sunk);
+    }
+  }
+}
+
+// Linhas de régua do orçamento: o que, quanto e o valor da linha. O mesmo bloco serve ao dono e ao cliente.
+app-orcamento-page,
+app-publico-page {
+  display: block;
+
+  .quote-head {
+    display: flex;
+    align-items: baseline;
+    justify-content: space-between;
+    gap: var(--space-3);
+
+    h1 {
+      margin-bottom: 0;
+    }
+  }
+
+  .shop {
+    margin: var(--space-3) 0 0;
+    color: var(--color-ink-muted);
+    font-weight: var(--weight-strong);
+  }
+
+  .who {
+    margin: 0 0 var(--space-3);
+  }
+
+  .lines {
+    margin: var(--space-3) 0;
+    padding: 0;
+    list-style: none;
+
+    li {
+      display: grid;
+      grid-template-columns: 1fr auto;
+      grid-template-areas:
+        "what sum"
+        "how sum";
+      column-gap: var(--space-3);
+      padding: var(--space-3) 0;
+      border-bottom: var(--line) solid var(--color-rule);
+    }
+
+    .what {
+      grid-area: what;
+    }
+
+    .how {
+      grid-area: how;
+      color: var(--color-ink-muted);
+      font-size: var(--text-s);
+    }
+
+    .sum {
+      grid-area: sum;
+      align-self: center;
+      font-weight: var(--weight-strong);
+    }
+  }
+
+  .total {
+    display: flex;
+    justify-content: space-between;
+    align-items: baseline;
+    margin: var(--space-3) 0;
+    font-size: var(--text-l);
+
+    strong {
+      font-size: var(--text-xl);
+    }
+  }
+
+  .note {
+    padding-left: var(--space-3);
+    border-left: var(--line-strong) solid var(--color-rule);
+    color: var(--color-ink-muted);
+  }
+
+  .valid {
+    margin: 0 0 var(--space-3);
+    color: var(--color-ink-muted);
+  }
+
+  .link-box {
+    margin: var(--space-4) 0;
+    padding: var(--space-3) var(--space-4);
+    border-left: var(--line-strong) solid var(--color-out);
+    background: var(--color-paper-sunk);
+
+    h2 {
+      margin-top: 0;
+    }
+
+    .link-field {
+      box-sizing: border-box;
+      width: 100%;
+      min-height: var(--control-height);
+      margin-bottom: var(--space-3);
+      padding: 0 var(--space-3);
+      border: var(--line) solid var(--color-ink);
+      border-radius: var(--radius);
+      background: var(--color-paper);
+      color: var(--color-ink);
+      font-size: var(--text-s);
+    }
+  }
+
+  // Ações ficam no fim, ao alcance do polegar, uma embaixo da outra no celular.
+  .actions {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-3);
+    margin: var(--space-4) 0;
+
+    button[erpButton] {
+      min-height: 3rem;
+    }
+  }
+}
+
+// Celular: ações em coluna, botão em largura total. Desktop: a mesma coluna, mais larga.
+@media (min-width: 40rem) {
+  app-orcamento-page .actions,
+  app-publico-page .actions {
+    flex-direction: row;
+    flex-wrap: wrap;
+  }
+}
+
+app-novo-page,
+app-oficina-page {
+  button[erpButton] {
+    min-height: 3rem;
+  }
+}
+
+app-oficina-page erp-text-field,
+app-novo-page .editor-row {
+  margin-bottom: var(--space-3);
+}
+
+erp-quote-items-editor {
+  display: block;
+
+  .rows {
+    margin: 0 0 var(--space-3);
+    padding: 0;
+    list-style: none;
+  }
+
+  .row {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: var(--space-2) var(--space-3);
+    margin-bottom: var(--space-4);
+    padding-bottom: var(--space-3);
+    border-bottom: var(--line) solid var(--color-rule);
+
+    erp-text-field:first-child,
+    button[erpButton] {
+      grid-column: 1 / -1;
+    }
+  }
+}
+
+// A página do cliente não tem menu: o conteúdo começa no topo.
+main.client-page {
+  padding-top: var(--space-3);
+}

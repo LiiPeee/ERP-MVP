@@ -6,10 +6,12 @@ import { SessionStore } from './session.store';
 
 const API_PREFIX = '/api/';
 const AUTH_PREFIX = '/api/auth/';
+/** O link público do orçamento não usa a sessão do dono: um token vencido ali viraria 401 numa rota que é aberta. */
+const PUBLIC_PREFIX = '/api/public/';
 
 function isPrivateApiCall(request: HttpRequest<unknown>): boolean {
   const path = new URL(request.url, 'http://localhost').pathname;
-  return path.startsWith(API_PREFIX) && !path.startsWith(AUTH_PREFIX);
+  return path.startsWith(API_PREFIX) && !path.startsWith(AUTH_PREFIX) && !path.startsWith(PUBLIC_PREFIX);
 }
 
 /** Põe o token de acesso nas chamadas à API e, se ele venceu (401), renova uma vez e repete a chamada. */

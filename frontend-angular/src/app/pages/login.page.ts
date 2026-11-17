@@ -45,7 +45,7 @@ export class LoginPage {
     const { email, password } = this.form.getRawValue();
     try {
       await this.session.login(email, password);
-      await this.router.navigateByUrl('/me');
+      await this.router.navigateByUrl('/fila');
     } catch (failure) {
       this.error.set(problemMessage(failure));
     } finally {

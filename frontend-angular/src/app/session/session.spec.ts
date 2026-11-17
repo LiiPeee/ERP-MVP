@@ -22,6 +22,23 @@ function configure(auth: Partial<AuthService>) {
   });
 }
 
+describe('authInterceptor e o link público', () => {
+  it('não põe o token do dono nem tenta renovar a sessão nas chamadas do link público', async () => {
+    configure({ refresh: () => { throw new Error('não deveria renovar'); } });
+    TestBed.inject(SessionStore)['token'].set('token-do-dono');
+    const http = TestBed.inject(HttpClient);
+    const backend = TestBed.inject(HttpTestingController);
+
+    const result = http.get('/api/public/quotes/abc').subscribe({ error: () => undefined });
+    const request = backend.expectOne('/api/public/quotes/abc');
+
+    expect(request.request.headers.has('Authorization')).toBe(false);
+    request.flush({}, { status: 401, statusText: 'Unauthorized' });
+    result.unsubscribe();
+    backend.verify();
+  });
+});
+
 describe('SessionStore', () => {
   it('guarda o token só em memória, nunca em localStorage ou sessionStorage', async () => {
     configure({ login: () => of({ accessToken: 'token-sintetico', expiresAt: '2026-01-01T00:00:00Z' }) as never });

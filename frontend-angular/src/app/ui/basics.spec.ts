@@ -35,21 +35,24 @@ describe('erp-button', () => {
 });
 
 describe('erp-status-tag', () => {
-  it('dado status a receber, quando renderiza, então mostra texto e sinal, nunca só cor', async () => {
-    await render(StatusTagComponent, { inputs: { status: 'receivable' } });
-
-    expect(screen.getByText('a receber')).toBeTruthy();
-    expect(screen.getByText('▲')).toBeTruthy();
-  });
-
   it.each([
-    ['payable', 'a pagar', '▼'],
-    ['overdue', 'atrasado', '!'],
-  ] as const)('dado status %s, quando renderiza, então mostra "%s"', async (status, label, glyph) => {
+    ['DRAFT', 'rascunho', '•'],
+    ['SENT', 'enviado', '→'],
+    ['APPROVED', 'aprovado', '✓'],
+    ['REJECTED', 'recusado', '✕'],
+    ['EXPIRED', 'vencido', '!'],
+    ['CANCELLED', 'cancelado', '–'],
+  ] as const)('dado o estado %s, quando renderiza, então mostra "%s" com sinal, nunca só cor', async (status, label, glyph) => {
     await render(StatusTagComponent, { inputs: { status } });
 
     expect(screen.getByText(label)).toBeTruthy();
     expect(screen.getByText(glyph)).toBeTruthy();
+  });
+
+  it('dado um estado que a API ainda não conhecia, quando renderiza, então cai no neutro em vez de quebrar', async () => {
+    await render(StatusTagComponent, { inputs: { status: 'ESTADO_NOVO' } });
+
+    expect(screen.getByText('cancelado')).toBeTruthy();
   });
 });
 

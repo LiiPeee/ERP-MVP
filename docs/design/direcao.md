@@ -125,3 +125,16 @@ Construção simples: o nome em minúsculas, na fonte de título, com uma linha 
 - **Seletor e data usam os controles nativos** (`<select>` e `<input type="date">`): teclado, leitor de tela e celular já funcionam. O formato da data nativa segue o idioma do navegador, não o da página.
 - **Estilo na folha global, não nos componentes.** A CSP só aceita `style-src 'self'`; o Angular injetaria o estilo encapsulado como `<style>` e o navegador o bloquearia. Todo o estilo dos componentes fica em `src/styles/_ui.scss`, aninhado sob o próprio elemento. Componente novo segue a mesma regra.
 - **Sem Angular CDK.** O CDK também injeta `<style>` ao abrir o diálogo (3 violações de CSP medidas). O `<dialog>` nativo faz o que precisávamos (foco, Esc, retorno do foco) sem isso, então o CDK saiu das dependências.
+
+## Ajuste para a oficina (Fase 1, 17/11/2026)
+
+O produto virou o orçamento de oficina mecânica pequena. A direção B segue (papel frio, tinta, régua, Schibsted Grotesk e IBM Plex Mono, tema claro), com estas mudanças:
+
+- **Celular primeiro.** O dono usa o telefone em pé, com a mão suja e uma só mão livre. Alvos de toque de pelo menos 48 px, uma coluna, ações principais ao alcance do polegar (no fim da tela), nada que dependa de passar o mouse. O desktop é a mesma coluna, mais larga (máximo de 44 rem), não um painel.
+- **Densidade confortável**, não mais compacta: linha de 44 px (`--row-height`) e controle de 48 px. Isto **reverte** a decisão de densidade compacta de 17/11/2026, que era para o caixa.
+- **A cor muda de significado.** Verde (`--color-in`): aprovado. Azul (`--color-out`): esperando o cliente. Tijolo (`--color-alert`): recusado ou vencido, o que pede uma ação do dono. Tinta suave: rascunho e cancelado. Todo status leva também sinal e texto: rascunho `•`, enviado `→`, aprovado `✓`, recusado `✕`, vencido `!`, cancelado `–`.
+- **A fila é a tela inicial**, em três blocos com nomes de ação: "Precisam de você", "Esperando o cliente", "Fechados". Cada orçamento é uma linha de régua (veículo, cliente, valor), não um cartão.
+- **A página do cliente** (link do WhatsApp) é a única que o cliente vê: sem menu, sem login, nome da oficina, veículo, itens em linhas de régua, o total grande e dois botões empilhados ("Aprovar orçamento", "Recusar"), mais a validade em uma frase. Carrega pouco JavaScript e abre rápido em rede ruim.
+- **Zero digitação:** o cadastro do cliente e do veículo é o mínimo (nome e telefone; placa, marca, modelo e ano). O que o mecânico não deve digitar na oficina entra por áudio e conversa, em fases seguintes; esta fase só garante que o orçamento saia sem planilha.
+- **Removido:** o protótipo do caixa (`/caixa`), a fixture da padaria e as telas de linha do tempo. O produto não tem mais "caixa" nesta fase.
+- **Nome e marca:** continuam adiados; a barra de topo usa só o texto "Orçamentos".

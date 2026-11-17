@@ -1,26 +1,30 @@
 import { Component, inject } from '@angular/core';
 import { toSignal } from '@angular/core/rxjs-interop';
-import { NavigationEnd, Router, RouterLink, RouterOutlet } from '@angular/router';
+import { NavigationEnd, Router, RouterOutlet } from '@angular/router';
 import { filter, map } from 'rxjs';
 import { SessionStore } from './session/session.store';
+import { NavComponent, NavItem } from './ui/nav';
 
-/** Casca descartável das telas de conta. As telas de laboratório (/design) ocupam a página inteira. */
+const OWNER_NAV: readonly NavItem[] = [
+  { label: 'Orçamentos', link: '/fila' },
+  { label: 'Novo', link: '/orcamento/novo' },
+  { label: 'Oficina', link: '/oficina' },
+];
+
+/** A casca das telas do dono. A página do cliente (/o/...) fica sem menu nenhum: ela só mostra o orçamento. */
 @Component({
   selector: 'app-root',
-  imports: [RouterOutlet, RouterLink],
+  imports: [RouterOutlet, NavComponent],
   template: `
-    @if (!isLab()) {
-      <nav>
+    @if (!isClientPage()) {
+      <header class="app-bar">
         @if (session.isAuthenticated()) {
-          <a routerLink="/me">Quem sou eu</a>
-          <button type="button" (click)="logout()">Sair</button>
-        } @else {
-          <a routerLink="/login">Entrar</a>
-          <a routerLink="/register">Cadastrar</a>
+          <erp-nav [items]="ownerNav" />
+          <button type="button" class="link-button" (click)="logout()">Sair</button>
         }
-      </nav>
+      </header>
     }
-    <main>
+    <main [class.client-page]="isClientPage()">
       <router-outlet />
     </main>
   `,
@@ -28,12 +32,13 @@ import { SessionStore } from './session/session.store';
 export class App {
   protected readonly session = inject(SessionStore);
   private readonly router = inject(Router);
-  protected readonly isLab = toSignal(
+  protected readonly ownerNav = OWNER_NAV;
+  protected readonly isClientPage = toSignal(
     this.router.events.pipe(
       filter((event): event is NavigationEnd => event instanceof NavigationEnd),
-      map((event) => event.urlAfterRedirects.startsWith('/caixa') || event.urlAfterRedirects.startsWith('/componentes')),
+      map((event) => event.urlAfterRedirects.startsWith('/o/')),
     ),
-    { initialValue: false },
+    { initialValue: typeof location !== 'undefined' && location.pathname.startsWith('/o/') },
   );
 
   protected async logout(): Promise<void> {
