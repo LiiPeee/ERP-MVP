@@ -1,0 +1,56 @@
+<main class="gallery">
+  <h1>Componentes</h1>
+  <erp-nav [items]="navItems" />
+
+  <section aria-labelledby="g-botoes">
+    <h2 id="g-botoes">Botões</h2>
+    <div class="line">
+      <button erpButton variant="primary" type="button">Lançar</button>
+      <button erpButton type="button">Cancelar</button>
+      <button erpButton type="button" disabled>Indisponível</button>
+    </div>
+  </section>
+
+  <section aria-labelledby="g-campos">
+    <h2 id="g-campos">Campos</h2>
+    <div class="grid">
+      <erp-text-field label="Descrição" hint="Ex.: Farinha, aluguel, venda no balcão." />
+      <erp-text-field label="Descrição com erro" error="Diga o que é este lançamento, por exemplo &quot;Farinha&quot;." />
+      <erp-money-field label="Valor em reais" hint="Use o sinal de menos para uma saída." />
+      <erp-select-field label="Tipo" [options]="typeOptions" />
+      <erp-date-field label="Vencimento" />
+    </div>
+  </section>
+
+  <section aria-labelledby="g-status">
+    <h2 id="g-status">Status e avisos</h2>
+    <div class="line">
+      <erp-status-tag status="receivable" />
+      <erp-status-tag status="payable" />
+      <erp-status-tag status="overdue" />
+    </div>
+    <erp-notice>Lançamento salvo.</erp-notice>
+    <erp-notice tone="alert">Não foi possível salvar. Confira a data e tente de novo.</erp-notice>
+  </section>
+
+  <section aria-labelledby="g-tabela">
+    <h2 id="g-tabela">Tabela densa</h2>
+    <erp-data-table caption="Próximos lançamentos" [columns]="columns" [rows]="rows" [rowKey]="rowKey" />
+  </section>
+
+  <section aria-labelledby="g-estados">
+    <h2 id="g-estados">Vazio e carregamento</h2>
+    <erp-empty-state title="Nenhuma conta a receber nesta semana" guidance="Lance a primeira conta pelo botão abaixo ou use a tecla N.">
+      <button erpButton type="button">Novo lançamento</button>
+    </erp-empty-state>
+    <erp-skeleton [lines]="3" label="Carregando lançamentos" />
+  </section>
+
+  <section aria-labelledby="g-dialogo">
+    <h2 id="g-dialogo">Diálogo</h2>
+    <button erpButton type="button" (click)="askToDelete()">Apagar lançamento</button>
+    @if (dialogAnswer()) {
+      <erp-notice>{{ dialogAnswer() }}</erp-notice>
+    }
+  </section>
+</main>

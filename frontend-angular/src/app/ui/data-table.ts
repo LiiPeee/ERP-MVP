@@ -1,5 +1,5 @@
 import { ChangeDetectionStrategy, Component, computed, input, signal } from '@angular/core';
-import { nextFieldId } from './field.styles';
+import { nextFieldId } from './field-id';
 import { UI_MESSAGES } from './messages';
 
 export interface TableColumn<T> {
@@ -53,27 +53,6 @@ function normalize(text: string): string {
     </table>
     @if (visibleRows().length === 0) {
       <p class="none">{{ messages.tableEmpty }}</p>
-    }
-  `,
-  styles: `
-    :host { display: block; }
-    .filter { display: flex; align-items: center; gap: var(--space-2); margin-bottom: var(--space-3); }
-    .filter label { font-size: var(--text-s); font-weight: var(--weight-strong); }
-    .filter input { min-height: var(--control-height); padding: 0 var(--space-3); border: var(--line) solid var(--color-ink); border-radius: var(--radius); background: var(--color-paper); color: var(--color-ink); font: inherit; }
-    table { width: 100%; border-collapse: collapse; }
-    caption { padding-bottom: var(--space-2); text-align: left; font-size: var(--text-s); font-weight: var(--weight-heavy); letter-spacing: 0.04em; text-transform: uppercase; }
-    th, td { height: var(--row-height); padding: 0 var(--space-3); border-bottom: var(--line) solid var(--color-rule); text-align: left; font-size: var(--text-s); }
-    th { border-bottom-color: var(--color-ink); }
-    th button { padding: 0; border: 0; background: none; color: inherit; font: inherit; font-weight: var(--weight-strong); cursor: pointer; }
-    .cell--end { text-align: right; }
-    th.cell--end button { text-align: right; }
-    .none { margin: var(--space-3) 0 0; color: var(--color-ink-muted); }
-    @media (max-width: 40rem) {
-      thead { position: absolute; width: 1px; height: 1px; overflow: hidden; clip-path: inset(50%); }
-      tr, td { display: block; }
-      tr { padding: var(--space-2) 0; border-bottom: var(--line) solid var(--color-rule); }
-      td { display: flex; justify-content: space-between; height: auto; padding: var(--space-1) 0; border: 0; }
-      td::before { content: attr(data-label); color: var(--color-ink-muted); }
     }
   `,
 })

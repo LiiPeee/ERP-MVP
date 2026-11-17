@@ -1,6 +1,6 @@
 import { ChangeDetectionStrategy, Component, input, model } from '@angular/core';
 import { ErrorMessageComponent } from './error-message';
-import { FIELD_STYLES, nextFieldId } from './field.styles';
+import { nextFieldId } from './field-id';
 
 /** Data de calendário (AAAA-MM-DD), no seletor nativo do navegador. */
 @Component({
@@ -13,7 +13,6 @@ import { FIELD_STYLES, nextFieldId } from './field.styles';
     <erp-error-message [message]="error()" [messageId]="errorId" />
   `,
   changeDetection: ChangeDetectionStrategy.OnPush,
-  styles: FIELD_STYLES,
 })
 export class DateFieldComponent {
   readonly label = input.required<string>();

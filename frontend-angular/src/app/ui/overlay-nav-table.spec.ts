@@ -101,41 +101,60 @@ describe('erp-nav', () => {
   });
 });
 
-describe('diálogo de confirmação (CDK)', () => {
+describe('diálogo de confirmação (<dialog> nativo)', () => {
   const request = { title: 'Apagar lançamento?', message: 'Esta ação não pode ser desfeita.', confirmLabel: 'Apagar', cancelLabel: 'Manter' };
 
-  it('dado um pedido, quando abre, então é um diálogo modal com título e foco dentro', async () => {
-    await render('<div></div>', {});
-    const service = TestBed.inject(ConfirmDialogService);
+  // O jsdom não implementa showModal/close; este stub imita o que o navegador faz (abrir, guardar returnValue, disparar "close").
+  // O comportamento real (foco preso, Esc, retorno do foco) é conferido no Playwright, em navegador de verdade.
+  beforeAll(() => {
+    HTMLDialogElement.prototype.showModal = function (this: HTMLDialogElement) {
+      this.setAttribute('open', '');
+    };
+    HTMLDialogElement.prototype.close = function (this: HTMLDialogElement, returnValue?: string) {
+      this.returnValue = returnValue ?? '';
+      this.removeAttribute('open');
+      this.dispatchEvent(new Event('close'));
+    };
+  });
 
-    const result = service.confirm(request);
+  it('dado um pedido, quando abre, então é um diálogo modal com título e a mensagem', async () => {
+    await render('<div></div>', {});
+
+    const result = TestBed.inject(ConfirmDialogService).confirm(request);
 
     const dialog = await screen.findByRole('dialog', { name: 'Apagar lançamento?' });
     expect(dialog.textContent).toContain('Esta ação não pode ser desfeita.');
-    expect(dialog.contains(document.activeElement)).toBe(true);
     await userEvent.click(screen.getByRole('button', { name: 'Manter' }));
     expect(await result).toBe(false);
   });
 
-  it('dado o botão de confirmar, quando clica, então devolve verdadeiro e fecha', async () => {
+  it('dado o botão de confirmar, quando clica, então devolve verdadeiro e remove o diálogo da página', async () => {
     await render('<div></div>', {});
     const result = TestBed.inject(ConfirmDialogService).confirm(request);
 
     await userEvent.click(await screen.findByRole('button', { name: 'Apagar' }));
 
     expect(await result).toBe(true);
-    expect(screen.queryByRole('dialog')).toBeNull();
+    expect(document.querySelector('erp-confirm-dialog')).toBeNull();
   });
 
-  it('dado Esc, quando o diálogo está aberto, então cancela', async () => {
+  it('dado Esc (o navegador fecha o diálogo sem valor), quando acontece, então conta como não', async () => {
     await render('<div></div>', {});
     const result = TestBed.inject(ConfirmDialogService).confirm(request);
-    await screen.findByRole('dialog');
+    const dialog = await screen.findByRole('dialog');
 
-    // O CDK confere keyCode 27; o jsdom não o preenche sozinho, então o evento leva o código do Esc de um navegador real.
-    (document.activeElement ?? document.body).dispatchEvent(
-      new KeyboardEvent('keydown', { key: 'Escape', code: 'Escape', keyCode: 27, bubbles: true }),
-    );
+    dialog.dispatchEvent(new Event('cancel'));
+    (dialog as HTMLDialogElement).close();
+
+    expect(await result).toBe(false);
+  });
+
+  it('dado clique no fundo do diálogo, quando acontece, então cancela', async () => {
+    await render('<div></div>', {});
+    const result = TestBed.inject(ConfirmDialogService).confirm(request);
+    const dialog = await screen.findByRole('dialog');
+
+    await userEvent.click(dialog);
 
     expect(await result).toBe(false);
   });

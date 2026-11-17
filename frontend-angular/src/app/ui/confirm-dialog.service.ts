@@ -1,6 +1,4 @@
-import { Dialog, DIALOG_DATA, DialogRef } from '@angular/cdk/dialog';
-import { ChangeDetectionStrategy, Component, inject, Injectable } from '@angular/core';
-import { firstValueFrom } from 'rxjs';
+import { afterNextRender, ApplicationRef, ChangeDetectionStrategy, Component, createComponent, DOCUMENT, ElementRef, EnvironmentInjector, inject, Injectable, input, output, viewChild } from '@angular/core';
 import { ButtonComponent } from './button';
 
 export interface ConfirmRequest {
@@ -12,45 +10,70 @@ export interface ConfirmRequest {
 
 const TITLE_ID = 'erp-dialog-title';
 
+/**
+ * Sobre o `<dialog>` nativo: foco preso, Esc que fecha e retorno do foco vêm do navegador, sem injetar estilo
+ * (a CSP só aceita `style-src 'self'`). O foco inicial cai no primeiro botão, o de cancelar: o mais seguro.
+ */
 @Component({
   selector: 'erp-confirm-dialog',
   imports: [ButtonComponent],
   template: `
-    <h2 [id]="titleId">{{ data.title }}</h2>
-    <p>{{ data.message }}</p>
-    <div class="actions">
-      <button erpButton type="button" (click)="ref.close(false)">{{ data.cancelLabel }}</button>
-      <button erpButton variant="primary" type="button" cdkFocusInitial (click)="ref.close(true)">{{ data.confirmLabel }}</button>
-    </div>
+    <dialog #dialog [attr.aria-labelledby]="titleId" (close)="finish()" (click)="onBackdropClick($event)">
+      <div class="panel">
+        <h2 [id]="titleId">{{ request().title }}</h2>
+        <p>{{ request().message }}</p>
+        <div class="actions">
+          <button erpButton type="button" (click)="close(false)">{{ request().cancelLabel }}</button>
+          <button erpButton variant="primary" type="button" (click)="close(true)">{{ request().confirmLabel }}</button>
+        </div>
+      </div>
+    </dialog>
   `,
   changeDetection: ChangeDetectionStrategy.OnPush,
-  styles: `
-    :host { display: block; min-width: 20rem; max-width: 28rem; padding: var(--space-5); border: var(--line-strong) solid var(--color-ink); border-radius: var(--radius); background: var(--color-paper); color: var(--color-ink); }
-    h2 { margin: 0 0 var(--space-3); font-size: var(--text-l); font-weight: var(--weight-heavy); }
-    p { margin: 0 0 var(--space-5); color: var(--color-ink-muted); }
-    .actions { display: flex; justify-content: flex-end; gap: var(--space-3); }
-  `,
 })
 export class ConfirmDialogComponent {
-  protected readonly data = inject<ConfirmRequest>(DIALOG_DATA);
-  protected readonly ref = inject<DialogRef<boolean>>(DialogRef);
+  readonly request = input.required<ConfirmRequest>();
+  readonly closed = output<boolean>();
   protected readonly titleId = TITLE_ID;
+  private readonly dialog = viewChild.required<ElementRef<HTMLDialogElement>>('dialog');
+
+  constructor() {
+    afterNextRender(() => this.dialog().nativeElement.showModal());
+  }
+
+  protected close(confirmed: boolean): void {
+    this.dialog().nativeElement.close(String(confirmed));
+  }
+
+  /** O clique no fundo (fora do painel) chega ao próprio <dialog>; conta como "não". */
+  protected onBackdropClick(event: MouseEvent): void {
+    if (event.target === this.dialog().nativeElement) {
+      this.dialog().nativeElement.close('');
+    }
+  }
+
+  /** Esc fecha sem valor ("" ), o que também conta como "não". */
+  protected finish(): void {
+    this.closed.emit(this.dialog().nativeElement.returnValue === 'true');
+  }
 }
 
-/** Diálogo modal sobre o CDK: foco preso, Esc fecha, foco volta a quem abriu. Esc e clique fora contam como "não". */
 @Injectable({ providedIn: 'root' })
 export class ConfirmDialogService {
-  private readonly dialog = inject(Dialog);
+  private readonly appRef = inject(ApplicationRef);
+  private readonly injector = inject(EnvironmentInjector);
+  private readonly document = inject(DOCUMENT);
 
-  async confirm(request: ConfirmRequest): Promise<boolean> {
-    const ref = this.dialog.open<boolean, ConfirmRequest>(ConfirmDialogComponent, {
-      data: request,
-      ariaModal: true,
-      ariaLabelledBy: TITLE_ID,
-      autoFocus: 'first-tabbable',
-      restoreFocus: true,
-      backdropClass: 'erp-dialog-backdrop',
+  confirm(request: ConfirmRequest): Promise<boolean> {
+    return new Promise((resolve) => {
+      const ref = createComponent(ConfirmDialogComponent, { environmentInjector: this.injector });
+      ref.setInput('request', request);
+      ref.instance.closed.subscribe((confirmed) => {
+        ref.destroy();
+        resolve(confirmed);
+      });
+      this.appRef.attachView(ref.hostView);
+      this.document.body.appendChild(ref.location.nativeElement);
     });
-    return (await firstValueFrom(ref.closed)) === true;
   }
 }

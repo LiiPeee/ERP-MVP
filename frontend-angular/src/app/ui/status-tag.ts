@@ -14,12 +14,6 @@ const LABELS: Record<Status, { text: string; glyph: string }> = {
   template: '<span class="glyph" aria-hidden="true">{{ label().glyph }}</span>{{ label().text }}',
   changeDetection: ChangeDetectionStrategy.OnPush,
   host: { '[class]': "'status status--' + status()" },
-  styles: `
-    :host { display: inline-flex; gap: var(--space-1); align-items: baseline; font-size: var(--text-s); font-weight: var(--weight-strong); }
-    :host(.status--receivable) { color: var(--color-in); }
-    :host(.status--payable) { color: var(--color-out); }
-    :host(.status--overdue) { color: var(--color-alert); }
-  `,
 })
 export class StatusTagComponent {
   readonly status = input.required<Status>();

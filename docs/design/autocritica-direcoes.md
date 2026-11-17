@@ -1,5 +1,7 @@
 # Autocrítica das duas direções (ponto de verificação 2)
 
+> Registro histórico. A direção B foi escolhida; a A foi removida do código e suas capturas saíram do repositório (ficam no histórico do git, commit `d81505b`). A autocrítica da tela final está em [../relatorios/fase-0.5.md](../relatorios/fase-0.5.md).
+
 Capturas em `docs/capturas/fase-0.5/` (desktop 1280x800 e celular 390x844, página inteira). Rotas de laboratório: `/design/a` e `/design/b`, só com a fixture sintética. Feita por mim olhando as capturas; **não é uma avaliação de design de terceiros**.
 
 ## Verificações objetivas

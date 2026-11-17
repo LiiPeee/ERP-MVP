@@ -1,6 +1,6 @@
-# Direção de arte (rascunho para aprovação)
+# Direção de arte
 
-Estado: **rascunho do ponto de verificação 1.** Nada aqui está implementado. Paleta, fontes e nomes são propostas; os números de contraste ainda **não foram medidos** e serão validados no código (WCAG AA) antes de qualquer cor virar token.
+Estado: **direção B (Mesa de controle) escolhida em 17/11/2026 e implementada** nos tokens (`frontend-angular/src/styles/_tokens.scss`), nos componentes base (`src/app/ui/`) e no protótipo da tela do caixa (`/caixa`). Este documento foi escrito antes da implementação; onde diz "proposta" ou "direção A", vale o que está em **Decisões tomadas**, no fim. Contraste: o axe não achou violação WCAG AA nas telas, mas os pares de cor não foram medidos um a um.
 
 ## Para quem e para quê
 
@@ -112,3 +112,16 @@ Construção simples: o nome em minúsculas, na fonte de título, com uma linha 
 2. **Densidade padrão das tabelas:** confortável, compacta ou escolhida pelo usuário.
 3. **Nome:** uma das três, outra, ou adiar (o nome é provisório até lá).
 4. **Dependências novas**, a aprovar antes de instalar (cada uma ganha linha em `docs/dependencias.md`): Angular CDK, Testing Library (Angular) e `@axe-core/playwright`. Mais as fontes escolhidas, baixadas do repositório oficial e hospedadas localmente.
+
+## Decisões tomadas (17/11/2026)
+
+- **Direção:** B, Mesa de controle. A direção A (Livro-caixa) foi removida do código; as fontes dela (Newsreader e IBM Plex Sans) também. Sua autocrítica fica em [autocritica-direcoes.md](autocritica-direcoes.md).
+- **Fontes:** Schibsted Grotesk (texto) e IBM Plex Mono (valores). Detalhes e licenças em [fontes.md](fontes.md).
+- **Paleta final** (tokens `--color-*`): papel `#edf0ec`, papel afundado `#e0e5df`, tinta `#11161a`, tinta suave `#4d5852`, régua `#c3cbc5`, a receber `#0f6a4b`, a pagar `#1f4fa3`, atrasado e saldo negativo `#b3331f`. O saldo negativo também leva hachura nas linhas, e todo status leva sinal e texto.
+- **Modo escuro:** **não nesta fase.** Os tokens têm nomes semânticos para o escuro caber depois sem tocar nos componentes.
+- **Densidade padrão:** compacta (linha de 26 px, token `--row-height`). Não há seletor de densidade.
+- **Nome e marca:** adiados. A interface usa "Padaria Fictícia" só como dado da fixture; nenhum logotipo foi desenhado.
+- **Componentes:** botão, campo de texto, campo de valor em reais, seletor, data, tabela densa, tag de status, diálogo (`<dialog>` nativo), aviso, mensagem de erro, estado vazio, esqueleto, navegação e formatadores pt-BR (galeria em `/componentes`).
+- **Seletor e data usam os controles nativos** (`<select>` e `<input type="date">`): teclado, leitor de tela e celular já funcionam. O formato da data nativa segue o idioma do navegador, não o da página.
+- **Estilo na folha global, não nos componentes.** A CSP só aceita `style-src 'self'`; o Angular injetaria o estilo encapsulado como `<style>` e o navegador o bloquearia. Todo o estilo dos componentes fica em `src/styles/_ui.scss`, aninhado sob o próprio elemento. Componente novo segue a mesma regra.
+- **Sem Angular CDK.** O CDK também injeta `<style>` ao abrir o diálogo (3 violações de CSP medidas). O `<dialog>` nativo faz o que precisávamos (foco, Esc, retorno do foco) sem isso, então o CDK saiu das dependências.

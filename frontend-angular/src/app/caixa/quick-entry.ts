@@ -1,10 +1,12 @@
-import { addDays, IsoDate, parseBRL } from '../cash/format';
-import { MESSAGES } from './messages';
+import { addDays } from '../cash/format';
+import { UI_MESSAGES } from '../ui/messages';
 import { QuickEntry } from './cash-model';
+import { MESSAGES } from './messages';
 
 export interface QuickEntryInput {
   readonly description: string;
-  readonly amount: string;
+  /** Já lido pelo campo de valor; nulo se vazio ou inválido. */
+  readonly amountCents: number | null;
   readonly date: string;
 }
 
@@ -15,20 +17,19 @@ export function validateQuickEntry(input: QuickEntryInput): QuickEntryResult {
   if (description === '') {
     return { error: MESSAGES.quickEntry.descriptionRequired };
   }
-  const amountCents = parseBRL(input.amount);
-  if (amountCents === null) {
-    return { error: MESSAGES.quickEntry.amountInvalid };
+  if (input.amountCents === null) {
+    return { error: UI_MESSAGES.moneyInvalid };
   }
-  if (amountCents === 0) {
+  if (input.amountCents === 0) {
     return { error: MESSAGES.quickEntry.amountZero };
   }
   if (!isExistingDate(input.date)) {
     return { error: MESSAGES.quickEntry.dateInvalid };
   }
-  return { entry: { description, amountCents, date: input.date } };
+  return { entry: { description, amountCents: input.amountCents, date: input.date } };
 }
 
-function isExistingDate(date: string): date is IsoDate {
+function isExistingDate(date: string): boolean {
   try {
     addDays(date, 0);
     return true;

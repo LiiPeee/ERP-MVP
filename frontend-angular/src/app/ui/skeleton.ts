@@ -10,10 +10,6 @@ import { ChangeDetectionStrategy, Component, computed, input } from '@angular/co
     </div>
   `,
   changeDetection: ChangeDetectionStrategy.OnPush,
-  styles: `
-    .erp-skeleton__line { display: block; height: var(--row-height); margin-bottom: var(--space-1); background: var(--color-paper-sunk); animation: pulse 1.2s ease-in-out infinite alternate; }
-    @keyframes pulse { to { opacity: 0.45; } }
-  `,
 })
 export class SkeletonComponent {
   readonly lines = input(3);

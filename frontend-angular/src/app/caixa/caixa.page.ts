@@ -1,46 +1,50 @@
-import { ChangeDetectionStrategy, Component, ElementRef, Injector, afterNextRender, computed, inject, signal, viewChild } from '@angular/core';
+import { ChangeDetectionStrategy, Component, Injector, afterNextRender, computed, inject, signal } from '@angular/core';
 import { buildTimeline } from '../cash/geometry';
-import { formatBRL, formatDayLong, formatDayShort, IsoDate } from '../cash/format';
+import { IsoDate } from '../cash/format';
+import { ButtonComponent } from '../ui/button';
+import { DateFieldComponent } from '../ui/date-field';
+import { EmptyStateComponent } from '../ui/empty-state';
+import { ErrorMessageComponent } from '../ui/error-message';
+import { DataCurtaPipe, DataLongaPipe, MoedaPipe } from '../ui/format.pipes';
+import { MoneyFieldComponent } from '../ui/money-field';
+import { StatusTagComponent } from '../ui/status-tag';
+import { TextFieldComponent } from '../ui/text-field';
 import { createCashModel } from './cash-model';
 import { MESSAGES } from './messages';
 import { validateQuickEntry } from './quick-entry';
 
-const ROW = 26;
-const SPAN = 150;
+const ROW_PX = 26;
+const SPAN = 100;
 
-/** Direção B, "Mesa de controle": linha do tempo vertical como protagonista e o painel do dia ao lado. */
+/** Protótipo da tela do caixa (Fase 0.5): dados da fixture, sem backend. A regra real é da Fase 3. */
 @Component({
   selector: 'app-caixa',
+  imports: [ButtonComponent, DateFieldComponent, EmptyStateComponent, ErrorMessageComponent, MoneyFieldComponent, StatusTagComponent, TextFieldComponent, MoedaPipe, DataCurtaPipe, DataLongaPipe],
   templateUrl: './caixa.page.html',
-  styleUrl: './caixa.page.scss',
   changeDetection: ChangeDetectionStrategy.OnPush,
   host: { '(document:keydown)': 'onKeydown($event)' },
 })
 export class CaixaPage {
   protected readonly model = createCashModel();
   protected readonly text = MESSAGES;
-  protected readonly formatBRL = formatBRL;
-  protected readonly formatDayShort = formatDayShort;
   protected readonly span = SPAN;
-  protected readonly formOpen = signal(false);
-  protected readonly formError = signal<string | null>(null);
-  private readonly injector = inject(Injector);
-  private readonly descriptionInput = viewChild<ElementRef<HTMLInputElement>>('description');
-
-  protected readonly height = computed(() => this.model.series().length * ROW);
   protected readonly selectedDate = signal<IsoDate>(this.model.today);
 
-  /** Mesma geometria da direção A, transposta: o tempo desce e o saldo avança para a direita. */
+  protected readonly formOpen = signal(false);
+  protected readonly formError = signal<string | null>(null);
+  protected readonly description = signal('');
+  protected readonly amountCents = signal<number | null>(null);
+  protected readonly entryDate = signal<IsoDate>(this.model.today);
+
+  private readonly injector = inject(Injector);
+
+  protected readonly height = computed(() => this.model.series().length * ROW_PX);
+
+  /** O tempo desce e o saldo avança para a direita (a geometria horizontal, transposta). */
   protected readonly curve = computed(() => {
-    const timeline = buildTimeline(this.model.series(), { width: this.height(), height: SPAN, paddingX: ROW / 2, paddingY: 12 });
-    const toVertical = (p: { x: number; y: number }) => ({ x: SPAN - p.y, y: p.x });
-    const points = timeline.points.map(toVertical);
-    return {
-      points,
-      path: points.map((p, index) => `${index === 0 ? 'M' : 'L'}${p.x} ${p.y}`).join(' '),
-      zeroX: SPAN - timeline.zeroY,
-      negativeBands: timeline.negativeAreas.map((area) => ({ y: area.fromX, height: area.toX - area.fromX })),
-    };
+    const timeline = buildTimeline(this.model.series(), { width: this.height(), height: SPAN, paddingX: ROW_PX / 2, paddingY: 6 });
+    const points = timeline.points.map((p) => ({ x: SPAN - p.y, y: p.x }));
+    return { points, path: points.map((p, i) => `${i === 0 ? 'M' : 'L'}${p.x} ${p.y}`).join(' '), zeroX: SPAN - timeline.zeroY };
   });
 
   protected readonly markers = computed(() =>
@@ -56,15 +60,14 @@ export class CaixaPage {
   });
 
   protected readonly selectedDay = computed(() => this.model.series().find((day) => day.date === this.selectedDate()));
+
   /** Os atrasados vencem "hoje" na projeção, mas aparecem em bloco próprio no painel. */
   protected readonly selectedEntries = computed(() => {
     const overdueIds = new Set(this.model.overdue().map((entry) => entry.id));
     return (this.selectedDay()?.entries ?? []).filter((entry) => !overdueIds.has(entry.id));
   });
-  protected readonly dayLabel = (date: IsoDate) => {
-    const label = formatDayLong(date);
-    return label.charAt(0).toUpperCase() + label.slice(1);
-  };
+
+  protected readonly showOverdue = computed(() => this.selectedDate() === this.model.today && this.model.overdue().length > 0);
 
   protected select(date: IsoDate): void {
     this.selectedDate.set(date);
@@ -80,23 +83,26 @@ export class CaixaPage {
 
   protected openForm(): void {
     this.formError.set(null);
+    this.entryDate.set(this.selectedDate());
     this.formOpen.set(true);
-    afterNextRender(() => this.descriptionInput()?.nativeElement.focus(), { injector: this.injector });
+    afterNextRender(() => document.querySelector<HTMLInputElement>('app-caixa form input')?.focus(), { injector: this.injector });
   }
 
   protected closeForm(): void {
     this.formOpen.set(false);
   }
 
-  protected submit(event: Event, description: string, amount: string, date: string): void {
+  protected submit(event: Event): void {
     event.preventDefault();
-    const result = validateQuickEntry({ description, amount, date });
+    const result = validateQuickEntry({ description: this.description(), amountCents: this.amountCents(), date: this.entryDate() });
     if ('error' in result) {
       this.formError.set(result.error);
       return;
     }
     this.model.add(result.entry);
     this.selectedDate.set(result.entry.date);
+    this.description.set('');
+    this.amountCents.set(null);
     this.formOpen.set(false);
   }
 

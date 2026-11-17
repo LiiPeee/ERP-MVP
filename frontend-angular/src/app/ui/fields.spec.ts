@@ -49,6 +49,14 @@ describe('erp-money-field', () => {
     expect(input.value).toBe('1.200,50');
   });
 
+  it('dado Enter no campo, quando o usuário confirma sem sair dele, então o valor já foi lido', async () => {
+    const { fixture } = await render(MoneyFieldComponent, { inputs: { label: 'Valor' } });
+
+    await userEvent.type(screen.getByLabelText('Valor'), '10{Enter}');
+
+    expect(fixture.componentInstance.cents()).toBe(1000);
+  });
+
   it('dado sinal de menos, quando perde o foco, então é saída', async () => {
     const { fixture } = await render(MoneyFieldComponent, { inputs: { label: 'Valor' } });
 

@@ -48,15 +48,17 @@ Versões conferidas em 16/11/2026. Versões gerenciadas pelo Spring Boot 4.1.2 n
 | typescript 6.0.3 | Versão exigida pelo Angular 22 (`>=6.0 <6.1`). |
 | vitest 5.1.0, jsdom 30.1.3 | Testes unitários do frontend. |
 | prettier 3.10.1 | Formatação (vem do esqueleto do Angular). |
+| @testing-library/angular 19.6.0, @testing-library/dom 10.4.2, @testing-library/user-event 14.6.12 | Testes de componente pelo que o usuário vê e faz (papéis, rótulos, teclado), sem depender da estrutura interna. Padrão consolidado; só dev. |
 
-Nenhuma biblioteca de interface, fonte, ícone, CDN ou analytics: o frontend não depende de terceiros em tempo de
-execução (e a CSP impede). O `.npmrc` bloqueia scripts de instalação de pacotes.
+Nenhuma biblioteca de interface visual, ícone, CDN ou analytics: o frontend não carrega nada de terceiros em tempo de
+execução (e a CSP impede). As fontes são arquivos locais (ver [docs/design/fontes.md](design/fontes.md)); o diálogo usa o `<dialog>` nativo. O `.npmrc` bloqueia scripts de instalação de pacotes.
 
 ## Testes de ponta a ponta (npm)
 
 | Dependência | Resolve |
 |---|---|
 | @playwright/test 1.65.1 | Teste do fluxo no navegador real. |
+| @axe-core/playwright 4.14.0 | Verificação automática de acessibilidade (WCAG A e AA) nas telas, dentro do Playwright. Só dev. |
 
 ## Imagens e ferramentas
 

@@ -31,7 +31,7 @@ export class App {
   protected readonly isLab = toSignal(
     this.router.events.pipe(
       filter((event): event is NavigationEnd => event instanceof NavigationEnd),
-      map((event) => event.urlAfterRedirects.startsWith('/caixa')),
+      map((event) => event.urlAfterRedirects.startsWith('/caixa') || event.urlAfterRedirects.startsWith('/componentes')),
     ),
     { initialValue: false },
   );

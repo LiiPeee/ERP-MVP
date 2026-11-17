@@ -1,6 +1,6 @@
 import { ChangeDetectionStrategy, Component, input, model } from '@angular/core';
 import { ErrorMessageComponent } from './error-message';
-import { FIELD_STYLES, nextFieldId } from './field.styles';
+import { nextFieldId } from './field-id';
 
 export interface SelectOption {
   readonly value: string;
@@ -21,7 +21,6 @@ export interface SelectOption {
     <erp-error-message [message]="error()" [messageId]="errorId" />
   `,
   changeDetection: ChangeDetectionStrategy.OnPush,
-  styles: FIELD_STYLES,
 })
 export class SelectFieldComponent {
   readonly label = input.required<string>();

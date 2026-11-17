@@ -1,6 +1,6 @@
 import { ChangeDetectionStrategy, Component, computed, input, model } from '@angular/core';
 import { ErrorMessageComponent } from './error-message';
-import { FIELD_STYLES, nextFieldId } from './field.styles';
+import { nextFieldId } from './field-id';
 
 @Component({
   selector: 'erp-text-field',
@@ -15,7 +15,6 @@ import { FIELD_STYLES, nextFieldId } from './field.styles';
     <erp-error-message [message]="error()" [messageId]="errorId" />
   `,
   changeDetection: ChangeDetectionStrategy.OnPush,
-  styles: FIELD_STYLES,
 })
 export class TextFieldComponent {
   readonly label = input.required<string>();

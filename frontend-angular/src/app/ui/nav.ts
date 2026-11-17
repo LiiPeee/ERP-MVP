@@ -18,12 +18,6 @@ export interface NavItem {
     </nav>
   `,
   changeDetection: ChangeDetectionStrategy.OnPush,
-  styles: `
-    nav { display: flex; gap: var(--space-5); padding: var(--space-3) 0; border-bottom: var(--line) solid var(--color-rule); }
-    a { padding: var(--space-1) 0; color: var(--color-ink-muted); font-weight: var(--weight-strong); text-decoration: none; border-bottom: var(--line-strong) solid transparent; }
-    a:hover { color: var(--color-ink); }
-    a.active { color: var(--color-ink); border-bottom-color: var(--color-ink); }
-  `,
 })
 export class NavComponent {
   readonly items = input.required<readonly NavItem[]>();
