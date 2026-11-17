@@ -23,7 +23,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 @RestController
 @RequestMapping(path = "/api/company-profile", produces = MediaType.APPLICATION_JSON_VALUE)
-@Tag(name = "Perfil da oficina")
+@Tag(name = "Company profile")
 @SecurityRequirement(name = "bearerAuth")
 final class CompanyProfileController {
 
@@ -45,7 +45,7 @@ final class CompanyProfileController {
 
     @PutMapping(consumes = MediaType.APPLICATION_JSON_VALUE)
     @Operation(summary = "Atualiza o perfil da oficina")
-    CompanyProfileView update(@AuthenticationPrincipal Jwt token, @Valid @RequestBody UpdateRequest body) {
+    CompanyProfileView update(@AuthenticationPrincipal Jwt token, @Valid @RequestBody UpdateCompanyProfileRequest body) {
         return updateProfile.execute(new UpdateCompanyProfileCommand(Principals.of(token), body.displayName(),
                 body.businessPhone(), body.address(), body.openingHours(),
                 body.defaultValidityDays() == null ? 0 : body.defaultValidityDays(), body.signatureMessage(),
@@ -53,13 +53,13 @@ final class CompanyProfileController {
     }
 
     /** Só o tamanho é conferido aqui; as regras de cada campo são do domínio. */
-    record UpdateRequest(@Size(max = MAX_TEXT) String displayName, @Size(max = MAX_TEXT) String businessPhone,
+    record UpdateCompanyProfileRequest(@Size(max = MAX_TEXT) String displayName, @Size(max = MAX_TEXT) String businessPhone,
                          @Size(max = MAX_TEXT) String address, @Size(max = MAX_TEXT) String openingHours,
                          Integer defaultValidityDays, @Size(max = MAX_TEXT) String signatureMessage) {
 
         @Override
         public String toString() {
-            return "UpdateRequest[redacted]";
+            return "UpdateCompanyProfileRequest[redacted]";
         }
     }
 }

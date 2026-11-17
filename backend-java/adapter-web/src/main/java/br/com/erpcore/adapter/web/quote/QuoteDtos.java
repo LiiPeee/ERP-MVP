@@ -18,7 +18,7 @@ final class QuoteDtos {
     }
 
     /** Quantidade e preço são texto decimal exato ("1.5", "89.90"): nunca número de ponto flutuante. */
-    record ItemRequest(@Size(max = MAX_DESCRIPTION) String description, @Size(max = MAX_NUMBER_TEXT) String kind,
+    record QuoteItemRequest(@Size(max = MAX_DESCRIPTION) String description, @Size(max = MAX_NUMBER_TEXT) String kind,
                        @Size(max = MAX_NUMBER_TEXT) String quantity, @Size(max = MAX_NUMBER_TEXT) String unitPrice) {
 
         QuoteItemInput toInput() {
@@ -26,7 +26,7 @@ final class QuoteDtos {
         }
     }
 
-    record CreateRequest(UUID contactId, UUID vehicleId, @Size(max = MAX_ITEMS) List<@Valid ItemRequest> items,
+    record CreateQuoteRequest(UUID contactId, UUID vehicleId, @Size(max = MAX_ITEMS) List<@Valid QuoteItemRequest> items,
                          @Size(max = MAX_NOTE) String note, Integer validityDays) {
 
         List<QuoteItemInput> inputs() {
@@ -34,22 +34,22 @@ final class QuoteDtos {
         }
     }
 
-    record ReviseRequest(@Size(max = MAX_ITEMS) List<@Valid ItemRequest> items) {
+    record ReviseQuoteItemsRequest(@Size(max = MAX_ITEMS) List<@Valid QuoteItemRequest> items) {
 
         List<QuoteItemInput> inputs() {
             return QuoteDtos.inputs(items);
         }
     }
 
-    record RejectRequest(@Size(max = MAX_NOTE) String reason) {
+    record RejectQuoteRequest(@Size(max = MAX_NOTE) String reason) {
 
         @Override
         public String toString() {
-            return "RejectRequest[redacted]";
+            return "RejectQuoteRequest[redacted]";
         }
     }
 
-    private static List<QuoteItemInput> inputs(List<ItemRequest> items) {
-        return items == null ? List.of() : items.stream().map(ItemRequest::toInput).toList();
+    private static List<QuoteItemInput> inputs(List<QuoteItemRequest> items) {
+        return items == null ? List.of() : items.stream().map(QuoteItemRequest::toInput).toList();
     }
 }

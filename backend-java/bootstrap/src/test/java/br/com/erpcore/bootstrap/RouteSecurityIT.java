@@ -112,7 +112,8 @@ class RouteSecurityIT {
                 "POST /api/public/quotes/*/reject");
         assertThat(declared).filteredOn(route -> route.contains("/api/quotes") || route.contains("/api/contacts")
                 || route.contains("/api/company-profile")).isEmpty();
-        assertThat(PublicRoutes.FRONTEND).anyMatch(route -> route.pattern().equals("/o/*"));
+        assertThat(PublicRoutes.FRONTEND).extracting(PublicRoutes.Route::pattern)
+                .contains("/o/*", "/fila", "/oficina", "/orcamento/novo", "/orcamento/*");
     }
 
     @Test

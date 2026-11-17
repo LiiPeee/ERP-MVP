@@ -47,7 +47,27 @@
         },
         "type" : "object"
       },
-      "CreateRequest" : {
+      "CreateContactRequest" : {
+        "properties" : {
+          "email" : {
+            "maxLength" : 254,
+            "minLength" : 0,
+            "type" : "string"
+          },
+          "name" : {
+            "maxLength" : 120,
+            "minLength" : 0,
+            "type" : "string"
+          },
+          "phone" : {
+            "maxLength" : 254,
+            "minLength" : 0,
+            "type" : "string"
+          }
+        },
+        "type" : "object"
+      },
+      "CreateQuoteRequest" : {
         "properties" : {
           "contactId" : {
             "format" : "uuid",
@@ -55,7 +75,7 @@
           },
           "items" : {
             "items" : {
-              "$ref" : "#/components/schemas/ItemRequest"
+              "$ref" : "#/components/schemas/QuoteItemRequest"
             },
             "maxItems" : 100,
             "minItems" : 0,
@@ -72,31 +92,6 @@
           },
           "vehicleId" : {
             "format" : "uuid",
-            "type" : "string"
-          }
-        },
-        "type" : "object"
-      },
-      "ItemRequest" : {
-        "properties" : {
-          "description" : {
-            "maxLength" : 300,
-            "minLength" : 0,
-            "type" : "string"
-          },
-          "kind" : {
-            "maxLength" : 30,
-            "minLength" : 0,
-            "type" : "string"
-          },
-          "quantity" : {
-            "maxLength" : 30,
-            "minLength" : 0,
-            "type" : "string"
-          },
-          "unitPrice" : {
-            "maxLength" : 30,
-            "minLength" : 0,
             "type" : "string"
           }
         },
@@ -172,6 +167,31 @@
             "type" : "string"
           },
           "vehicleLabel" : {
+            "type" : "string"
+          }
+        },
+        "type" : "object"
+      },
+      "QuoteItemRequest" : {
+        "properties" : {
+          "description" : {
+            "maxLength" : 300,
+            "minLength" : 0,
+            "type" : "string"
+          },
+          "kind" : {
+            "maxLength" : 30,
+            "minLength" : 0,
+            "type" : "string"
+          },
+          "quantity" : {
+            "maxLength" : 30,
+            "minLength" : 0,
+            "type" : "string"
+          },
+          "unitPrice" : {
+            "maxLength" : 30,
+            "minLength" : 0,
             "type" : "string"
           }
         },
@@ -338,6 +358,44 @@
       },
       "RegisterRequest" : {
         "properties" : {
+          "companyName" : {
+            "maxLength" : 120,
+            "minLength" : 0,
+            "type" : "string"
+          },
+          "email" : {
+            "maxLength" : 254,
+            "minLength" : 0,
+            "type" : "string"
+          },
+          "ownerName" : {
+            "maxLength" : 120,
+            "minLength" : 0,
+            "type" : "string"
+          },
+          "password" : {
+            "maxLength" : 128,
+            "minLength" : 0,
+            "type" : "string"
+          }
+        },
+        "type" : "object"
+      },
+      "RegisterResponse" : {
+        "properties" : {
+          "companyId" : {
+            "format" : "uuid",
+            "type" : "string"
+          },
+          "userId" : {
+            "format" : "uuid",
+            "type" : "string"
+          }
+        },
+        "type" : "object"
+      },
+      "RegisterVehicleRequest" : {
+        "properties" : {
           "brand" : {
             "maxLength" : 100,
             "minLength" : 0,
@@ -364,20 +422,7 @@
         },
         "type" : "object"
       },
-      "RegisterResponse" : {
-        "properties" : {
-          "companyId" : {
-            "format" : "uuid",
-            "type" : "string"
-          },
-          "userId" : {
-            "format" : "uuid",
-            "type" : "string"
-          }
-        },
-        "type" : "object"
-      },
-      "RejectRequest" : {
+      "RejectQuoteRequest" : {
         "properties" : {
           "reason" : {
             "maxLength" : 1000,
@@ -387,11 +432,11 @@
         },
         "type" : "object"
       },
-      "ReviseRequest" : {
+      "ReviseQuoteItemsRequest" : {
         "properties" : {
           "items" : {
             "items" : {
-              "$ref" : "#/components/schemas/ItemRequest"
+              "$ref" : "#/components/schemas/QuoteItemRequest"
             },
             "maxItems" : 100,
             "minItems" : 0,
@@ -412,7 +457,7 @@
         },
         "type" : "object"
       },
-      "UpdateRequest" : {
+      "UpdateCompanyProfileRequest" : {
         "properties" : {
           "address" : {
             "maxLength" : 300,
@@ -616,7 +661,7 @@
           "bearerAuth" : [ ]
         } ],
         "summary" : "O perfil da oficina que aparece para o cliente (telefone mascarado)",
-        "tags" : [ "Perfil da oficina" ]
+        "tags" : [ "Company profile" ]
       },
       "put" : {
         "operationId" : "update",
@@ -624,7 +669,7 @@
           "content" : {
             "application/json" : {
               "schema" : {
-                "$ref" : "#/components/schemas/UpdateRequest"
+                "$ref" : "#/components/schemas/UpdateCompanyProfileRequest"
               }
             }
           },
@@ -646,7 +691,7 @@
           "bearerAuth" : [ ]
         } ],
         "summary" : "Atualiza o perfil da oficina",
-        "tags" : [ "Perfil da oficina" ]
+        "tags" : [ "Company profile" ]
       }
     },
     "/api/contacts" : {
@@ -690,7 +735,7 @@
           "bearerAuth" : [ ]
         } ],
         "summary" : "Busca clientes pelo nome (no máximo 50); telefone e e-mail voltam mascarados",
-        "tags" : [ "Clientes da oficina" ]
+        "tags" : [ "Contacts" ]
       },
       "post" : {
         "operationId" : "create",
@@ -698,7 +743,7 @@
           "content" : {
             "application/json" : {
               "schema" : {
-                "$ref" : "#/components/schemas/CreateRequest"
+                "$ref" : "#/components/schemas/CreateContactRequest"
               }
             }
           },
@@ -720,7 +765,7 @@
           "bearerAuth" : [ ]
         } ],
         "summary" : "Cadastra um cliente (telefone obrigatório, e-mail opcional)",
-        "tags" : [ "Clientes da oficina" ]
+        "tags" : [ "Contacts" ]
       }
     },
     "/api/contacts/{contactId}/vehicles" : {
@@ -754,7 +799,7 @@
           "bearerAuth" : [ ]
         } ],
         "summary" : "Os veículos de um cliente; a placa volta mascarada",
-        "tags" : [ "Veículos" ]
+        "tags" : [ "Vehicles" ]
       },
       "post" : {
         "operationId" : "register",
@@ -771,7 +816,7 @@
           "content" : {
             "application/json" : {
               "schema" : {
-                "$ref" : "#/components/schemas/RegisterRequest"
+                "$ref" : "#/components/schemas/RegisterVehicleRequest"
               }
             }
           },
@@ -793,7 +838,7 @@
           "bearerAuth" : [ ]
         } ],
         "summary" : "Cadastra um veículo do cliente",
-        "tags" : [ "Veículos" ]
+        "tags" : [ "Vehicles" ]
       }
     },
     "/api/me" : {
@@ -842,7 +887,7 @@
           }
         },
         "summary" : "O orçamento como o cliente vê: só o necessário para decidir",
-        "tags" : [ "Link público do orçamento" ]
+        "tags" : [ "Public quote link" ]
       }
     },
     "/api/public/quotes/{token}/approve" : {
@@ -869,7 +914,7 @@
           }
         },
         "summary" : "O cliente aprova. Repetir não muda nada; depois de recusar, é recusado",
-        "tags" : [ "Link público do orçamento" ]
+        "tags" : [ "Public quote link" ]
       }
     },
     "/api/public/quotes/{token}/reject" : {
@@ -887,7 +932,7 @@
           "content" : {
             "application/json" : {
               "schema" : {
-                "$ref" : "#/components/schemas/RejectRequest"
+                "$ref" : "#/components/schemas/RejectQuoteRequest"
               }
             }
           }
@@ -905,7 +950,7 @@
           }
         },
         "summary" : "O cliente recusa, com motivo opcional. Repetir não muda nada; depois de aprovar, é recusado",
-        "tags" : [ "Link público do orçamento" ]
+        "tags" : [ "Public quote link" ]
       }
     },
     "/api/quotes" : {
@@ -927,7 +972,7 @@
           "bearerAuth" : [ ]
         } ],
         "summary" : "A fila: o que precisa do dono, o que espera o cliente e o que já fechou",
-        "tags" : [ "Orçamentos" ]
+        "tags" : [ "Quotes" ]
       },
       "post" : {
         "operationId" : "createDraft",
@@ -935,7 +980,7 @@
           "content" : {
             "application/json" : {
               "schema" : {
-                "$ref" : "#/components/schemas/CreateRequest"
+                "$ref" : "#/components/schemas/CreateQuoteRequest"
               }
             }
           },
@@ -957,7 +1002,7 @@
           "bearerAuth" : [ ]
         } ],
         "summary" : "Cria um rascunho de orçamento; o total é calculado pelo servidor",
-        "tags" : [ "Orçamentos" ]
+        "tags" : [ "Quotes" ]
       }
     },
     "/api/quotes/{quoteId}" : {
@@ -988,7 +1033,7 @@
           "bearerAuth" : [ ]
         } ],
         "summary" : "Um orçamento (telefone do cliente mascarado)",
-        "tags" : [ "Orçamentos" ]
+        "tags" : [ "Quotes" ]
       }
     },
     "/api/quotes/{quoteId}/cancel" : {
@@ -1019,7 +1064,7 @@
           "bearerAuth" : [ ]
         } ],
         "summary" : "Cancela o orçamento; o link deixa de funcionar",
-        "tags" : [ "Orçamentos" ]
+        "tags" : [ "Quotes" ]
       }
     },
     "/api/quotes/{quoteId}/confirm" : {
@@ -1050,7 +1095,7 @@
           "bearerAuth" : [ ]
         } ],
         "summary" : "Confirma e envia ao cliente: gera o link de aprovação (aparece só nesta resposta)",
-        "tags" : [ "Orçamentos" ]
+        "tags" : [ "Quotes" ]
       }
     },
     "/api/quotes/{quoteId}/items" : {
@@ -1069,7 +1114,7 @@
           "content" : {
             "application/json" : {
               "schema" : {
-                "$ref" : "#/components/schemas/ReviseRequest"
+                "$ref" : "#/components/schemas/ReviseQuoteItemsRequest"
               }
             }
           },
@@ -1091,7 +1136,7 @@
           "bearerAuth" : [ ]
         } ],
         "summary" : "Troca todos os itens de um rascunho; a lista nova substitui a antiga",
-        "tags" : [ "Orçamentos" ]
+        "tags" : [ "Quotes" ]
       }
     },
     "/api/quotes/{quoteId}/resend" : {
@@ -1122,7 +1167,7 @@
           "bearerAuth" : [ ]
         } ],
         "summary" : "Reenvia um orçamento já enviado, com um link novo; o estado não muda",
-        "tags" : [ "Orçamentos" ]
+        "tags" : [ "Quotes" ]
       }
     }
   }

@@ -1,8 +1,8 @@
 package br.com.erpcore.adapter.web.quote;
 
 import br.com.erpcore.adapter.web.correlation.CorrelationIds;
-import br.com.erpcore.adapter.web.quote.QuoteDtos.CreateRequest;
-import br.com.erpcore.adapter.web.quote.QuoteDtos.ReviseRequest;
+import br.com.erpcore.adapter.web.quote.QuoteDtos.CreateQuoteRequest;
+import br.com.erpcore.adapter.web.quote.QuoteDtos.ReviseQuoteItemsRequest;
 import br.com.erpcore.adapter.web.security.Principals;
 import br.com.erpcore.application.quote.CancelQuoteCommand;
 import br.com.erpcore.application.quote.CancelQuoteUseCase;
@@ -42,7 +42,7 @@ import org.springframework.web.bind.annotation.RestController;
 /** Os orçamentos do ponto de vista do dono da oficina. A empresa e o usuário vêm só do token. */
 @RestController
 @RequestMapping(path = "/api/quotes", produces = MediaType.APPLICATION_JSON_VALUE)
-@Tag(name = "Orçamentos")
+@Tag(name = "Quotes")
 @SecurityRequirement(name = "bearerAuth")
 final class QuoteController {
 
@@ -75,7 +75,7 @@ final class QuoteController {
     @PostMapping(consumes = MediaType.APPLICATION_JSON_VALUE)
     @ResponseStatus(HttpStatus.CREATED)
     @Operation(summary = "Cria um rascunho de orçamento; o total é calculado pelo servidor")
-    QuoteView createDraft(@AuthenticationPrincipal Jwt token, @Valid @RequestBody CreateRequest body) {
+    QuoteView createDraft(@AuthenticationPrincipal Jwt token, @Valid @RequestBody CreateQuoteRequest body) {
         return createDraft.execute(new CreateQuoteDraftCommand(Principals.of(token), body.contactId(), body.vehicleId(),
                 body.inputs(), body.note(), body.validityDays(), CorrelationIds.current()));
     }
@@ -89,7 +89,7 @@ final class QuoteController {
     @PutMapping(path = "/{quoteId}/items", consumes = MediaType.APPLICATION_JSON_VALUE)
     @Operation(summary = "Troca todos os itens de um rascunho; a lista nova substitui a antiga")
     QuoteView reviseItems(@AuthenticationPrincipal Jwt token, @PathVariable UUID quoteId,
-                          @Valid @RequestBody ReviseRequest body) {
+                          @Valid @RequestBody ReviseQuoteItemsRequest body) {
         return reviseItems.execute(new ReviseQuoteItemsCommand(Principals.of(token), quoteId, body.inputs(),
                 CorrelationIds.current()));
     }

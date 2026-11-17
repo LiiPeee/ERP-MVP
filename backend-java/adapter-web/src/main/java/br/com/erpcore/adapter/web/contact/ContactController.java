@@ -27,7 +27,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 @RestController
 @RequestMapping(path = "/api/contacts", produces = MediaType.APPLICATION_JSON_VALUE)
-@Tag(name = "Clientes da oficina")
+@Tag(name = "Contacts")
 @SecurityRequirement(name = "bearerAuth")
 final class ContactController {
 
@@ -57,18 +57,18 @@ final class ContactController {
     @PostMapping(consumes = MediaType.APPLICATION_JSON_VALUE)
     @ResponseStatus(HttpStatus.CREATED)
     @Operation(summary = "Cadastra um cliente (telefone obrigatório, e-mail opcional)")
-    ContactView create(@AuthenticationPrincipal Jwt token, @Valid @RequestBody CreateRequest body) {
+    ContactView create(@AuthenticationPrincipal Jwt token, @Valid @RequestBody CreateContactRequest body) {
         return createContact.execute(new CreateContactCommand(Principals.of(token), body.name(), body.phone(),
                 body.email(), CorrelationIds.current()));
     }
 
     /** Só o tamanho é conferido aqui; as regras de cada campo são do domínio. */
-    record CreateRequest(@Size(max = MAX_NAME) String name, @Size(max = MAX_TEXT) String phone,
+    record CreateContactRequest(@Size(max = MAX_NAME) String name, @Size(max = MAX_TEXT) String phone,
                          @Size(max = MAX_TEXT) String email) {
 
         @Override
         public String toString() {
-            return "CreateRequest[redacted]";
+            return "CreateContactRequest[redacted]";
         }
     }
 }

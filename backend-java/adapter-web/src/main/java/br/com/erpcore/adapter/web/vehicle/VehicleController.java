@@ -28,7 +28,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 @RestController
 @RequestMapping(path = "/api/contacts/{contactId}/vehicles", produces = MediaType.APPLICATION_JSON_VALUE)
-@Tag(name = "Veículos")
+@Tag(name = "Vehicles")
 @SecurityRequirement(name = "bearerAuth")
 final class VehicleController {
 
@@ -52,7 +52,7 @@ final class VehicleController {
     @ResponseStatus(HttpStatus.CREATED)
     @Operation(summary = "Cadastra um veículo do cliente")
     VehicleView register(@AuthenticationPrincipal Jwt token, @PathVariable UUID contactId,
-                         @Valid @RequestBody RegisterRequest body) {
+                         @Valid @RequestBody RegisterVehicleRequest body) {
         return registerVehicle.execute(new RegisterVehicleCommand(Principals.of(token), contactId, body.plate(),
                 body.brand(), body.model(), body.year() == null ? 0 : body.year(), body.odometerKm(),
                 CorrelationIds.current()));
@@ -63,12 +63,12 @@ final class VehicleController {
      * o domínio recusa com o nome do campo, depois de conferir a empresa (um primitivo faria o corpo vazio morrer em
      * 400 antes da autorização).
      */
-    record RegisterRequest(@Size(max = MAX_TEXT) String plate, @Size(max = MAX_TEXT) String brand,
+    record RegisterVehicleRequest(@Size(max = MAX_TEXT) String plate, @Size(max = MAX_TEXT) String brand,
                            @Size(max = MAX_TEXT) String model, Integer year, Integer odometerKm) {
 
         @Override
         public String toString() {
-            return "RegisterRequest[redacted]";
+            return "RegisterVehicleRequest[redacted]";
         }
     }
 }

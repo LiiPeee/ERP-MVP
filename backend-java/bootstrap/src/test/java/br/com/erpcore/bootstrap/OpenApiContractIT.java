@@ -120,6 +120,20 @@ class OpenApiContractIT {
     }
 
     @Test
+    void givenEveryRequestBody_whenReadingTheSchemas_thenEachOneKeepsItsOwnNameAndFields() {
+        JsonNode schemas = spec().get("components").get("schemas");
+
+        assertThat(schemas.get("RegisterRequest").get("properties").propertyNames()).contains("companyName", "ownerName");
+        assertThat(schemas.get("CreateContactRequest").get("properties").propertyNames()).contains("name", "phone", "email");
+        assertThat(schemas.get("RegisterVehicleRequest").get("properties").propertyNames()).contains("plate", "brand", "year");
+        assertThat(schemas.get("CreateQuoteRequest").get("properties").propertyNames()).contains("contactId", "vehicleId", "items");
+        assertThat(schemas.get("ReviseQuoteItemsRequest").get("properties").propertyNames()).contains("items");
+        assertThat(schemas.get("RejectQuoteRequest").get("properties").propertyNames()).contains("reason");
+        assertThat(schemas.get("UpdateCompanyProfileRequest").get("properties").propertyNames()).contains("displayName");
+        assertThat(schemas.get("QuoteItemRequest").get("properties").propertyNames()).contains("unitPrice");
+    }
+
+    @Test
     void givenThePublicQuoteSchema_whenReadingIt_thenItHasNoPersonalDataFields() {
         String schema = spec().get("components").get("schemas").get("PublicQuoteView").toString();
 

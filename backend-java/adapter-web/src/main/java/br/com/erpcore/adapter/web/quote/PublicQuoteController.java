@@ -1,7 +1,7 @@
 package br.com.erpcore.adapter.web.quote;
 
 import br.com.erpcore.adapter.web.correlation.CorrelationIds;
-import br.com.erpcore.adapter.web.quote.QuoteDtos.RejectRequest;
+import br.com.erpcore.adapter.web.quote.QuoteDtos.RejectQuoteRequest;
 import br.com.erpcore.adapter.web.ratelimit.RateLimits;
 import br.com.erpcore.application.quote.ApproveQuoteByLinkUseCase;
 import br.com.erpcore.application.quote.DecideQuoteByLinkCommand;
@@ -29,7 +29,7 @@ import org.springframework.web.bind.annotation.RestController;
  */
 @RestController
 @RequestMapping(path = "/api/public/quotes/{token}", produces = MediaType.APPLICATION_JSON_VALUE)
-@Tag(name = "Link público do orçamento")
+@Tag(name = "Public quote link")
 final class PublicQuoteController {
 
     private final GetPublicQuoteUseCase getQuote;
@@ -61,7 +61,7 @@ final class PublicQuoteController {
 
     @PostMapping(path = "/reject", consumes = MediaType.APPLICATION_JSON_VALUE)
     @Operation(summary = "O cliente recusa, com motivo opcional. Repetir não muda nada; depois de aprovar, é recusado")
-    PublicQuoteDecision reject(@PathVariable String token, @Valid @RequestBody(required = false) RejectRequest body,
+    PublicQuoteDecision reject(@PathVariable String token, @Valid @RequestBody(required = false) RejectQuoteRequest body,
                                HttpServletRequest request) {
         rateLimits.checkPublicLink(request.getRemoteAddr(), token);
         return reject.execute(new DecideQuoteByLinkCommand(token, body == null ? null : body.reason(),

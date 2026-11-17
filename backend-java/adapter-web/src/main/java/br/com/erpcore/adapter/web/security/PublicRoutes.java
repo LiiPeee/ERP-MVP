@@ -36,6 +36,11 @@ public final class PublicRoutes {
             new Route(HttpMethod.GET, "/me"),
             // A página que o cliente abre pelo link do orçamento.
             new Route(HttpMethod.GET, "/o/*"),
+            // As telas do dono: só entregam o index.html; os dados vêm de /api/**, que exige token.
+            new Route(HttpMethod.GET, "/fila"),
+            new Route(HttpMethod.GET, "/oficina"),
+            new Route(HttpMethod.GET, "/orcamento/novo"),
+            new Route(HttpMethod.GET, "/orcamento/*"),
             new Route(HttpMethod.GET, "/*.js"),
             new Route(HttpMethod.GET, "/*.css"),
             new Route(HttpMethod.GET, "/*.ico"),

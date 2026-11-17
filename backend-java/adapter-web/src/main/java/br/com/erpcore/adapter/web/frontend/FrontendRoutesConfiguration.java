@@ -13,7 +13,8 @@ class FrontendRoutesConfiguration implements WebMvcConfigurer {
 
     @Override
     public void addViewControllers(ViewControllerRegistry registry) {
-        for (String route : new String[] {"/login", "/register", "/me", "/o/{token}"}) {
+        for (String route : new String[] {"/login", "/register", "/me", "/o/{token}", "/fila", "/oficina",
+                "/orcamento/novo", "/orcamento/{id}"}) {
             registry.addViewController(route).setViewName("forward:/index.html");
         }
     }
