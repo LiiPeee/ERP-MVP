@@ -21,7 +21,7 @@ public final class PostgresTestDatabase {
     public static final String SUPERUSER = "bootstrap_superuser_test";
 
     private static final DockerImageName IMAGE = DockerImageName.parse("postgres:18.7-alpine");
-    private static final Path ROLES_SCRIPT = Path.of("..", "infra", "postgres", "init", "01-roles.sql");
+    private static final Path ROLES_SCRIPT = Path.of("..", "..", "infra", "postgres", "init", "01-roles.sql");
     private static final String ROLES_SCRIPT_IN_CONTAINER = "/docker-entrypoint-initdb.d/01-roles.sql";
 
     private static final String DATABASE_NAME = "erp_test";

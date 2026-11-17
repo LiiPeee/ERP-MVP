@@ -28,6 +28,7 @@ jobs:
           java-version: ${{ env.JAVA_VERSION }}
           cache: maven
       - name: ./mvnw verify
+        working-directory: backend-java
         run: ./mvnw --batch-mode --no-transfer-progress verify
 
   secret-scan:
@@ -63,13 +64,14 @@ jobs:
       - name: OWASP Dependency-Check
         env:
           NVD_API_KEY: ${{ secrets.NVD_API_KEY }}
+        working-directory: backend-java
         run: ./mvnw --batch-mode --no-transfer-progress -DskipTests package dependency-check:aggregate
       - name: Guardar relatório
         if: always()
         uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9 # v7.0.2
         with:
           name: dependency-check-report
-          path: target/dependency-check-report.html
+          path: backend-java/target/dependency-check-report.html
           if-no-files-found: ignore
 
   frontend:
@@ -77,14 +79,14 @@ jobs:
     runs-on: ubuntu-24.04
     defaults:
       run:
-        working-directory: frontend
+        working-directory: frontend-angular
     steps:
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
       - uses: actions/setup-node@949feb2413d6458794dcd2491c4babbbce0c15c1 # v7.1.0
         with:
           node-version: "24.22.3"
           cache: npm
-          cache-dependency-path: frontend/package-lock.json
+          cache-dependency-path: frontend-angular/package-lock.json
       - run: npm ci
       - run: npm test -- --watch=false
       - run: npm run build
@@ -102,9 +104,10 @@ jobs:
           java-version: ${{ env.JAVA_VERSION }}
           cache: maven
       - name: Gerar o cliente a partir de openapi/openapi.json
+        working-directory: backend-java
         run: ./mvnw --batch-mode --no-transfer-progress -N -Pgenerate-client generate-sources
       - name: O cliente versionado precisa ser igual ao gerado
-        run: git diff --exit-code -- frontend/src/app/api
+        run: git diff --exit-code -- frontend-angular/src/app/api
 
   e2e:
     name: Ponta a ponta (Playwright)

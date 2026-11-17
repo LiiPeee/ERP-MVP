@@ -25,7 +25,7 @@ import tools.jackson.databind.json.JsonMapper;
 @TestPropertySource(properties = "springdoc.api-docs.enabled=true")
 class OpenApiContractIT {
 
-    private static final Path SNAPSHOT = Path.of("..", "openapi", "openapi.json");
+    private static final Path SNAPSHOT = Path.of("..", "..", "openapi", "openapi.json");
     private static final JsonMapper SORTED = JsonMapper.builder()
             .enable(SerializationFeature.INDENT_OUTPUT)
             .enable(SerializationFeature.ORDER_MAP_ENTRIES_BY_KEYS)

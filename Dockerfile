@@ -2,9 +2,9 @@ FROM node:24.22.3-bookworm-slim AS frontend
 WORKDIR /frontend
 ENV NG_CLI_ANALYTICS=false
 # O .npmrc bloqueia scripts de instalação de pacotes; npm ci instala exatamente o que está no package-lock.json.
-COPY frontend/package.json frontend/package-lock.json frontend/.npmrc ./
+COPY frontend-angular/package.json frontend-angular/package-lock.json frontend-angular/.npmrc ./
 RUN npm ci
-COPY frontend/ ./
+COPY frontend-angular/ ./
 RUN npm run build
 
 FROM eclipse-temurin:21.0.13_9-jdk-noble AS build
@@ -15,14 +15,14 @@ RUN apt-get update \
     && apt-get install --yes --no-install-recommends unzip \
     && rm -rf /var/lib/apt/lists/*
 
-COPY mvnw pom.xml ./
-COPY .mvn/ .mvn/
-COPY domain/ domain/
-COPY application/ application/
-COPY adapter-web/ adapter-web/
-COPY adapter-persistence/ adapter-persistence/
-COPY adapter-infra/ adapter-infra/
-COPY bootstrap/ bootstrap/
+COPY backend-java/mvnw backend-java/pom.xml ./
+COPY backend-java/.mvn/ .mvn/
+COPY backend-java/domain/ domain/
+COPY backend-java/application/ application/
+COPY backend-java/adapter-web/ adapter-web/
+COPY backend-java/adapter-persistence/ adapter-persistence/
+COPY backend-java/adapter-infra/ adapter-infra/
+COPY backend-java/bootstrap/ bootstrap/
 
 # Os testes rodam no CI (precisam de Docker); aqui só empacotamos.
 RUN ./mvnw --batch-mode --no-transfer-progress -DskipTests package
