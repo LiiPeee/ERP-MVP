@@ -7,7 +7,7 @@ RUN npm ci
 COPY frontend-angular/ ./
 RUN npm run build
 
-FROM eclipse-temurin:21.0.13_9-jdk-noble AS build
+FROM eclipse-temurin:24.0.2_12-jdk-noble AS build
 WORKDIR /workspace
 
 # O wrapper valida o hash do Maven sobre o .zip, por isso o unzip é necessário.
@@ -27,7 +27,7 @@ COPY backend-java/bootstrap/ bootstrap/
 # Os testes rodam no CI (precisam de Docker); aqui só empacotamos.
 RUN ./mvnw --batch-mode --no-transfer-progress -DskipTests package
 
-FROM eclipse-temurin:21.0.13_9-jre-noble
+FROM eclipse-temurin:24.0.2_12-jre-noble
 RUN groupadd --system erp && useradd --system --gid erp --no-create-home erp
 WORKDIR /app
 COPY --from=build /workspace/bootstrap/target/erp-core.jar erp-core.jar
