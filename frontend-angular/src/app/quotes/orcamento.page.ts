@@ -4,7 +4,7 @@ import { firstValueFrom } from 'rxjs';
 import { QuoteSentResult, QuoteView, QuotesService } from '../api';
 import { problemMessage } from '../session/problem-message';
 import { formatDay, formatValidUntil } from '../shared/dates';
-import { formatMoney } from '../shared/money-text';
+import { formatMoney, formatQuantity } from '../shared/money-text';
 import { ButtonComponent } from '../ui/button';
 import { ConfirmDialogService } from '../ui/confirm-dialog.service';
 import { NoticeComponent } from '../ui/notice';
@@ -36,7 +36,7 @@ import { ItemRow, QuoteItemsEditorComponent, rowsToRequests } from './quote-item
           @for (item of current.items; track $index) {
             <li>
               <span class="what">{{ item.description }}</span>
-              <span class="how num">{{ item.quantity }} × {{ money(item.unitPrice) }}</span>
+              <span class="how num">{{ qty(item.quantity) }} × {{ money(item.unitPrice) }}</span>
               <span class="sum num">{{ money(item.lineTotal) }}</span>
             </li>
           }
@@ -119,6 +119,7 @@ export class OrcamentoPage implements OnInit {
   protected readonly link = signal<QuoteSentResult | null>(null);
   protected readonly copied = signal(false);
   protected readonly money = formatMoney;
+  protected readonly qty = formatQuantity;
   protected readonly day = formatDay;
 
   async ngOnInit(): Promise<void> {

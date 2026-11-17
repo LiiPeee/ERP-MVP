@@ -1,4 +1,4 @@
-import { formatMoney, toApiDecimal } from './money-text';
+import { formatMoney, formatQuantity, toApiDecimal } from './money-text';
 
 describe('formatMoney', () => {
   it('dado o texto decimal da API, quando formata, então mostra reais no padrão brasileiro', () => {
@@ -25,5 +25,21 @@ describe('toApiDecimal', () => {
 
   it.each(['', 'abc', '1,2,3', '-5', '1.234,56'])('dado "%s", quando converte, então é recusado', (typed) => {
     expect(toApiDecimal(typed)).toBeNull();
+  });
+});
+
+describe('formatQuantity', () => {
+  it.each([
+    ['1.000', '1'],
+    ['2.500', '2,5'],
+    ['0.250', '0,25'],
+    ['12.000', '12'],
+  ])('dado "%s" da API, quando formata, então mostra "%s" sem zeros inúteis', (api, shown) => {
+    expect(formatQuantity(api)).toBe(shown);
+  });
+
+  it('dado nada ou texto inválido, quando formata, então devolve travessão', () => {
+    expect(formatQuantity(undefined)).toBe('—');
+    expect(formatQuantity('x')).toBe('—');
   });
 });

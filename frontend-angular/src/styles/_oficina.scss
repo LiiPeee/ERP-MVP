@@ -94,6 +94,18 @@ main {
   padding: var(--space-2) var(--space-4);
   border-bottom: var(--line) solid var(--color-rule);
 
+  // A régua da barra já separa do conteúdo: o menu não leva a sua. Alvos de toque de 48 px.
+  erp-nav nav {
+    padding: 0;
+    border-bottom: 0;
+
+    a {
+      display: inline-flex;
+      align-items: center;
+      min-height: var(--control-height);
+    }
+  }
+
   .link-button {
     min-height: var(--control-height);
     padding: 0 var(--space-2);
@@ -137,6 +149,15 @@ app-fila-page {
     padding-bottom: var(--space-1);
     border-bottom: var(--line-strong) solid var(--color-ink);
     font-size: var(--text-m);
+  }
+
+  // Bloco vazio ocupa pouco: a orientação cabe em duas linhas e não empurra o que tem conteúdo.
+  erp-empty-state {
+    padding: var(--space-3) 0 var(--space-2);
+
+    p {
+      margin: var(--space-1) 0 0;
+    }
   }
 
   .count {

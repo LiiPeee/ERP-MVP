@@ -24,7 +24,7 @@ backend-java/            monólito modular em Java (Maven multi-módulo)
   adapter-persistence/   entidades JPA, adaptadores, migrações Flyway, Row Level Security
   adapter-infra/         Argon2id, refresh token, JWT, ids, mascaramento de logs
   bootstrap/             configuração do Spring, injeção de dependências, main
-frontend-angular/        Angular 22: tokens de design, componentes base (src/app/ui), protótipo do caixa e cliente HTTP gerado do OpenAPI
+frontend-angular/        Angular 22: tokens de design, componentes base (src/app/ui), telas da oficina (src/app/quotes) e cliente HTTP gerado do OpenAPI
 e2e/                     testes de ponta a ponta (Playwright)
 openapi/                 contrato da API (fonte do cliente do frontend)
 infra/                   scripts do banco (papéis)
@@ -82,11 +82,11 @@ cd e2e && npx playwright test             # ponta a ponta contra a pilha do Comp
   `./mvnw verify -pl domain,application,adapter-infra,adapter-web` e depois
   `./mvnw verify -pl adapter-persistence,bootstrap -am` (dentro de `backend-java/`). Os heaps já são limitados em `.mvn/jvm.config` e no pom raiz.
 - No **Windows**, o `mvnw.cmd` chamado do PowerShell 7 falha em alguns ambientes; use o `./mvnw` pelo Git Bash.
-- **Ponta a ponta:** o teste cria várias contas e o limite padrão é 5 cadastros por hora por IP. Suba a pilha assim:
-  `ERP_WEB_RATE_LIMIT_REGISTER_PER_IP=1000 ERP_WEB_RATE_LIMIT_LOGIN_PER_IP=1000 ERP_WEB_RATE_LIMIT_LOGIN_PER_EMAIL=1000 docker compose up --build`.
+- **Ponta a ponta:** os testes criam várias contas, recarregam a página (cada recarga renova a sessão) e abrem links; os limites
+  padrão (5 cadastros por hora, 30 renovações por minuto, 60 aberturas de link por minuto, por IP) os travariam. Suba a pilha assim:
+  `ERP_WEB_RATE_LIMIT_REGISTER_PER_IP=1000 ERP_WEB_RATE_LIMIT_LOGIN_PER_IP=1000 ERP_WEB_RATE_LIMIT_LOGIN_PER_EMAIL=1000 ERP_WEB_RATE_LIMIT_REFRESH_PER_IP=1000 ERP_WEB_RATE_LIMIT_PUBLIC_LINK_PER_IP=1000 ERP_WEB_RATE_LIMIT_PUBLIC_LINK_PER_TOKEN=1000 docker compose up --build`.
+  Capturas das telas (desktop e celular) em `e2e/capturas/fase-1/`: `E2E_CAPTURAS=1 npx playwright test tests/orcamento.spec.ts`.
   Sem baixar navegador, use o Edge instalado: `PLAYWRIGHT_CHANNEL=msedge npx playwright test`.
-- **Protótipo de design** (`/caixa` e `/componentes`, sem backend): `cd frontend-angular && npx ng serve`, e em `e2e/`:
-  `E2E_DESIGN=1 E2E_BASE_URL=http://127.0.0.1:4200 PLAYWRIGHT_CHANNEL=msedge npx playwright test`. Capturas: `node capturas/capturar-design.mjs` (mesmas variáveis, sem `E2E_DESIGN`).
 
 ## Contrato da API e cliente do frontend
 
@@ -120,4 +120,4 @@ jurídica foi inventada: onde falta decisão há `TODO(decisão)`.
 - Como confiar em `X-Forwarded-For` atrás de proxy reverso (limites de requisição por IP).
 - Nome definitivo do produto e domínio (cookie e CORS): provisório em desenvolvimento.
 
-Relatórios: [Fase 0](docs/relatorios/fase-0.md) e [Fase 0.5, identidade visual](docs/relatorios/fase-0.5.md). Direção de arte em [docs/design/](docs/design/direcao.md). Telas de protótipo, sem backend: `/caixa` e `/componentes`. Roteiro de teste manual: [docs/roteiro-teste-manual.md](docs/roteiro-teste-manual.md). Decisões: [docs/adr/](docs/adr/).
+Relatórios: [Fase 0](docs/relatorios/fase-0.md) e [Fase 0.5, identidade visual](docs/relatorios/fase-0.5.md). Direção de arte em [docs/design/](docs/design/direcao.md). Relatório da [Fase 1, núcleo do orçamento](docs/relatorios/fase-1.md). Roteiro de teste manual: [docs/roteiro-teste-manual.md](docs/roteiro-teste-manual.md). Decisões: [docs/adr/](docs/adr/).

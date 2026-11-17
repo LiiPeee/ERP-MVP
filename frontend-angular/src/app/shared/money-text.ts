@@ -12,3 +12,11 @@ export function toApiDecimal(typed: string): string | null {
   const cleaned = typed.replace(/R\$|\s/g, '');
   return TYPED_DECIMAL.test(cleaned) ? cleaned.replace(',', '.') : null;
 }
+
+const quantity = new Intl.NumberFormat('pt-BR', { maximumFractionDigits: 3 });
+
+/** A API manda a quantidade com 3 casas ("1.000"); na tela vai sem zeros inúteis ("1", "2,5"). */
+export function formatQuantity(text: string | undefined): string {
+  const amount = text === undefined ? Number.NaN : Number(text);
+  return Number.isFinite(amount) ? quantity.format(amount) : '—';
+}

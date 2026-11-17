@@ -29,7 +29,9 @@ test('cadastrar, ver o contexto, recarregar, sair e entrar de novo', async ({ pa
 
   await register(page, account);
 
-  await expect(page).toHaveURL(/\/me$/);
+  // Depois de entrar, a tela inicial é a fila de orçamentos; "Quem sou eu" fica em /me.
+  await expect(page).toHaveURL(/\/fila$/);
+  await page.goto('/me');
   await expect(page.getByTestId('email')).toHaveText(account.email);
   await expect(page.getByTestId('display-name')).toHaveText(account.owner);
   await expect(page.getByTestId('company-name')).toHaveText(account.company);
@@ -46,7 +48,8 @@ test('cadastrar, ver o contexto, recarregar, sair e entrar de novo', async ({ pa
   await expect(page).toHaveURL(/\/login$/);
 
   await login(page, account.email, PASSWORD);
-  await expect(page).toHaveURL(/\/me$/);
+  await expect(page).toHaveURL(/\/fila$/);
+  await page.goto('/me');
   await expect(page.getByTestId('company-name')).toHaveText(account.company);
 });
 
@@ -89,7 +92,7 @@ test('o navegador guarda o token só onde deve e a página não depende de terce
   page.on('request', (request) => hosts.add(new URL(request.url()).host));
 
   await register(page, account);
-  await expect(page).toHaveURL(/\/me$/);
+  await expect(page).toHaveURL(/\/fila$/);
 
   const storage = await page.evaluate(() => ({
     local: localStorage.length,

@@ -3,7 +3,7 @@ import { Observable, firstValueFrom } from 'rxjs';
 import { PublicQuoteDecision, PublicQuoteLinkService, PublicQuoteView } from '../api';
 import { problemCode, problemMessage } from '../session/problem-message';
 import { formatValidUntil } from '../shared/dates';
-import { formatMoney } from '../shared/money-text';
+import { formatMoney, formatQuantity } from '../shared/money-text';
 import { ButtonComponent } from '../ui/button';
 import { NoticeComponent } from '../ui/notice';
 import { SkeletonComponent } from '../ui/skeleton';
@@ -27,7 +27,7 @@ import { TextFieldComponent } from '../ui/text-field';
         @for (item of current.items; track $index) {
           <li>
             <span class="what">{{ item.description }}</span>
-            <span class="how num">{{ item.quantity }} × {{ money(item.unitPrice) }}</span>
+            <span class="how num">{{ qty(item.quantity) }} × {{ money(item.unitPrice) }}</span>
             <span class="sum num">{{ money(item.lineTotal) }}</span>
           </li>
         }
@@ -84,6 +84,7 @@ export class PublicoPage implements OnInit {
   protected readonly rejecting = signal(false);
   protected readonly reason = signal('');
   protected readonly money = formatMoney;
+  protected readonly qty = formatQuantity;
 
   async ngOnInit(): Promise<void> {
     try {
