@@ -134,6 +134,17 @@ class OpenApiContractIT {
     }
 
     @Test
+    void givenEveryOperation_whenReadingItsId_thenItIsAReadableNameWithoutAutomaticNumberSuffix() {
+        JsonNode paths = spec().get("paths");
+        java.util.List<String> ids = new java.util.ArrayList<>();
+        paths.propertyNames().forEach(path -> paths.get(path).propertyNames()
+                .forEach(method -> ids.add(paths.get(path).get(method).get("operationId").asString())));
+
+        assertThat(ids).doesNotHaveDuplicates().allSatisfy(id -> assertThat(id).doesNotMatch(".*[0-9]$"));
+        assertThat(ids).contains("registerVehicle", "register", "listQuotes", "getPublicQuote");
+    }
+
+    @Test
     void givenThePublicQuoteSchema_whenReadingIt_thenItHasNoPersonalDataFields() {
         String schema = spec().get("components").get("schemas").get("PublicQuoteView").toString();
 

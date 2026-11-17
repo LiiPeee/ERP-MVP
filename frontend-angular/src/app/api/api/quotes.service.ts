@@ -51,12 +51,12 @@ export class QuotesService extends BaseService {
      * @param reportProgress flag to report request and response progress.
      * @param options additional options
      */
-    public cancel(quoteId: string, observe?: 'body', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json', context?: HttpContext, transferCache?: boolean}): Observable<QuoteView>;
-    public cancel(quoteId: string, observe?: 'response', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json', context?: HttpContext, transferCache?: boolean}): Observable<HttpResponse<QuoteView>>;
-    public cancel(quoteId: string, observe?: 'events', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json', context?: HttpContext, transferCache?: boolean}): Observable<HttpEvent<QuoteView>>;
-    public cancel(quoteId: string, observe: any = 'body', reportProgress: boolean = false, options?: {httpHeaderAccept?: 'application/json', context?: HttpContext, transferCache?: boolean}): Observable<any> {
+    public cancelQuote(quoteId: string, observe?: 'body', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json', context?: HttpContext, transferCache?: boolean}): Observable<QuoteView>;
+    public cancelQuote(quoteId: string, observe?: 'response', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json', context?: HttpContext, transferCache?: boolean}): Observable<HttpResponse<QuoteView>>;
+    public cancelQuote(quoteId: string, observe?: 'events', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json', context?: HttpContext, transferCache?: boolean}): Observable<HttpEvent<QuoteView>>;
+    public cancelQuote(quoteId: string, observe: any = 'body', reportProgress: boolean = false, options?: {httpHeaderAccept?: 'application/json', context?: HttpContext, transferCache?: boolean}): Observable<any> {
         if (quoteId === null || quoteId === undefined) {
-            throw new Error('Required parameter quoteId was null or undefined when calling cancel.');
+            throw new Error('Required parameter quoteId was null or undefined when calling cancelQuote.');
         }
 
         let localVarHeaders = this.defaultHeaders;
@@ -110,12 +110,12 @@ export class QuotesService extends BaseService {
      * @param reportProgress flag to report request and response progress.
      * @param options additional options
      */
-    public confirm(quoteId: string, observe?: 'body', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json', context?: HttpContext, transferCache?: boolean}): Observable<QuoteSentResult>;
-    public confirm(quoteId: string, observe?: 'response', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json', context?: HttpContext, transferCache?: boolean}): Observable<HttpResponse<QuoteSentResult>>;
-    public confirm(quoteId: string, observe?: 'events', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json', context?: HttpContext, transferCache?: boolean}): Observable<HttpEvent<QuoteSentResult>>;
-    public confirm(quoteId: string, observe: any = 'body', reportProgress: boolean = false, options?: {httpHeaderAccept?: 'application/json', context?: HttpContext, transferCache?: boolean}): Observable<any> {
+    public confirmQuote(quoteId: string, observe?: 'body', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json', context?: HttpContext, transferCache?: boolean}): Observable<QuoteSentResult>;
+    public confirmQuote(quoteId: string, observe?: 'response', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json', context?: HttpContext, transferCache?: boolean}): Observable<HttpResponse<QuoteSentResult>>;
+    public confirmQuote(quoteId: string, observe?: 'events', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json', context?: HttpContext, transferCache?: boolean}): Observable<HttpEvent<QuoteSentResult>>;
+    public confirmQuote(quoteId: string, observe: any = 'body', reportProgress: boolean = false, options?: {httpHeaderAccept?: 'application/json', context?: HttpContext, transferCache?: boolean}): Observable<any> {
         if (quoteId === null || quoteId === undefined) {
-            throw new Error('Required parameter quoteId was null or undefined when calling confirm.');
+            throw new Error('Required parameter quoteId was null or undefined when calling confirmQuote.');
         }
 
         let localVarHeaders = this.defaultHeaders;
@@ -169,12 +169,12 @@ export class QuotesService extends BaseService {
      * @param reportProgress flag to report request and response progress.
      * @param options additional options
      */
-    public createDraft(createQuoteRequest: CreateQuoteRequest, observe?: 'body', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json', context?: HttpContext, transferCache?: boolean}): Observable<QuoteView>;
-    public createDraft(createQuoteRequest: CreateQuoteRequest, observe?: 'response', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json', context?: HttpContext, transferCache?: boolean}): Observable<HttpResponse<QuoteView>>;
-    public createDraft(createQuoteRequest: CreateQuoteRequest, observe?: 'events', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json', context?: HttpContext, transferCache?: boolean}): Observable<HttpEvent<QuoteView>>;
-    public createDraft(createQuoteRequest: CreateQuoteRequest, observe: any = 'body', reportProgress: boolean = false, options?: {httpHeaderAccept?: 'application/json', context?: HttpContext, transferCache?: boolean}): Observable<any> {
+    public createQuoteDraft(createQuoteRequest: CreateQuoteRequest, observe?: 'body', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json', context?: HttpContext, transferCache?: boolean}): Observable<QuoteView>;
+    public createQuoteDraft(createQuoteRequest: CreateQuoteRequest, observe?: 'response', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json', context?: HttpContext, transferCache?: boolean}): Observable<HttpResponse<QuoteView>>;
+    public createQuoteDraft(createQuoteRequest: CreateQuoteRequest, observe?: 'events', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json', context?: HttpContext, transferCache?: boolean}): Observable<HttpEvent<QuoteView>>;
+    public createQuoteDraft(createQuoteRequest: CreateQuoteRequest, observe: any = 'body', reportProgress: boolean = false, options?: {httpHeaderAccept?: 'application/json', context?: HttpContext, transferCache?: boolean}): Observable<any> {
         if (createQuoteRequest === null || createQuoteRequest === undefined) {
-            throw new Error('Required parameter createQuoteRequest was null or undefined when calling createDraft.');
+            throw new Error('Required parameter createQuoteRequest was null or undefined when calling createQuoteDraft.');
         }
 
         let localVarHeaders = this.defaultHeaders;
@@ -238,12 +238,12 @@ export class QuotesService extends BaseService {
      * @param reportProgress flag to report request and response progress.
      * @param options additional options
      */
-    public get1(quoteId: string, observe?: 'body', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json', context?: HttpContext, transferCache?: boolean}): Observable<QuoteView>;
-    public get1(quoteId: string, observe?: 'response', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json', context?: HttpContext, transferCache?: boolean}): Observable<HttpResponse<QuoteView>>;
-    public get1(quoteId: string, observe?: 'events', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json', context?: HttpContext, transferCache?: boolean}): Observable<HttpEvent<QuoteView>>;
-    public get1(quoteId: string, observe: any = 'body', reportProgress: boolean = false, options?: {httpHeaderAccept?: 'application/json', context?: HttpContext, transferCache?: boolean}): Observable<any> {
+    public getQuote(quoteId: string, observe?: 'body', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json', context?: HttpContext, transferCache?: boolean}): Observable<QuoteView>;
+    public getQuote(quoteId: string, observe?: 'response', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json', context?: HttpContext, transferCache?: boolean}): Observable<HttpResponse<QuoteView>>;
+    public getQuote(quoteId: string, observe?: 'events', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json', context?: HttpContext, transferCache?: boolean}): Observable<HttpEvent<QuoteView>>;
+    public getQuote(quoteId: string, observe: any = 'body', reportProgress: boolean = false, options?: {httpHeaderAccept?: 'application/json', context?: HttpContext, transferCache?: boolean}): Observable<any> {
         if (quoteId === null || quoteId === undefined) {
-            throw new Error('Required parameter quoteId was null or undefined when calling get1.');
+            throw new Error('Required parameter quoteId was null or undefined when calling getQuote.');
         }
 
         let localVarHeaders = this.defaultHeaders;
@@ -296,10 +296,10 @@ export class QuotesService extends BaseService {
      * @param reportProgress flag to report request and response progress.
      * @param options additional options
      */
-    public queue(observe?: 'body', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json', context?: HttpContext, transferCache?: boolean}): Observable<QuoteQueue>;
-    public queue(observe?: 'response', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json', context?: HttpContext, transferCache?: boolean}): Observable<HttpResponse<QuoteQueue>>;
-    public queue(observe?: 'events', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json', context?: HttpContext, transferCache?: boolean}): Observable<HttpEvent<QuoteQueue>>;
-    public queue(observe: any = 'body', reportProgress: boolean = false, options?: {httpHeaderAccept?: 'application/json', context?: HttpContext, transferCache?: boolean}): Observable<any> {
+    public listQuotes(observe?: 'body', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json', context?: HttpContext, transferCache?: boolean}): Observable<QuoteQueue>;
+    public listQuotes(observe?: 'response', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json', context?: HttpContext, transferCache?: boolean}): Observable<HttpResponse<QuoteQueue>>;
+    public listQuotes(observe?: 'events', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json', context?: HttpContext, transferCache?: boolean}): Observable<HttpEvent<QuoteQueue>>;
+    public listQuotes(observe: any = 'body', reportProgress: boolean = false, options?: {httpHeaderAccept?: 'application/json', context?: HttpContext, transferCache?: boolean}): Observable<any> {
 
         let localVarHeaders = this.defaultHeaders;
 
@@ -352,12 +352,12 @@ export class QuotesService extends BaseService {
      * @param reportProgress flag to report request and response progress.
      * @param options additional options
      */
-    public resend(quoteId: string, observe?: 'body', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json', context?: HttpContext, transferCache?: boolean}): Observable<QuoteSentResult>;
-    public resend(quoteId: string, observe?: 'response', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json', context?: HttpContext, transferCache?: boolean}): Observable<HttpResponse<QuoteSentResult>>;
-    public resend(quoteId: string, observe?: 'events', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json', context?: HttpContext, transferCache?: boolean}): Observable<HttpEvent<QuoteSentResult>>;
-    public resend(quoteId: string, observe: any = 'body', reportProgress: boolean = false, options?: {httpHeaderAccept?: 'application/json', context?: HttpContext, transferCache?: boolean}): Observable<any> {
+    public resendQuote(quoteId: string, observe?: 'body', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json', context?: HttpContext, transferCache?: boolean}): Observable<QuoteSentResult>;
+    public resendQuote(quoteId: string, observe?: 'response', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json', context?: HttpContext, transferCache?: boolean}): Observable<HttpResponse<QuoteSentResult>>;
+    public resendQuote(quoteId: string, observe?: 'events', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json', context?: HttpContext, transferCache?: boolean}): Observable<HttpEvent<QuoteSentResult>>;
+    public resendQuote(quoteId: string, observe: any = 'body', reportProgress: boolean = false, options?: {httpHeaderAccept?: 'application/json', context?: HttpContext, transferCache?: boolean}): Observable<any> {
         if (quoteId === null || quoteId === undefined) {
-            throw new Error('Required parameter quoteId was null or undefined when calling resend.');
+            throw new Error('Required parameter quoteId was null or undefined when calling resendQuote.');
         }
 
         let localVarHeaders = this.defaultHeaders;
@@ -412,15 +412,15 @@ export class QuotesService extends BaseService {
      * @param reportProgress flag to report request and response progress.
      * @param options additional options
      */
-    public reviseItems(quoteId: string, reviseQuoteItemsRequest: ReviseQuoteItemsRequest, observe?: 'body', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json', context?: HttpContext, transferCache?: boolean}): Observable<QuoteView>;
-    public reviseItems(quoteId: string, reviseQuoteItemsRequest: ReviseQuoteItemsRequest, observe?: 'response', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json', context?: HttpContext, transferCache?: boolean}): Observable<HttpResponse<QuoteView>>;
-    public reviseItems(quoteId: string, reviseQuoteItemsRequest: ReviseQuoteItemsRequest, observe?: 'events', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json', context?: HttpContext, transferCache?: boolean}): Observable<HttpEvent<QuoteView>>;
-    public reviseItems(quoteId: string, reviseQuoteItemsRequest: ReviseQuoteItemsRequest, observe: any = 'body', reportProgress: boolean = false, options?: {httpHeaderAccept?: 'application/json', context?: HttpContext, transferCache?: boolean}): Observable<any> {
+    public reviseQuoteItems(quoteId: string, reviseQuoteItemsRequest: ReviseQuoteItemsRequest, observe?: 'body', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json', context?: HttpContext, transferCache?: boolean}): Observable<QuoteView>;
+    public reviseQuoteItems(quoteId: string, reviseQuoteItemsRequest: ReviseQuoteItemsRequest, observe?: 'response', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json', context?: HttpContext, transferCache?: boolean}): Observable<HttpResponse<QuoteView>>;
+    public reviseQuoteItems(quoteId: string, reviseQuoteItemsRequest: ReviseQuoteItemsRequest, observe?: 'events', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json', context?: HttpContext, transferCache?: boolean}): Observable<HttpEvent<QuoteView>>;
+    public reviseQuoteItems(quoteId: string, reviseQuoteItemsRequest: ReviseQuoteItemsRequest, observe: any = 'body', reportProgress: boolean = false, options?: {httpHeaderAccept?: 'application/json', context?: HttpContext, transferCache?: boolean}): Observable<any> {
         if (quoteId === null || quoteId === undefined) {
-            throw new Error('Required parameter quoteId was null or undefined when calling reviseItems.');
+            throw new Error('Required parameter quoteId was null or undefined when calling reviseQuoteItems.');
         }
         if (reviseQuoteItemsRequest === null || reviseQuoteItemsRequest === undefined) {
-            throw new Error('Required parameter reviseQuoteItemsRequest was null or undefined when calling reviseItems.');
+            throw new Error('Required parameter reviseQuoteItemsRequest was null or undefined when calling reviseQuoteItems.');
         }
 
         let localVarHeaders = this.defaultHeaders;

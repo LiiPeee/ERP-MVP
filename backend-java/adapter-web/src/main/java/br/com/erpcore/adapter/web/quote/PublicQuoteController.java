@@ -46,21 +46,21 @@ final class PublicQuoteController {
     }
 
     @GetMapping
-    @Operation(summary = "O orçamento como o cliente vê: só o necessário para decidir")
+    @Operation(operationId = "getPublicQuote", summary = "O orçamento como o cliente vê: só o necessário para decidir")
     PublicQuoteView view(@PathVariable String token, HttpServletRequest request) {
         rateLimits.checkPublicLink(request.getRemoteAddr(), token);
         return getQuote.execute(new GetPublicQuoteQuery(token));
     }
 
     @PostMapping("/approve")
-    @Operation(summary = "O cliente aprova. Repetir não muda nada; depois de recusar, é recusado")
+    @Operation(operationId = "approveQuoteByLink", summary = "O cliente aprova. Repetir não muda nada; depois de recusar, é recusado")
     PublicQuoteDecision approve(@PathVariable String token, HttpServletRequest request) {
         rateLimits.checkPublicLink(request.getRemoteAddr(), token);
         return approve.execute(new DecideQuoteByLinkCommand(token, null, CorrelationIds.current()));
     }
 
     @PostMapping(path = "/reject", consumes = MediaType.APPLICATION_JSON_VALUE)
-    @Operation(summary = "O cliente recusa, com motivo opcional. Repetir não muda nada; depois de aprovar, é recusado")
+    @Operation(operationId = "rejectQuoteByLink", summary = "O cliente recusa, com motivo opcional. Repetir não muda nada; depois de aprovar, é recusado")
     PublicQuoteDecision reject(@PathVariable String token, @Valid @RequestBody(required = false) RejectQuoteRequest body,
                                HttpServletRequest request) {
         rateLimits.checkPublicLink(request.getRemoteAddr(), token);

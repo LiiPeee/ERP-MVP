@@ -47,7 +47,7 @@ final class ContactController {
      * clientes mais recentes. A query string não é registrada em log.
      */
     @GetMapping
-    @Operation(summary = "Busca clientes pelo nome (no máximo 50); telefone e e-mail voltam mascarados")
+    @Operation(operationId = "listContacts", summary = "Busca clientes pelo nome (no máximo 50); telefone e e-mail voltam mascarados")
     List<ContactView> list(@AuthenticationPrincipal Jwt token,
                            @RequestParam(name = "name", required = false) @Size(max = MAX_NAME) String name,
                            @RequestParam(name = "limit", defaultValue = "0") int limit) {
@@ -56,7 +56,7 @@ final class ContactController {
 
     @PostMapping(consumes = MediaType.APPLICATION_JSON_VALUE)
     @ResponseStatus(HttpStatus.CREATED)
-    @Operation(summary = "Cadastra um cliente (telefone obrigatório, e-mail opcional)")
+    @Operation(operationId = "createContact", summary = "Cadastra um cliente (telefone obrigatório, e-mail opcional)")
     ContactView create(@AuthenticationPrincipal Jwt token, @Valid @RequestBody CreateContactRequest body) {
         return createContact.execute(new CreateContactCommand(Principals.of(token), body.name(), body.phone(),
                 body.email(), CorrelationIds.current()));

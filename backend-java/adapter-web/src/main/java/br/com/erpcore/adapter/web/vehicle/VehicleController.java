@@ -43,14 +43,14 @@ final class VehicleController {
     }
 
     @GetMapping
-    @Operation(summary = "Os veículos de um cliente; a placa volta mascarada")
+    @Operation(operationId = "listVehicles", summary = "Os veículos de um cliente; a placa volta mascarada")
     List<VehicleView> list(@AuthenticationPrincipal Jwt token, @PathVariable UUID contactId) {
         return listVehicles.execute(new ListVehiclesQuery(Principals.of(token), contactId));
     }
 
     @PostMapping(consumes = MediaType.APPLICATION_JSON_VALUE)
     @ResponseStatus(HttpStatus.CREATED)
-    @Operation(summary = "Cadastra um veículo do cliente")
+    @Operation(operationId = "registerVehicle", summary = "Cadastra um veículo do cliente")
     VehicleView register(@AuthenticationPrincipal Jwt token, @PathVariable UUID contactId,
                          @Valid @RequestBody RegisterVehicleRequest body) {
         return registerVehicle.execute(new RegisterVehicleCommand(Principals.of(token), contactId, body.plate(),

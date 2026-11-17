@@ -615,7 +615,7 @@
     },
     "/api/auth/register" : {
       "post" : {
-        "operationId" : "register_1",
+        "operationId" : "register",
         "requestBody" : {
           "content" : {
             "application/json" : {
@@ -644,7 +644,7 @@
     },
     "/api/company-profile" : {
       "get" : {
-        "operationId" : "get",
+        "operationId" : "getCompanyProfile",
         "responses" : {
           "200" : {
             "content" : {
@@ -664,7 +664,7 @@
         "tags" : [ "Company profile" ]
       },
       "put" : {
-        "operationId" : "update",
+        "operationId" : "updateCompanyProfile",
         "requestBody" : {
           "content" : {
             "application/json" : {
@@ -696,7 +696,7 @@
     },
     "/api/contacts" : {
       "get" : {
-        "operationId" : "list",
+        "operationId" : "listContacts",
         "parameters" : [ {
           "in" : "query",
           "name" : "name",
@@ -738,7 +738,7 @@
         "tags" : [ "Contacts" ]
       },
       "post" : {
-        "operationId" : "create",
+        "operationId" : "createContact",
         "requestBody" : {
           "content" : {
             "application/json" : {
@@ -770,7 +770,7 @@
     },
     "/api/contacts/{contactId}/vehicles" : {
       "get" : {
-        "operationId" : "list_1",
+        "operationId" : "listVehicles",
         "parameters" : [ {
           "in" : "path",
           "name" : "contactId",
@@ -802,7 +802,7 @@
         "tags" : [ "Vehicles" ]
       },
       "post" : {
-        "operationId" : "register",
+        "operationId" : "registerVehicle",
         "parameters" : [ {
           "in" : "path",
           "name" : "contactId",
@@ -865,7 +865,7 @@
     },
     "/api/public/quotes/{token}" : {
       "get" : {
-        "operationId" : "view",
+        "operationId" : "getPublicQuote",
         "parameters" : [ {
           "in" : "path",
           "name" : "token",
@@ -892,7 +892,7 @@
     },
     "/api/public/quotes/{token}/approve" : {
       "post" : {
-        "operationId" : "approve",
+        "operationId" : "approveQuoteByLink",
         "parameters" : [ {
           "in" : "path",
           "name" : "token",
@@ -919,7 +919,7 @@
     },
     "/api/public/quotes/{token}/reject" : {
       "post" : {
-        "operationId" : "reject",
+        "operationId" : "rejectQuoteByLink",
         "parameters" : [ {
           "in" : "path",
           "name" : "token",
@@ -955,7 +955,7 @@
     },
     "/api/quotes" : {
       "get" : {
-        "operationId" : "queue",
+        "operationId" : "listQuotes",
         "responses" : {
           "200" : {
             "content" : {
@@ -975,7 +975,7 @@
         "tags" : [ "Quotes" ]
       },
       "post" : {
-        "operationId" : "createDraft",
+        "operationId" : "createQuoteDraft",
         "requestBody" : {
           "content" : {
             "application/json" : {
@@ -1007,7 +1007,7 @@
     },
     "/api/quotes/{quoteId}" : {
       "get" : {
-        "operationId" : "get_1",
+        "operationId" : "getQuote",
         "parameters" : [ {
           "in" : "path",
           "name" : "quoteId",
@@ -1038,7 +1038,7 @@
     },
     "/api/quotes/{quoteId}/cancel" : {
       "post" : {
-        "operationId" : "cancel",
+        "operationId" : "cancelQuote",
         "parameters" : [ {
           "in" : "path",
           "name" : "quoteId",
@@ -1069,7 +1069,7 @@
     },
     "/api/quotes/{quoteId}/confirm" : {
       "post" : {
-        "operationId" : "confirm",
+        "operationId" : "confirmQuote",
         "parameters" : [ {
           "in" : "path",
           "name" : "quoteId",
@@ -1100,7 +1100,7 @@
     },
     "/api/quotes/{quoteId}/items" : {
       "put" : {
-        "operationId" : "reviseItems",
+        "operationId" : "reviseQuoteItems",
         "parameters" : [ {
           "in" : "path",
           "name" : "quoteId",
@@ -1141,7 +1141,7 @@
     },
     "/api/quotes/{quoteId}/resend" : {
       "post" : {
-        "operationId" : "resend",
+        "operationId" : "resendQuote",
         "parameters" : [ {
           "in" : "path",
           "name" : "quoteId",

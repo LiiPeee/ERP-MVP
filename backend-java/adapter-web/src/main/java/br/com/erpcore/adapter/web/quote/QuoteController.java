@@ -67,27 +67,27 @@ final class QuoteController {
     }
 
     @GetMapping
-    @Operation(summary = "A fila: o que precisa do dono, o que espera o cliente e o que já fechou")
+    @Operation(operationId = "listQuotes", summary = "A fila: o que precisa do dono, o que espera o cliente e o que já fechou")
     QuoteQueue queue(@AuthenticationPrincipal Jwt token) {
         return list.execute(new ListQuotesQuery(Principals.of(token)));
     }
 
     @PostMapping(consumes = MediaType.APPLICATION_JSON_VALUE)
     @ResponseStatus(HttpStatus.CREATED)
-    @Operation(summary = "Cria um rascunho de orçamento; o total é calculado pelo servidor")
+    @Operation(operationId = "createQuoteDraft", summary = "Cria um rascunho de orçamento; o total é calculado pelo servidor")
     QuoteView createDraft(@AuthenticationPrincipal Jwt token, @Valid @RequestBody CreateQuoteRequest body) {
         return createDraft.execute(new CreateQuoteDraftCommand(Principals.of(token), body.contactId(), body.vehicleId(),
                 body.inputs(), body.note(), body.validityDays(), CorrelationIds.current()));
     }
 
     @GetMapping("/{quoteId}")
-    @Operation(summary = "Um orçamento (telefone do cliente mascarado)")
+    @Operation(operationId = "getQuote", summary = "Um orçamento (telefone do cliente mascarado)")
     QuoteView get(@AuthenticationPrincipal Jwt token, @PathVariable UUID quoteId) {
         return get.execute(new GetQuoteQuery(Principals.of(token), quoteId));
     }
 
     @PutMapping(path = "/{quoteId}/items", consumes = MediaType.APPLICATION_JSON_VALUE)
-    @Operation(summary = "Troca todos os itens de um rascunho; a lista nova substitui a antiga")
+    @Operation(operationId = "reviseQuoteItems", summary = "Troca todos os itens de um rascunho; a lista nova substitui a antiga")
     QuoteView reviseItems(@AuthenticationPrincipal Jwt token, @PathVariable UUID quoteId,
                           @Valid @RequestBody ReviseQuoteItemsRequest body) {
         return reviseItems.execute(new ReviseQuoteItemsCommand(Principals.of(token), quoteId, body.inputs(),
@@ -95,19 +95,19 @@ final class QuoteController {
     }
 
     @PostMapping("/{quoteId}/confirm")
-    @Operation(summary = "Confirma e envia ao cliente: gera o link de aprovação (aparece só nesta resposta)")
+    @Operation(operationId = "confirmQuote", summary = "Confirma e envia ao cliente: gera o link de aprovação (aparece só nesta resposta)")
     QuoteSentResult confirm(@AuthenticationPrincipal Jwt token, @PathVariable UUID quoteId) {
         return confirm.execute(new ConfirmQuoteCommand(Principals.of(token), quoteId, CorrelationIds.current()));
     }
 
     @PostMapping("/{quoteId}/resend")
-    @Operation(summary = "Reenvia um orçamento já enviado, com um link novo; o estado não muda")
+    @Operation(operationId = "resendQuote", summary = "Reenvia um orçamento já enviado, com um link novo; o estado não muda")
     QuoteSentResult resend(@AuthenticationPrincipal Jwt token, @PathVariable UUID quoteId) {
         return resend.execute(new SendQuoteCommand(Principals.of(token), quoteId, CorrelationIds.current()));
     }
 
     @PostMapping("/{quoteId}/cancel")
-    @Operation(summary = "Cancela o orçamento; o link deixa de funcionar")
+    @Operation(operationId = "cancelQuote", summary = "Cancela o orçamento; o link deixa de funcionar")
     QuoteView cancel(@AuthenticationPrincipal Jwt token, @PathVariable UUID quoteId) {
         return cancel.execute(new CancelQuoteCommand(Principals.of(token), quoteId, CorrelationIds.current()));
     }

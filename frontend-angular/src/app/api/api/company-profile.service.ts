@@ -44,10 +44,10 @@ export class CompanyProfileService extends BaseService {
      * @param reportProgress flag to report request and response progress.
      * @param options additional options
      */
-    public get(observe?: 'body', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json', context?: HttpContext, transferCache?: boolean}): Observable<CompanyProfileView>;
-    public get(observe?: 'response', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json', context?: HttpContext, transferCache?: boolean}): Observable<HttpResponse<CompanyProfileView>>;
-    public get(observe?: 'events', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json', context?: HttpContext, transferCache?: boolean}): Observable<HttpEvent<CompanyProfileView>>;
-    public get(observe: any = 'body', reportProgress: boolean = false, options?: {httpHeaderAccept?: 'application/json', context?: HttpContext, transferCache?: boolean}): Observable<any> {
+    public getCompanyProfile(observe?: 'body', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json', context?: HttpContext, transferCache?: boolean}): Observable<CompanyProfileView>;
+    public getCompanyProfile(observe?: 'response', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json', context?: HttpContext, transferCache?: boolean}): Observable<HttpResponse<CompanyProfileView>>;
+    public getCompanyProfile(observe?: 'events', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json', context?: HttpContext, transferCache?: boolean}): Observable<HttpEvent<CompanyProfileView>>;
+    public getCompanyProfile(observe: any = 'body', reportProgress: boolean = false, options?: {httpHeaderAccept?: 'application/json', context?: HttpContext, transferCache?: boolean}): Observable<any> {
 
         let localVarHeaders = this.defaultHeaders;
 
@@ -100,12 +100,12 @@ export class CompanyProfileService extends BaseService {
      * @param reportProgress flag to report request and response progress.
      * @param options additional options
      */
-    public update(updateCompanyProfileRequest: UpdateCompanyProfileRequest, observe?: 'body', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json', context?: HttpContext, transferCache?: boolean}): Observable<CompanyProfileView>;
-    public update(updateCompanyProfileRequest: UpdateCompanyProfileRequest, observe?: 'response', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json', context?: HttpContext, transferCache?: boolean}): Observable<HttpResponse<CompanyProfileView>>;
-    public update(updateCompanyProfileRequest: UpdateCompanyProfileRequest, observe?: 'events', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json', context?: HttpContext, transferCache?: boolean}): Observable<HttpEvent<CompanyProfileView>>;
-    public update(updateCompanyProfileRequest: UpdateCompanyProfileRequest, observe: any = 'body', reportProgress: boolean = false, options?: {httpHeaderAccept?: 'application/json', context?: HttpContext, transferCache?: boolean}): Observable<any> {
+    public updateCompanyProfile(updateCompanyProfileRequest: UpdateCompanyProfileRequest, observe?: 'body', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json', context?: HttpContext, transferCache?: boolean}): Observable<CompanyProfileView>;
+    public updateCompanyProfile(updateCompanyProfileRequest: UpdateCompanyProfileRequest, observe?: 'response', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json', context?: HttpContext, transferCache?: boolean}): Observable<HttpResponse<CompanyProfileView>>;
+    public updateCompanyProfile(updateCompanyProfileRequest: UpdateCompanyProfileRequest, observe?: 'events', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json', context?: HttpContext, transferCache?: boolean}): Observable<HttpEvent<CompanyProfileView>>;
+    public updateCompanyProfile(updateCompanyProfileRequest: UpdateCompanyProfileRequest, observe: any = 'body', reportProgress: boolean = false, options?: {httpHeaderAccept?: 'application/json', context?: HttpContext, transferCache?: boolean}): Observable<any> {
         if (updateCompanyProfileRequest === null || updateCompanyProfileRequest === undefined) {
-            throw new Error('Required parameter updateCompanyProfileRequest was null or undefined when calling update.');
+            throw new Error('Required parameter updateCompanyProfileRequest was null or undefined when calling updateCompanyProfile.');
         }
 
         let localVarHeaders = this.defaultHeaders;

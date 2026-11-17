@@ -45,12 +45,12 @@ export class VehiclesService extends BaseService {
      * @param reportProgress flag to report request and response progress.
      * @param options additional options
      */
-    public list1(contactId: string, observe?: 'body', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json', context?: HttpContext, transferCache?: boolean}): Observable<Array<VehicleView>>;
-    public list1(contactId: string, observe?: 'response', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json', context?: HttpContext, transferCache?: boolean}): Observable<HttpResponse<Array<VehicleView>>>;
-    public list1(contactId: string, observe?: 'events', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json', context?: HttpContext, transferCache?: boolean}): Observable<HttpEvent<Array<VehicleView>>>;
-    public list1(contactId: string, observe: any = 'body', reportProgress: boolean = false, options?: {httpHeaderAccept?: 'application/json', context?: HttpContext, transferCache?: boolean}): Observable<any> {
+    public listVehicles(contactId: string, observe?: 'body', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json', context?: HttpContext, transferCache?: boolean}): Observable<Array<VehicleView>>;
+    public listVehicles(contactId: string, observe?: 'response', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json', context?: HttpContext, transferCache?: boolean}): Observable<HttpResponse<Array<VehicleView>>>;
+    public listVehicles(contactId: string, observe?: 'events', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json', context?: HttpContext, transferCache?: boolean}): Observable<HttpEvent<Array<VehicleView>>>;
+    public listVehicles(contactId: string, observe: any = 'body', reportProgress: boolean = false, options?: {httpHeaderAccept?: 'application/json', context?: HttpContext, transferCache?: boolean}): Observable<any> {
         if (contactId === null || contactId === undefined) {
-            throw new Error('Required parameter contactId was null or undefined when calling list1.');
+            throw new Error('Required parameter contactId was null or undefined when calling listVehicles.');
         }
 
         let localVarHeaders = this.defaultHeaders;
@@ -105,15 +105,15 @@ export class VehiclesService extends BaseService {
      * @param reportProgress flag to report request and response progress.
      * @param options additional options
      */
-    public register(contactId: string, registerVehicleRequest: RegisterVehicleRequest, observe?: 'body', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json', context?: HttpContext, transferCache?: boolean}): Observable<VehicleView>;
-    public register(contactId: string, registerVehicleRequest: RegisterVehicleRequest, observe?: 'response', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json', context?: HttpContext, transferCache?: boolean}): Observable<HttpResponse<VehicleView>>;
-    public register(contactId: string, registerVehicleRequest: RegisterVehicleRequest, observe?: 'events', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json', context?: HttpContext, transferCache?: boolean}): Observable<HttpEvent<VehicleView>>;
-    public register(contactId: string, registerVehicleRequest: RegisterVehicleRequest, observe: any = 'body', reportProgress: boolean = false, options?: {httpHeaderAccept?: 'application/json', context?: HttpContext, transferCache?: boolean}): Observable<any> {
+    public registerVehicle(contactId: string, registerVehicleRequest: RegisterVehicleRequest, observe?: 'body', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json', context?: HttpContext, transferCache?: boolean}): Observable<VehicleView>;
+    public registerVehicle(contactId: string, registerVehicleRequest: RegisterVehicleRequest, observe?: 'response', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json', context?: HttpContext, transferCache?: boolean}): Observable<HttpResponse<VehicleView>>;
+    public registerVehicle(contactId: string, registerVehicleRequest: RegisterVehicleRequest, observe?: 'events', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json', context?: HttpContext, transferCache?: boolean}): Observable<HttpEvent<VehicleView>>;
+    public registerVehicle(contactId: string, registerVehicleRequest: RegisterVehicleRequest, observe: any = 'body', reportProgress: boolean = false, options?: {httpHeaderAccept?: 'application/json', context?: HttpContext, transferCache?: boolean}): Observable<any> {
         if (contactId === null || contactId === undefined) {
-            throw new Error('Required parameter contactId was null or undefined when calling register.');
+            throw new Error('Required parameter contactId was null or undefined when calling registerVehicle.');
         }
         if (registerVehicleRequest === null || registerVehicleRequest === undefined) {
-            throw new Error('Required parameter registerVehicleRequest was null or undefined when calling register.');
+            throw new Error('Required parameter registerVehicleRequest was null or undefined when calling registerVehicle.');
         }
 
         let localVarHeaders = this.defaultHeaders;

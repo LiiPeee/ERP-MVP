@@ -38,13 +38,13 @@ final class CompanyProfileController {
     }
 
     @GetMapping
-    @Operation(summary = "O perfil da oficina que aparece para o cliente (telefone mascarado)")
+    @Operation(operationId = "getCompanyProfile", summary = "O perfil da oficina que aparece para o cliente (telefone mascarado)")
     CompanyProfileView get(@AuthenticationPrincipal Jwt token) {
         return getProfile.execute(new GetCompanyProfileQuery(Principals.of(token)));
     }
 
     @PutMapping(consumes = MediaType.APPLICATION_JSON_VALUE)
-    @Operation(summary = "Atualiza o perfil da oficina")
+    @Operation(operationId = "updateCompanyProfile", summary = "Atualiza o perfil da oficina")
     CompanyProfileView update(@AuthenticationPrincipal Jwt token, @Valid @RequestBody UpdateCompanyProfileRequest body) {
         return updateProfile.execute(new UpdateCompanyProfileCommand(Principals.of(token), body.displayName(),
                 body.businessPhone(), body.address(), body.openingHours(),
