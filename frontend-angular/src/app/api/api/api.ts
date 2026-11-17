@@ -1,5 +1,15 @@
 export * from './auth.service';
 import { AuthService } from './auth.service';
+export * from './company-profile.service';
+import { CompanyProfileService } from './company-profile.service';
+export * from './contacts.service';
+import { ContactsService } from './contacts.service';
 export * from './me.service';
 import { MeService } from './me.service';
-export const APIS = [AuthService, MeService];
+export * from './public-quote-link.service';
+import { PublicQuoteLinkService } from './public-quote-link.service';
+export * from './quotes.service';
+import { QuotesService } from './quotes.service';
+export * from './vehicles.service';
+import { VehiclesService } from './vehicles.service';
+export const APIS = [AuthService, CompanyProfileService, ContactsService, MeService, PublicQuoteLinkService, QuotesService, VehiclesService];
