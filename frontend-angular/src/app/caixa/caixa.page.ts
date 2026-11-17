@@ -10,13 +10,13 @@ const SPAN = 150;
 
 /** Direção B, "Mesa de controle": linha do tempo vertical como protagonista e o painel do dia ao lado. */
 @Component({
-  selector: 'app-direction-b',
-  templateUrl: './direction-b.page.html',
-  styleUrl: './direction-b.page.scss',
+  selector: 'app-caixa',
+  templateUrl: './caixa.page.html',
+  styleUrl: './caixa.page.scss',
   changeDetection: ChangeDetectionStrategy.OnPush,
   host: { '(document:keydown)': 'onKeydown($event)' },
 })
-export class DirectionBPage {
+export class CaixaPage {
   protected readonly model = createCashModel();
   protected readonly text = MESSAGES;
   protected readonly formatBRL = formatBRL;

@@ -1,0 +1,46 @@
+body {
+  margin: 0;
+  background: var(--color-paper);
+  color: var(--color-ink);
+  font-family: var(--font-text);
+  font-size: var(--text-m);
+  font-weight: var(--weight-regular);
+  line-height: 1.4;
+}
+
+:focus-visible {
+  outline: var(--line-strong) solid var(--color-focus);
+  outline-offset: 2px;
+}
+
+.visually-hidden {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+  clip-path: inset(50%);
+  white-space: nowrap;
+}
+
+// Valores em reais: números com a mesma largura, sempre alinhados.
+.num {
+  font-family: var(--font-number);
+  font-variant-numeric: tabular-nums;
+}
+
+kbd {
+  padding: 0 var(--space-1);
+  border: var(--line) solid var(--color-ink-muted);
+  border-radius: var(--radius);
+  font-family: var(--font-number);
+  font-size: var(--text-s);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    transition: none !important;
+    animation: none !important;
+  }
+}
