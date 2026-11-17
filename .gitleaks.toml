@@ -1,6 +1,6 @@
 # Configuração do gitleaks: as regras padrão continuam todas ligadas.
 # A única exceção abaixo vale para valores SINTÉTICOS e claramente falsos, e só quando as DUAS condições se cumprem:
-#   1) o arquivo é de teste (src/test, e2e/tests) ou o .env.example; e
+#   1) o arquivo é de teste (src/test, e2e/tests, e2e/capturas) ou o .env.example; e
 #   2) a linha traz um marcador de valor falso (sintetic..., dev-only, fake-) ou é um dos exemplos fixos abaixo.
 # Uma credencial real num arquivo de produção, ou numa linha de teste sem marcador, continua sendo achada.
 [extend]
@@ -13,6 +13,7 @@ regexTarget = "line"
 paths = [
   '''(^|/)src/test/''',
   '''(^|/)e2e/tests/''',
+  '''(^|/)e2e/capturas/''',
   '''(^|/)\.env\.example$''',
 ]
 regexes = [

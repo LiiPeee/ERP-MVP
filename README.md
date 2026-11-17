@@ -118,4 +118,4 @@ jurídica foi inventada: onde falta decisão há `TODO(decisão)`.
 - Como confiar em `X-Forwarded-For` atrás de proxy reverso (limites de requisição por IP).
 - Nome definitivo do produto e domínio (cookie e CORS): provisório em desenvolvimento.
 
-Relatório final da fase: [docs/relatorio-fase-0.md](docs/relatorio-fase-0.md).
+Relatório final da fase: [docs/relatorios/fase-0.md](docs/relatorios/fase-0.md). Roteiro de teste manual: [docs/roteiro-teste-manual.md](docs/roteiro-teste-manual.md). Decisões: [docs/adr/](docs/adr/).

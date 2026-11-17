@@ -67,6 +67,8 @@ execução (e a CSP impede). O `.npmrc` bloqueia scripts de instalação de paco
 | eclipse-temurin 21.0.13_9 (jdk e jre) | Build e execução da aplicação. |
 | node:24.22.3-bookworm-slim | Build do Angular na imagem. |
 | gitleaks 8.30.1 | Varredura de segredos no CI (hash do binário conferido). |
+| aquasecurity/trivy-action 0.36.0 (fixada por SHA) | Varredura da imagem de container no CI (altas e críticas com correção disponível). Mantida pela Aqua Security, amplamente usada; sem ela a imagem não seria varrida. |
+| Dependabot (recurso do GitHub, `.github/dependabot.yml`) | Atualização automática de Maven, npm, Actions e Docker, por pull request. |
 | GitHub Actions: checkout 7.0.1, setup-java 6.1.0, setup-node 7.1.0, upload-artifact 7.0.2 | CI, todas **fixadas por SHA**. |
 
 ## O que ficou de fora de propósito

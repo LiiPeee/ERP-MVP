@@ -1,6 +1,6 @@
 # Relatório final da Fase 0
 
-Data: 16/11/2026. Estado: **código completo e testado nesta máquina; nada verificado em CI nem em máquina limpa.**
+Data: 16/11/2026. Estado: **código completo e testado nesta máquina; o CI foi executado e falhou na primeira vez (permissão do `mvnw` e gitleaks); as correções estão commitadas localmente e o CI só será reverificado depois do envio ao GitHub. Nada verificado em máquina limpa.**
 
 ## O que foi feito
 
@@ -30,7 +30,7 @@ commitado separadamente (histórico mostra vermelho e verde).
 | Testes escritos antes do código, todos passando | **Majoritariamente.** O ciclo vermelho→verde está no histórico para domínio, aplicação, RLS e várias partes da borda. Exceções: os testes de contrato nasceram depois dos fakes (verdes de saída; o vermelho veio no banco real) e alguns testes de borda foram escritos junto do código. |
 | ArchUnit verde; cobertura de domain e application ≥ 90% | **Sim** (93,3% e 94,1% de ramos; o JaCoCo falha o build abaixo de 90%). |
 | `./mvnw verify` e `docker compose up` do zero em máquina limpa | **Só nesta máquina, e com ressalva:** o `verify` em uma única execução cai por falta de memória aqui; rodei em duas etapas. Nunca testei em máquina limpa. |
-| Varreduras de segredos e dependências sem pendência crítica | **Não verificado:** gitleaks e OWASP Dependency-Check só rodam no CI, que nunca rodou. Só o `npm audit` rodou (0 vulnerabilidades). |
+| Varreduras de segredos e dependências sem pendência crítica | **Parcial.** gitleaks rodou localmente sobre todo o histórico: 30 achados, todos valores sintéticos de teste/desenvolvimento, agora cobertos por uma allowlist estreita (`.gitleaks.toml`, ADR 0007) e com 0 achados; segredo falso fora das condições continua sendo detectado. `npm audit`: 0 vulnerabilidades. **Não verificado:** OWASP Dependency-Check e Trivy (novo job de imagem), que só rodam no CI; o OWASP precisa do segredo `NVD_API_KEY`. |
 | Isolamento entre empresas em todas as rotas; nenhum dado pessoal em logs | **Sim**, com testes. |
 | Playwright do fluxo | **Sim** (no Edge; Chromium só no CI). |
 | Relatório final | Este documento. |
@@ -50,7 +50,7 @@ commitado separadamente (histórico mostra vermelho e verde).
 
 ## O que **não** foi verificado
 
-- **CI** (nunca rodou), **gitleaks**, **OWASP Dependency-Check**, e o job de ponta a ponta no Chromium.
+- **CI após as correções**, **OWASP Dependency-Check**, **Trivy** e o job de ponta a ponta no Chromium (dependem de enviar ao GitHub).
 - **Máquina limpa**, outro sistema operacional, outro navegador além do Edge.
 - **HTTPS real** (HSTS, cookie `Secure` em domínio real).
 - **Várias instâncias**, carga, desempenho; os parâmetros do Argon2id não foram calibrados no hardware alvo.
@@ -107,8 +107,16 @@ transferência internacional na hospedagem.
 
 ## Próximos passos sugeridos
 
-1. Enviar o repositório ao GitHub (sob seu controle) e **rodar o CI**; corrigir o que ele achar.
+1. Enviar as correções ao GitHub (sob seu controle), **conferir o CI verde** e cadastrar o segredo `NVD_API_KEY`.
 2. Decidir o espelho do Maven e o proxy reverso.
 3. Revisão jurídica dos rascunhos; definir retenção e implementar o expurgo.
 4. Verificação de e-mail e troca/recuperação de senha (fora da Fase 0).
 5. Calibrar o Argon2id no hardware de produção.
+
+## Fechamento da Fase 0
+
+- ADRs em `docs/adr/` (0001 a 0007).
+- Roteiro de teste manual: [docs/roteiro-teste-manual.md](../roteiro-teste-manual.md).
+- Capturas desktop e celular com autocrítica visual: [docs/capturas/fase-0/](../capturas/fase-0/README.md).
+- CI: job de varredura de imagem (Trivy) e `dependabot.yml`.
+- Revisão independente (`revisao-independente.md`) ainda por fazer, em **sessão nova**.

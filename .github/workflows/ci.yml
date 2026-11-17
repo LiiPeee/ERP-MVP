@@ -139,3 +139,19 @@ jobs:
           name: playwright-traces
           path: e2e/test-results
           if-no-files-found: ignore
+
+  image-scan:
+    name: Varredura da imagem de container
+    runs-on: ubuntu-24.04
+    needs: [build-and-test, frontend]
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+      - name: Construir a imagem
+        run: docker build --tag erp-core-app:ci .
+      - name: Varrer vulnerabilidades altas e críticas
+        uses: aquasecurity/trivy-action@ed142fd0673e97e23eac54620cfb913e5ce36c25 # v0.36.0
+        with:
+          image-ref: erp-core-app:ci
+          severity: HIGH,CRITICAL
+          ignore-unfixed: true
+          exit-code: "1"
