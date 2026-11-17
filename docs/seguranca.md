@@ -34,6 +34,29 @@ HMAC-SHA256, no mínimo 32 bytes, em Base64, **só no ambiente**; a aplicação 
 O `compose.yaml` expõe só `K1`; para a rotação, adicione a variável da chave nova ao serviço `app`.
 Criptografia de campo: não há campo sensível a criptografar na Fase 0 (`TODO(decisão)` quando houver).
 
+## Criptografia de campo (Fase 1)
+
+Telefone, e-mail e placa de terceiros ficam **cifrados no banco** (Tink, AES-256-GCM). A cifra é presa à empresa e ao campo
+(dados associados): um texto cifrado copiado para outra empresa ou outro campo não decifra. A busca exata usa um **índice
+cego** (HMAC-SHA256 do valor normalizado, também preso ao contexto), com chave própria.
+
+- **Chaves (só do ambiente):** `ERP_SECURITY_FIELD_ACTIVE_KEY_ID`, `ERP_SECURITY_FIELD_KEYS_<ID>` (AES-256, exatamente 32 bytes em
+  Base64) e `ERP_SECURITY_FIELD_BLIND_INDEX_KEY` (no mínimo 32 bytes em Base64). A aplicação **não sobe** sem elas.
+- **Rotação da chave de cifrar:** configure a nova ao lado da antiga (`..._KEYS_K2`), aponte a ativa para a nova e mantenha a
+  antiga: o texto cifrado carrega a identificação da chave, então o que foi gravado antes continua legível. Só remova a antiga
+  depois de regravar o que foi cifrado com ela. **Ainda não existe rotina de regravação** (`TODO` da Fase 7).
+- **O índice cego não tem rotação:** trocar a chave do índice exige reindexar todos os telefones e placas. Trate-a como segredo
+  permanente e guarde cópia segura.
+- **Perda de chave = perda do dado cifrado.** O backup do banco sem as chaves não recupera telefone, e-mail nem placa.
+- **Limite honesto:** quem tem acesso ao banco **e** às chaves lê tudo; quem tem só o banco não lê. O nome do cliente está em claro.
+
+## Link público do orçamento (Fase 1)
+
+É o primeiro dado atrás de uma rota **sem login**. O token tem 256 bits e só o **hash** é guardado. Abrir o link (GET) não muda
+nada (prévias do WhatsApp e rastreadores abrem links sozinhos); só a decisão (POST) o consome. Token inexistente, vencido ou de
+orçamento cancelado dão **a mesma resposta**. No banco, três escopos de acesso estreitos (`quote_link_lookup`, `quote_decision`,
+`quote_expiration`) limitam o que cada etapa enxerga e altera; ver `docs/adr/0009-link-publico-e-escopos-de-acesso.md`.
+
 ## Cabeçalhos e navegador
 
 CSP `default-src 'self'` (sem `unsafe-inline` nem `unsafe-eval`), `frame-ancestors 'none'`, `X-Frame-Options: DENY`,
