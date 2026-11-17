@@ -19,5 +19,6 @@ paths = [
 regexes = [
   '''(?i)(sintetic|dev-only|fake-)''',
   '''ZGV2LW9ubHkt''',                                     # base64 de "dev-only-": valores de desenvolvimento do .env.example
+  '''k3J9x_Qw-7ZpL0aVbN2mC8dR5tYhGfE1uIoS4xWzAqM''',      # token de link SINTÉTICO usado nos testes do mascarador de logs e do caminho logável
   '''eyJhbGciOiJIUzI1NiJ9\.eyJzdWIiOiJ0ZXN0ZSJ9''',       # JWT de exemplo, sem chave real, usado no teste de mascaramento de logs
 ]
