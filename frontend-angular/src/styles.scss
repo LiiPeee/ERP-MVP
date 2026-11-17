@@ -1,3 +1,4 @@
+@use "@angular/cdk";
 @use "styles/tokens";
 @use "styles/base";
 
@@ -7,3 +8,9 @@
 @font-face { font-family: "Schibsted Grotesk"; font-weight: 500; font-style: normal; font-display: swap; src: url("/fonts/schibsted-grotesk-latin-500-normal.woff2") format("woff2"); }
 @font-face { font-family: "Schibsted Grotesk"; font-weight: 600; font-style: normal; font-display: swap; src: url("/fonts/schibsted-grotesk-latin-600-normal.woff2") format("woff2"); }
 @font-face { font-family: "Schibsted Grotesk"; font-weight: 700; font-style: normal; font-display: swap; src: url("/fonts/schibsted-grotesk-latin-700-normal.woff2") format("woff2"); }
+
+@include cdk.overlay();
+
+.erp-dialog-backdrop {
+  background: var(--overlay-scrim);
+}
