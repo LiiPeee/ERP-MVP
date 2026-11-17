@@ -71,6 +71,34 @@ class PersonalDataMaskerTest {
         assertThat(PersonalDataMasker.mask(text)).isEqualTo(text);
     }
 
+    @ParameterizedTest
+    @ValueSource(strings = {"+5511955554444", "+551132224444", "+55 (11) 95555-4444", "(11) 95555-4444"})
+    void givenABrazilianPhoneInAnyFormat_whenMasking_thenItIsReplaced(String phone) {
+        assertThat(PersonalDataMasker.mask("cliente " + phone + " cadastrado")).isEqualTo("cliente [phone] cadastrado");
+    }
+
+    @ParameterizedTest
+    @ValueSource(strings = {"ABC1D23", "ABC-1234", "ABC1234"})
+    void givenALicensePlateOldOrMercosul_whenMasking_thenItIsReplaced(String plate) {
+        assertThat(PersonalDataMasker.mask("placa " + plate + " informada")).isEqualTo("placa [plate] informada");
+    }
+
+    @Test
+    void givenTheQuoteLinkTokenInAPath_whenMasking_thenItIsReplaced() {
+        String token = "k3J9x_Qw-7ZpL0aVbN2mC8dR5tYhGfE1uIoS4xWzAqM";
+
+        assertThat(PersonalDataMasker.mask("GET /o/" + token + " 200")).isEqualTo("GET /o/[token] 200");
+        assertThat(PersonalDataMasker.mask("path=/api/public/quotes/" + token + "/approve"))
+                .isEqualTo("path=/api/public/quotes/[token]/approve");
+    }
+
+    @ParameterizedTest
+    @ValueSource(strings = {"path=/api/quotes/2848f2cd-ba32-4fa5-9e6b-47196187436d/confirm", "status=SENT total=131.00",
+            "quote APPROVED em 2026-07-01", "ABC e 1234 sozinhos", "plano ABCD1234"})
+    void givenQuoteDiagnosticText_whenMasking_thenItIsLeftAlone(String text) {
+        assertThat(PersonalDataMasker.mask(text)).isEqualTo(text);
+    }
+
     @Test
     void givenNull_whenMasking_thenNullComesBack() {
         assertThat(PersonalDataMasker.mask(null)).isNull();
