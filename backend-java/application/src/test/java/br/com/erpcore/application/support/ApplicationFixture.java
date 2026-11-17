@@ -1,7 +1,15 @@
 package br.com.erpcore.application.support;
 
 import br.com.erpcore.application.audit.AuditRecorder;
+import br.com.erpcore.application.company.GetCompanyProfileUseCase;
+import br.com.erpcore.application.company.UpdateCompanyProfileUseCase;
+import br.com.erpcore.application.contact.CreateContactUseCase;
+import br.com.erpcore.application.contact.ListContactsUseCase;
+import br.com.erpcore.application.identity.AuthenticatedPrincipal;
 import br.com.erpcore.application.identity.GetCurrentContextUseCase;
+import br.com.erpcore.application.identity.OwnerGuard;
+import br.com.erpcore.application.vehicle.ListVehiclesUseCase;
+import br.com.erpcore.application.vehicle.RegisterVehicleUseCase;
 import br.com.erpcore.application.identity.LoginCommand;
 import br.com.erpcore.application.identity.LogoutUseCase;
 import br.com.erpcore.application.identity.LoginUseCase;
@@ -48,6 +56,45 @@ public final class ApplicationFixture {
     public final AuditRecorder auditRecorder = new AuditRecorder(auditEvents, ids, clock);
     public final SessionIssuer sessionIssuer =
             new SessionIssuer(refreshTokens, refreshCodec, accessTokens, ids, SESSION_POLICY);
+    public final InMemoryCompanyProfileRepository profiles = new InMemoryCompanyProfileRepository(unitOfWork);
+    public final InMemoryContactRepository contacts = new InMemoryContactRepository(unitOfWork);
+    public final InMemoryVehicleRepository vehicles = new InMemoryVehicleRepository(unitOfWork);
+    public final OwnerGuard ownerGuard = new OwnerGuard(memberships);
+
+    public GetCompanyProfileUseCase getCompanyProfileUseCase() {
+        return new GetCompanyProfileUseCase(unitOfWork, profiles, companies, ownerGuard);
+    }
+
+    public UpdateCompanyProfileUseCase updateCompanyProfileUseCase() {
+        return new UpdateCompanyProfileUseCase(unitOfWork, profiles, ownerGuard, auditRecorder);
+    }
+
+    public CreateContactUseCase createContactUseCase() {
+        return new CreateContactUseCase(unitOfWork, contacts, ownerGuard, auditRecorder, ids, clock);
+    }
+
+    public ListContactsUseCase listContactsUseCase() {
+        return new ListContactsUseCase(unitOfWork, contacts, ownerGuard);
+    }
+
+    public RegisterVehicleUseCase registerVehicleUseCase() {
+        return new RegisterVehicleUseCase(unitOfWork, contacts, vehicles, ownerGuard, auditRecorder, ids, clock);
+    }
+
+    public ListVehiclesUseCase listVehiclesUseCase() {
+        return new ListVehiclesUseCase(unitOfWork, contacts, vehicles, ownerGuard);
+    }
+
+    /** Quem está autenticado depois do cadastro: o dono da empresa recém-criada. */
+    public AuthenticatedPrincipal principalOf(RegisterCompanyAndOwnerResult registered) {
+        return new AuthenticatedPrincipal(registered.userId(), registered.companyId());
+    }
+
+    /** Uma segunda oficina, para os testes de isolamento entre empresas. */
+    public RegisterCompanyAndOwnerResult registerOtherOwner() {
+        return registerUseCase().execute(new RegisterCompanyAndOwnerCommand("Oficina Fictícia ME", "Beto Fictício",
+                "beto.ficticio@exemplo.test", "outra-senha-sintetica-1", "correlacao-sintetica-2"));
+    }
 
     public RegisterCompanyAndOwnerUseCase registerUseCase() {
         return new RegisterCompanyAndOwnerUseCase(unitOfWork, companies, users, memberships, passwordHasher,

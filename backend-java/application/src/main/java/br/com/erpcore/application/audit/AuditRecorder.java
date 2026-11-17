@@ -32,6 +32,19 @@ public final class AuditRecorder {
                 correlationId, Map.of());
     }
 
+    /** Sucesso com detalhes técnicos (por exemplo, o id do que foi criado). Nunca dado pessoal. */
+    public void success(AuditEventType type, CompanyId companyId, UserId actorId, String correlationId,
+                        Map<String, String> details) {
+        record(type, AuditOutcome.SUCCESS, Objects.requireNonNull(companyId), Objects.requireNonNull(actorId),
+                correlationId, details);
+    }
+
+    /** Ação sem usuário autenticado (o cliente pelo link, ou uma tarefa agendada), mas dentro de uma empresa. */
+    public void systemSuccess(AuditEventType type, CompanyId companyId, String correlationId,
+                              Map<String, String> details) {
+        record(type, AuditOutcome.SUCCESS, Objects.requireNonNull(companyId), null, correlationId, details);
+    }
+
     /**
      * Registra uma falha. {@code companyId} e {@code actorId} podem ser {@code null} quando ainda não se sabe
      * quem agiu. {@code reasonCode} é um código técnico, nunca dado pessoal.
