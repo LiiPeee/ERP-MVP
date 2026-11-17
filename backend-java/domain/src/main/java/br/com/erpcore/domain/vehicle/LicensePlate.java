@@ -33,6 +33,11 @@ public record LicensePlate(String value) {
         return value.substring(value.length() - VISIBLE_CHARACTERS);
     }
 
+    /** Para a tela do dono: o tamanho se mantém e só os três últimos caracteres aparecem, por exemplo {@code ****E19}. */
+    public String masked() {
+        return "*".repeat(value.length() - VISIBLE_CHARACTERS) + lastCharacters();
+    }
+
     @Override
     public String toString() {
         return "LicensePlate[redacted]";

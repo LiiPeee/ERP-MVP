@@ -47,6 +47,12 @@ class EmailTest {
     }
 
     @Test
+    void givenAnEmail_whenMasking_thenOnlyTheFirstLetterAndTheDomainRemain() {
+        assertThat(Email.of("ana.ficticia@exemplo.test").masked()).isEqualTo("a***@exemplo.test");
+        assertThat(Email.of("x@exemplo.test").masked()).isEqualTo("x***@exemplo.test");
+    }
+
+    @Test
     void givenAnEmail_whenPrintingIt_thenTheAddressIsNotExposed() {
         assertThat(Email.of("ana@exemplo.test").toString()).doesNotContain("ana").doesNotContain("exemplo");
     }

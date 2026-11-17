@@ -37,6 +37,12 @@ class LicensePlateTest {
     }
 
     @Test
+    void givenAPlate_whenMasking_thenOnlyTheLastThreeCharactersRemainAndTheLengthIsKept() {
+        assertThat(LicensePlate.of("BRA2E19").masked()).isEqualTo("****E19");
+        assertThat(LicensePlate.of("ABC1234").masked()).isEqualTo("****234");
+    }
+
+    @Test
     void givenAPlate_whenPrinting_thenItIsNeverShown() {
         assertThat(LicensePlate.of("ABC1234")).hasToString("LicensePlate[redacted]");
     }

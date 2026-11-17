@@ -23,6 +23,12 @@ public record Email(String value) {
         return new Email(raw);
     }
 
+    /** Só a primeira letra e o domínio, por exemplo {@code a***@exemplo.test}. */
+    public String masked() {
+        int at = value.indexOf('@');
+        return value.charAt(0) + "***" + value.substring(at);
+    }
+
     @Override
     public String toString() {
         return "Email[redacted]";
