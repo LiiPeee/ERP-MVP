@@ -32,7 +32,9 @@ public final class PublicRoutes {
             new Route(HttpMethod.GET, "/me"),
             new Route(HttpMethod.GET, "/*.js"),
             new Route(HttpMethod.GET, "/*.css"),
-            new Route(HttpMethod.GET, "/*.ico"));
+            new Route(HttpMethod.GET, "/*.ico"),
+            // Fontes locais (OFL): só .woff2 diretamente em /fonts. Os arquivos de licença da mesma pasta seguem negados.
+            new Route(HttpMethod.GET, "/fonts/*.woff2"));
 
     private PublicRoutes() {
     }

@@ -191,6 +191,10 @@ class RouteSecurityIT {
                 assertThat(api.post(path, "{}", Map.of()).status()).as("POST %s", path).isEqualTo(401);
             }
         }
+        // Fontes locais do frontend: só arquivos .woff2 diretamente em /fonts, e só leitura.
+        assertThat(api.get("/fonts/schibsted-grotesk-latin-600-normal.woff2", Map.of()).status()).isNotEqualTo(401);
+        assertThat(api.get("/fonts/segredo.txt", Map.of()).status()).isEqualTo(401);
+        assertThat(api.get("/fonts/sub/escondido.woff2", Map.of()).status()).isEqualTo(401);
         assertThat(api.get("/assets/segredo.txt", Map.of()).status()).isEqualTo(401);
         assertThat(api.get("/app.map", Map.of()).status()).isEqualTo(401);
     }
