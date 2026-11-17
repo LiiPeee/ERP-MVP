@@ -1,0 +1,125 @@
+<main class="desk">
+  <header class="head">
+    <p class="overline">Padaria Fictícia · caixa</p>
+    @if (model.cashDays() === null) {
+      <h1 class="answer">O caixa <strong>não zera</strong> nos próximos 45 dias.</h1>
+    } @else {
+      <h1 class="answer">
+        <strong class="answer-number num">{{ model.cashDays() }}</strong>
+        <span class="answer-unit">{{ model.cashDays() === 1 ? 'dia' : 'dias' }} de caixa</span>
+      </h1>
+      @if (firstNegative(); as negative) {
+        <p class="answer-detail">O saldo zera em {{ formatDayShort(negative.date) }} e fecha o dia em {{ formatBRL(negative.balanceCents) }}.</p>
+      }
+    }
+    <p class="shortcuts" aria-label="Atalhos">
+      <span><kbd>J</kbd> <kbd>K</kbd> mudam o dia</span>
+      <span><kbd>N</kbd> novo lançamento</span>
+    </p>
+  </header>
+
+  <div class="layout">
+    <section class="timeline" aria-labelledby="tl-title">
+      <h2 id="tl-title" class="visually-hidden">Dias, do mais próximo ao mais distante</h2>
+      <svg class="curve" [attr.viewBox]="'0 0 ' + span + ' ' + height()" [attr.height]="height()" [attr.width]="span" preserveAspectRatio="none" aria-hidden="true">
+        <defs>
+          <pattern id="hatch-b" width="6" height="6" patternUnits="userSpaceOnUse" patternTransform="rotate(-45)">
+            <line x1="0" y1="0" x2="0" y2="6" class="hatch-line" />
+          </pattern>
+        </defs>
+        @for (band of curve().negativeBands; track band.y) {
+          <rect x="0" [attr.y]="band.y" [attr.width]="span" [attr.height]="band.height" fill="url(#hatch-b)" />
+        }
+        <line class="zero" [attr.x1]="curve().zeroX" [attr.x2]="curve().zeroX" y1="0" [attr.y2]="height()" />
+        <path class="balance" [attr.d]="curve().path" />
+        @for (marker of markers(); track marker.date) {
+          <circle [class]="'marker marker-' + marker.kind" [attr.cx]="marker.x" [attr.cy]="marker.y" r="4" />
+        }
+      </svg>
+
+      <ul class="days">
+        @for (day of model.series(); track day.date) {
+          <li>
+            <button type="button" class="day" [id]="'row-' + day.date" [class.selected]="day.date === selectedDate()"
+              [attr.aria-current]="day.date === selectedDate() ? 'date' : null" (click)="select(day.date)">
+              <span class="day-date num">{{ day.date === model.today ? text.today : formatDayShort(day.date) }}</span>
+              <span class="day-gap"></span>
+              <span class="day-end num" [class.negative]="day.balanceCents < 0">
+                @if (firstNegative()?.date === day.date) {
+                  <span class="flag">{{ text.cashEnds }}</span>
+                }
+                {{ formatBRL(day.balanceCents) }}
+              </span>
+            </button>
+          </li>
+        }
+      </ul>
+    </section>
+
+    <section class="panel" aria-labelledby="panel-title">
+      <header class="panel-head">
+        <h2 id="panel-title">{{ dayLabel(selectedDate()) }}</h2>
+        <p class="panel-balance num" [class.negative]="(selectedDay()?.balanceCents ?? 0) < 0">
+          <span>{{ text.balanceAtEndOfDay }}</span>
+          {{ formatBRL(selectedDay()?.balanceCents ?? 0) }}
+        </p>
+      </header>
+
+      @if (selectedDate() === model.today && model.overdue().length > 0) {
+        <h3 class="subhead alert">{{ text.overdue }} <span class="num">{{ formatBRL(model.overdueTotalCents(), { explicitSign: true }) }}</span></h3>
+        <ul class="rows">
+          @for (entry of model.overdue(); track entry.id) {
+            <li class="row">
+              <span class="what">{{ entry.description }}<small>{{ text.overdueSince }} {{ formatDayShort(entry.date) }}</small></span>
+              <span class="amount num" [class.in]="entry.amountCents > 0" [class.out]="entry.amountCents < 0">{{ formatBRL(entry.amountCents, { explicitSign: true }) }}</span>
+            </li>
+          }
+        </ul>
+      }
+
+      @if (selectedEntries().length > 0) {
+        <ul class="rows">
+          @for (entry of selectedEntries(); track entry.id) {
+            <li class="row">
+              <span class="what">{{ entry.description }}<small>{{ text.kind[entry.kind] }}</small></span>
+              <span class="amount num" [class.in]="entry.amountCents > 0" [class.out]="entry.amountCents < 0">{{ formatBRL(entry.amountCents, { explicitSign: true }) }}</span>
+            </li>
+
+          }
+        </ul>
+      } @else if (selectedDate() !== model.today) {
+        <p class="empty">{{ text.empty }}</p>
+      }
+
+      <div class="panel-actions">
+        <button type="button" class="action" (click)="openForm()" [attr.aria-expanded]="formOpen()">{{ text.quickEntry.open }} <kbd>N</kbd></button>
+      </div>
+
+      @if (formOpen()) {
+        <form class="quick" (submit)="submit($event, description.value, amount.value, date.value)" novalidate>
+          <div class="field">
+            <label for="qb-description">{{ text.quickEntry.description }}</label>
+            <input #description id="qb-description" type="text" autocomplete="off" [attr.aria-invalid]="formError() ? 'true' : null"
+              [attr.aria-describedby]="formError() ? 'qb-error' : null" />
+          </div>
+          <div class="field">
+            <label for="qb-amount">{{ text.quickEntry.amount }}</label>
+            <input #amount id="qb-amount" type="text" inputmode="decimal" autocomplete="off" aria-describedby="qb-hint" class="num" />
+          </div>
+          <div class="field">
+            <label for="qb-date">{{ text.quickEntry.date }}</label>
+            <input #date id="qb-date" type="date" [value]="selectedDate()" />
+          </div>
+          <p id="qb-hint" class="hint">{{ text.quickEntry.amountHint }}</p>
+          @if (formError()) {
+            <p id="qb-error" class="error" role="alert">{{ formError() }}</p>
+          }
+          <div class="quick-actions">
+            <button type="submit" class="action primary">{{ text.quickEntry.submit }}</button>
+            <button type="button" class="action" (click)="closeForm()">{{ text.quickEntry.cancel }}</button>
+          </div>
+        </form>
+      }
+    </section>
+  </div>
+</main>

@@ -1,0 +1,115 @@
+<main class="page">
+  <header class="masthead">
+    <p class="overline">Padaria Fictícia · caixa</p>
+    <h1 class="answer">
+      {{ headline().lead }} <strong>{{ headline().strong }}</strong>.
+    </h1>
+    @if (headline().detail) {
+      <p class="answer-detail">{{ headline().detail }}</p>
+    }
+  </header>
+
+  <section class="strip" aria-labelledby="strip-title">
+    <h2 id="strip-title" class="visually-hidden">Saldo projetado dia a dia</h2>
+    <svg class="strip-svg" [attr.viewBox]="'0 0 ' + strip.width + ' ' + strip.height" preserveAspectRatio="none" role="img"
+      aria-label="Linha do saldo projetado para os próximos 45 dias, com os vencimentos marcados e a zona negativa hachurada.">
+      <defs>
+        <pattern id="hatch-a" width="7" height="7" patternUnits="userSpaceOnUse" patternTransform="rotate(45)">
+          <line x1="0" y1="0" x2="0" y2="7" class="hatch-line" />
+        </pattern>
+      </defs>
+      @for (area of timeline().negativeAreas; track area.fromX) {
+        <rect [attr.x]="area.fromX" y="0" [attr.width]="area.toX - area.fromX" [attr.height]="strip.height" fill="url(#hatch-a)" />
+      }
+      <line class="zero" [attr.x1]="0" [attr.x2]="strip.width" [attr.y1]="timeline().zeroY" [attr.y2]="timeline().zeroY" />
+      @for (tick of ticks(); track tick.id) {
+        <line [class]="'tick tick-' + tick.kind" [attr.x1]="tick.x" [attr.x2]="tick.x" [attr.y1]="tick.y1" [attr.y2]="tick.y2" />
+      }
+      <path class="balance" [attr.d]="timeline().path" />
+    </svg>
+    <div class="axis" aria-hidden="true">
+      @for (label of axisLabels(); track $index) {
+        <span>{{ $index === 0 ? text.today : label }}</span>
+      }
+    </div>
+    <p class="legend">
+      <span class="key key-receivable">▲ {{ text.kind.receivable }}</span>
+      <span class="key key-payable">▼ {{ text.kind.payable }}</span>
+      <span class="key key-negative">▨ saldo negativo</span>
+    </p>
+  </section>
+
+  <section class="ledger" aria-labelledby="ledger-title">
+    <div class="ledger-head">
+      <h2 id="ledger-title">Dia a dia</h2>
+      <button type="button" class="action" (click)="openForm()" [attr.aria-expanded]="formOpen()">
+        {{ text.quickEntry.open }} <kbd>N</kbd>
+      </button>
+    </div>
+
+    @if (formOpen()) {
+      <form class="quick" (submit)="submit($event, description.value, amount.value, date.value)" novalidate>
+        <div class="field grow">
+          <label for="qa-description">{{ text.quickEntry.description }}</label>
+          <input #description id="qa-description" type="text" autocomplete="off" [attr.aria-invalid]="formError() ? 'true' : null"
+            [attr.aria-describedby]="formError() ? 'qa-error' : null" />
+        </div>
+        <div class="field">
+          <label for="qa-amount">{{ text.quickEntry.amount }}</label>
+          <input #amount id="qa-amount" type="text" inputmode="decimal" autocomplete="off" aria-describedby="qa-hint" class="num" />
+        </div>
+        <div class="field">
+          <label for="qa-date">{{ text.quickEntry.date }}</label>
+          <input #date id="qa-date" type="date" [value]="defaultDate()" />
+        </div>
+        <div class="quick-actions">
+          <button type="submit" class="action primary">{{ text.quickEntry.submit }}</button>
+          <button type="button" class="action" (click)="closeForm()">{{ text.quickEntry.cancel }}</button>
+        </div>
+        <p id="qa-hint" class="hint">{{ text.quickEntry.amountHint }}</p>
+        @if (formError()) {
+          <p id="qa-error" class="error" role="alert">{{ formError() }}</p>
+        }
+      </form>
+    }
+
+    @if (model.overdue().length > 0) {
+      <article class="day day-overdue">
+        <header class="day-head">
+          <h3>{{ text.overdue }}</h3>
+          <span class="day-balance num">{{ formatBRL(model.overdueTotalCents(), { explicitSign: true }) }}</span>
+        </header>
+        <ul class="rows">
+          @for (entry of model.overdue(); track entry.id) {
+            <li class="row">
+              <span class="what">{{ entry.description }}<small>{{ text.overdueSince }} {{ formatDayShort(entry.date) }}</small></span>
+              <span class="tag tag-overdue">atrasado</span>
+              <span class="amount num" [class.in]="entry.amountCents > 0" [class.out]="entry.amountCents < 0">{{ formatBRL(entry.amountCents, { explicitSign: true }) }}</span>
+            </li>
+          }
+        </ul>
+      </article>
+    }
+
+    @for (group of model.groups(); track group.date) {
+      <article class="day" [class.day-negative]="endOfDay(group.date) < 0">
+        <header class="day-head">
+          <h3>{{ dayLabel(group.date) }}</h3>
+          <span class="day-balance num" [class.negative]="endOfDay(group.date) < 0">
+            <span class="day-balance-label">{{ text.balanceAtEndOfDay }}</span>
+            {{ formatBRL(endOfDay(group.date)) }}
+          </span>
+        </header>
+        <ul class="rows">
+          @for (entry of group.entries; track entry.id) {
+            <li class="row">
+              <span class="what">{{ entry.description }}</span>
+              <span class="tag" [class.tag-in]="entry.kind === 'receivable'" [class.tag-out]="entry.kind === 'payable'">{{ text.kind[entry.kind] }}</span>
+              <span class="amount num" [class.in]="entry.amountCents > 0" [class.out]="entry.amountCents < 0">{{ formatBRL(entry.amountCents, { explicitSign: true }) }}</span>
+            </li>
+          }
+        </ul>
+      </article>
+    }
+  </section>
+</main>
