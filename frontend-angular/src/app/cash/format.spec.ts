@@ -1,4 +1,4 @@
-import { addDays, daysBetween, formatBRL, formatDayLong, formatDayShort } from './format';
+import { addDays, daysBetween, formatBRL, formatDayLong, formatDayShort, parseBRL } from './format';
 
 const NBSP = ' ';
 const MINUS = '−';
@@ -24,6 +24,30 @@ describe('formatBRL', () => {
 
   it('dado centavos não inteiros, quando formata, então rejeita para não esconder erro de escala', () => {
     expect(() => formatBRL(10.5)).toThrow();
+  });
+});
+
+describe('parseBRL', () => {
+  it('dado texto em pt-BR, quando lê, então devolve centavos', () => {
+    expect(parseBRL('1.234,56')).toBe(123456);
+    expect(parseBRL('35')).toBe(3500);
+    expect(parseBRL('0,05')).toBe(5);
+    expect(parseBRL('12,5')).toBe(1250);
+  });
+
+  it('dado sinal de menos, quando lê, então vira saída', () => {
+    expect(parseBRL('-350,00')).toBe(-35000);
+    expect(parseBRL(`${MINUS}20`)).toBe(-2000);
+  });
+
+  it('dado prefixo R$ e espaços, quando lê, então ignora', () => {
+    expect(parseBRL(` R$${NBSP}1.000 `)).toBe(100000);
+  });
+
+  it('dado texto inválido, quando lê, então devolve nulo', () => {
+    for (const text of ['', 'abc', '1,234', '1.23', '--5', '12,345,6', '1,', ',50']) {
+      expect(parseBRL(text), text).toBeNull();
+    }
   });
 });
 

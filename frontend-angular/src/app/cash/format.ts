@@ -19,6 +19,19 @@ export function formatBRL(cents: number, options: { explicitSign?: boolean } = {
   return options.explicitSign && cents > 0 ? `+${body}` : body;
 }
 
+const BRL_INPUT = /^([-−])?(\d{1,3}(?:\.\d{3})+|\d+)(?:,(\d{1,2}))?$/;
+
+/** Lê o que a pessoa digita ("1.234,56", "-35", "R$ 10"). Devolve centavos, ou nulo se não for um valor. */
+export function parseBRL(text: string): number | null {
+  const match = BRL_INPUT.exec(text.replace(/R\$|\s/g, ''));
+  if (!match) {
+    return null;
+  }
+  const [, sign, integer, fraction = ''] = match;
+  const cents = Number(integer.replaceAll('.', '')) * 100 + Number(fraction.padEnd(2, '0'));
+  return sign ? -cents : cents;
+}
+
 function parse(date: IsoDate): number {
   const match = /^(\d{4})-(\d{2})-(\d{2})$/.exec(date);
   if (!match) {
