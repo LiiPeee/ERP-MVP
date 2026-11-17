@@ -1,0 +1,22 @@
+# Configuração do gitleaks: as regras padrão continuam todas ligadas.
+# A única exceção abaixo vale para valores SINTÉTICOS e claramente falsos, e só quando as DUAS condições se cumprem:
+#   1) o arquivo é de teste (src/test, e2e/tests) ou o .env.example; e
+#   2) a linha traz um marcador de valor falso (sintetic..., dev-only, fake-) ou é um dos exemplos fixos abaixo.
+# Uma credencial real num arquivo de produção, ou numa linha de teste sem marcador, continua sendo achada.
+[extend]
+useDefault = true
+
+[[allowlists]]
+description = "Senhas, chaves e tokens sintéticos de teste e de desenvolvimento"
+condition = "AND"
+regexTarget = "line"
+paths = [
+  '''(^|/)src/test/''',
+  '''(^|/)e2e/tests/''',
+  '''(^|/)\.env\.example$''',
+]
+regexes = [
+  '''(?i)(sintetic|dev-only|fake-)''',
+  '''ZGV2LW9ubHktY2hhbmdlLW1l''',                         # base64 do valor de desenvolvimento do .env.example
+  '''eyJhbGciOiJIUzI1NiJ9\.eyJzdWIiOiJ0ZXN0ZSJ9''',       # JWT de exemplo, sem chave real, usado no teste de mascaramento de logs
+]
