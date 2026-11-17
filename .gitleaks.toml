@@ -18,6 +18,6 @@ paths = [
 ]
 regexes = [
   '''(?i)(sintetic|dev-only|fake-)''',
-  '''ZGV2LW9ubHktY2hhbmdlLW1l''',                         # base64 do valor de desenvolvimento do .env.example
+  '''ZGV2LW9ubHkt''',                                     # base64 de "dev-only-": valores de desenvolvimento do .env.example
   '''eyJhbGciOiJIUzI1NiJ9\.eyJzdWIiOiJ0ZXN0ZSJ9''',       # JWT de exemplo, sem chave real, usado no teste de mascaramento de logs
 ]

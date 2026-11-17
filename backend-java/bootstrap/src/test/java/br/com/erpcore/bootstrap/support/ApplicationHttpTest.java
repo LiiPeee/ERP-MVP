@@ -37,6 +37,11 @@ public @interface ApplicationHttpTest {
             List<String> properties = new ArrayList<>(PostgresTestDatabase.applicationRoleProperties());
             properties.add("erp.security.jwt.active-key-id=" + ACTIVE_KEY_ID);
             properties.add("erp.security.jwt.keys." + ACTIVE_KEY_ID + "=" + Base64.getEncoder().encodeToString(ACTIVE_SECRET));
+            properties.add("erp.security.field.active-key-id=" + ACTIVE_KEY_ID);
+            properties.add("erp.security.field.keys." + ACTIVE_KEY_ID + "="
+                    + Base64.getEncoder().encodeToString("chave-sintetica-de-teste-aes-256".getBytes()));
+            properties.add("erp.security.field.blind-index-key="
+                    + Base64.getEncoder().encodeToString("chave-sintetica-do-indice-cego-de-teste".getBytes()));
             TestPropertyValues.of(properties.toArray(String[]::new)).applyTo(context);
             // Limites altos por padrão, com a menor precedência: um @TestPropertySource consegue baixá-los.
             context.getEnvironment().getPropertySources().addLast(new MapPropertySource("high-rate-limits", Map.of(
