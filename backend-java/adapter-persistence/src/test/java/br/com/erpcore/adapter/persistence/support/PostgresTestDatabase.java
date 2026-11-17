@@ -84,6 +84,6 @@ public final class PostgresTestDatabase {
 
     /** Apaga todos os dados. Só os testes de contrato usam, porque dependem de começar sem nada. */
     public static void truncateAll() {
-        superuserJdbc().sql("TRUNCATE audit_event, refresh_token, company_membership, \"user\", company CASCADE").update();
+        superuserJdbc().sql("TRUNCATE audit_event, quote_public_link, quote_item, quote, vehicle, contact, company_profile, refresh_token, company_membership, \"user\", company CASCADE").update();
     }
 }

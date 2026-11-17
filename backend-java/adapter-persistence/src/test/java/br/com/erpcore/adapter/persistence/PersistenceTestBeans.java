@@ -12,13 +12,43 @@ import br.com.erpcore.application.identity.SessionIssuer;
 import br.com.erpcore.application.identity.port.out.MembershipRepository;
 import br.com.erpcore.application.identity.port.out.RefreshTokenRepository;
 import br.com.erpcore.application.identity.port.out.UserRepository;
+import br.com.erpcore.application.shared.port.out.FieldProtector;
 import br.com.erpcore.application.shared.port.out.IdGenerator;
 import br.com.erpcore.application.shared.port.out.UnitOfWork;
 import br.com.erpcore.application.support.FakeAccessTokenIssuer;
+import br.com.erpcore.application.support.FakeFieldProtector;
 import br.com.erpcore.application.support.FakePasswordHasher;
 import br.com.erpcore.application.support.FakeRefreshTokenCodec;
 import br.com.erpcore.domain.identity.LoginLockoutPolicy;
 import br.com.erpcore.domain.identity.SessionPolicy;
+import br.com.erpcore.application.contact.CreateContactUseCase;
+import br.com.erpcore.application.contact.ListContactsUseCase;
+import br.com.erpcore.application.contact.port.out.ContactRepository;
+import br.com.erpcore.application.identity.OwnerGuard;
+import br.com.erpcore.application.profile.GetCompanyProfileUseCase;
+import br.com.erpcore.application.profile.UpdateCompanyProfileUseCase;
+import br.com.erpcore.application.profile.port.out.CompanyProfileRepository;
+import br.com.erpcore.application.quote.ApproveQuoteByLinkUseCase;
+import br.com.erpcore.application.quote.CancelQuoteUseCase;
+import br.com.erpcore.application.quote.ReviseQuoteItemsUseCase;
+import br.com.erpcore.application.quote.ConfirmQuoteUseCase;
+import br.com.erpcore.application.quote.CreateQuoteDraftUseCase;
+import br.com.erpcore.application.quote.ExpireDueQuotesUseCase;
+import br.com.erpcore.application.quote.GetPublicQuoteUseCase;
+import br.com.erpcore.application.quote.GetQuoteUseCase;
+import br.com.erpcore.application.quote.ListQuotesUseCase;
+import br.com.erpcore.application.quote.RejectQuoteByLinkUseCase;
+import br.com.erpcore.application.quote.port.out.PublicQuoteUrls;
+import br.com.erpcore.application.quote.port.out.QuoteDelivery;
+import br.com.erpcore.application.quote.port.out.QuoteLinkCodec;
+import br.com.erpcore.application.quote.port.out.QuoteLinkRepository;
+import br.com.erpcore.application.quote.port.out.QuoteRepository;
+import br.com.erpcore.application.support.FakePublicQuoteUrls;
+import br.com.erpcore.application.support.FakeQuoteDelivery;
+import br.com.erpcore.application.support.FakeQuoteLinkCodec;
+import br.com.erpcore.application.vehicle.RegisterVehicleUseCase;
+import br.com.erpcore.application.vehicle.port.out.VehicleRepository;
+import java.time.ZoneId;
 import java.time.Clock;
 import java.time.Duration;
 import java.util.UUID;
@@ -106,5 +136,129 @@ class PersistenceTestBeans {
                                                    CompanyRepository companies, MembershipRepository memberships,
                                                    AuditRecorder audit) {
         return new GetCurrentContextUseCase(unitOfWork, users, companies, memberships, audit);
+    }
+
+    @Bean
+    FieldProtector fieldProtector() {
+        return new FakeFieldProtector();
+    }
+
+    @Bean
+    OwnerGuard ownerGuard(MembershipRepository memberships) {
+        return new OwnerGuard(memberships);
+    }
+
+    @Bean
+    FakeQuoteLinkCodec quoteLinkCodec() {
+        return new FakeQuoteLinkCodec();
+    }
+
+    @Bean
+    FakeQuoteDelivery quoteDelivery() {
+        return new FakeQuoteDelivery();
+    }
+
+    @Bean
+    PublicQuoteUrls publicQuoteUrls() {
+        return new FakePublicQuoteUrls();
+    }
+
+    @Bean
+    UpdateCompanyProfileUseCase updateProfileUseCase(UnitOfWork unitOfWork, CompanyProfileRepository profiles,
+                                                     OwnerGuard guard, AuditRecorder audit) {
+        return new UpdateCompanyProfileUseCase(unitOfWork, profiles, guard, audit);
+    }
+
+    @Bean
+    GetCompanyProfileUseCase getProfileUseCase(UnitOfWork unitOfWork, CompanyProfileRepository profiles,
+                                               CompanyRepository companies, OwnerGuard guard) {
+        return new GetCompanyProfileUseCase(unitOfWork, profiles, companies, guard);
+    }
+
+    @Bean
+    CreateContactUseCase createContactUseCase(UnitOfWork unitOfWork, ContactRepository contacts, OwnerGuard guard,
+                                              AuditRecorder audit, IdGenerator ids, Clock clock) {
+        return new CreateContactUseCase(unitOfWork, contacts, guard, audit, ids, clock);
+    }
+
+    @Bean
+    ListContactsUseCase listContactsUseCase(UnitOfWork unitOfWork, ContactRepository contacts, OwnerGuard guard) {
+        return new ListContactsUseCase(unitOfWork, contacts, guard);
+    }
+
+    @Bean
+    RegisterVehicleUseCase registerVehicleUseCase(UnitOfWork unitOfWork, ContactRepository contacts,
+                                                  VehicleRepository vehicles, OwnerGuard guard, AuditRecorder audit,
+                                                  IdGenerator ids, Clock clock) {
+        return new RegisterVehicleUseCase(unitOfWork, contacts, vehicles, guard, audit, ids, clock);
+    }
+
+    @Bean
+    CreateQuoteDraftUseCase createQuoteDraftUseCase(UnitOfWork unitOfWork, ContactRepository contacts,
+                                                    VehicleRepository vehicles, QuoteRepository quotes,
+                                                    CompanyProfileRepository profiles, OwnerGuard guard,
+                                                    AuditRecorder audit, IdGenerator ids, Clock clock) {
+        return new CreateQuoteDraftUseCase(unitOfWork, contacts, vehicles, quotes, profiles, guard, audit, ids, clock);
+    }
+
+    @Bean
+    ConfirmQuoteUseCase confirmQuoteUseCase(UnitOfWork unitOfWork, QuoteRepository quotes, QuoteLinkRepository links,
+                                            QuoteLinkCodec codec, PublicQuoteUrls urls, QuoteDelivery delivery,
+                                            OwnerGuard guard, AuditRecorder audit, Clock clock) {
+        return new ConfirmQuoteUseCase(unitOfWork, quotes, links, codec, urls, delivery, guard, audit, clock,
+                ZoneId.of("America/Sao_Paulo"));
+    }
+
+    @Bean
+    GetQuoteUseCase getQuoteUseCase(UnitOfWork unitOfWork, ContactRepository contacts, VehicleRepository vehicles,
+                                    QuoteRepository quotes, OwnerGuard guard, Clock clock) {
+        return new GetQuoteUseCase(unitOfWork, contacts, vehicles, quotes, guard, clock);
+    }
+
+    @Bean
+    ListQuotesUseCase listQuotesUseCase(UnitOfWork unitOfWork, ContactRepository contacts, VehicleRepository vehicles,
+                                        QuoteRepository quotes, OwnerGuard guard, Clock clock) {
+        return new ListQuotesUseCase(unitOfWork, contacts, vehicles, quotes, guard, clock);
+    }
+
+    @Bean
+    GetPublicQuoteUseCase getPublicQuoteUseCase(UnitOfWork unitOfWork, QuoteRepository quotes,
+                                                QuoteLinkRepository links, QuoteLinkCodec codec,
+                                                VehicleRepository vehicles, CompanyProfileRepository profiles,
+                                                CompanyRepository companies, Clock clock) {
+        return new GetPublicQuoteUseCase(unitOfWork, quotes, links, codec, vehicles, profiles, companies, clock);
+    }
+
+    @Bean
+    ApproveQuoteByLinkUseCase approveQuoteByLinkUseCase(UnitOfWork unitOfWork, QuoteRepository quotes,
+                                                        QuoteLinkRepository links, QuoteLinkCodec codec,
+                                                        AuditRecorder audit, Clock clock) {
+        return new ApproveQuoteByLinkUseCase(unitOfWork, quotes, links, codec, audit, clock);
+    }
+
+    @Bean
+    RejectQuoteByLinkUseCase rejectQuoteByLinkUseCase(UnitOfWork unitOfWork, QuoteRepository quotes,
+                                                      QuoteLinkRepository links, QuoteLinkCodec codec,
+                                                      AuditRecorder audit, Clock clock) {
+        return new RejectQuoteByLinkUseCase(unitOfWork, quotes, links, codec, audit, clock);
+    }
+
+    @Bean
+    ExpireDueQuotesUseCase expireDueQuotesUseCase(UnitOfWork unitOfWork, QuoteRepository quotes, AuditRecorder audit,
+                                                  Clock clock) {
+        return new ExpireDueQuotesUseCase(unitOfWork, quotes, audit, clock, 50);
+    }
+
+    @Bean
+    ReviseQuoteItemsUseCase reviseQuoteItemsUseCase(UnitOfWork unitOfWork, ContactRepository contacts,
+                                                    VehicleRepository vehicles, QuoteRepository quotes,
+                                                    OwnerGuard guard, AuditRecorder audit, Clock clock) {
+        return new ReviseQuoteItemsUseCase(unitOfWork, contacts, vehicles, quotes, guard, audit, clock);
+    }
+
+    @Bean
+    CancelQuoteUseCase cancelQuoteUseCase(UnitOfWork unitOfWork, ContactRepository contacts, VehicleRepository vehicles,
+                                          QuoteRepository quotes, OwnerGuard guard, AuditRecorder audit, Clock clock) {
+        return new CancelQuoteUseCase(unitOfWork, contacts, vehicles, quotes, guard, audit, clock);
     }
 }

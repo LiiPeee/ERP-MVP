@@ -12,7 +12,8 @@ import org.junit.jupiter.api.Test;
 class MigrationsFromScratchIT {
 
     private static final List<String> EXPECTED_TABLES =
-            List.of("audit_event", "company", "company_membership", "refresh_token", "user");
+            List.of("audit_event", "company", "company_membership", "company_profile", "contact", "quote", "quote_item",
+                    "quote_public_link", "refresh_token", "user", "vehicle");
 
     @Test
     void givenAnEmptyDatabase_whenTheApplicationStarts_thenEveryMigrationIsAppliedSuccessfully() {
@@ -28,7 +29,7 @@ class MigrationsFromScratchIT {
     }
 
     @Test
-    void givenTheMigratedDatabase_whenListingTables_thenTheFivePhaseZeroTablesExist() {
+    void givenTheMigratedDatabase_whenListingTables_thenExactlyTheExpectedTablesExist() {
         var tables = PostgresTestDatabase.superuserJdbc()
                 .sql("SELECT table_name FROM information_schema.tables WHERE table_schema = 'public' "
                         + "AND table_name <> 'flyway_schema_history' ORDER BY table_name")

@@ -9,6 +9,24 @@ import br.com.erpcore.adapter.persistence.identity.JpaUserRepository;
 import br.com.erpcore.adapter.persistence.identity.MembershipJpaRepository;
 import br.com.erpcore.adapter.persistence.identity.RefreshTokenJpaRepository;
 import br.com.erpcore.adapter.persistence.identity.UserJpaRepository;
+import br.com.erpcore.adapter.persistence.contact.ContactJpaRepository;
+import br.com.erpcore.adapter.persistence.contact.JpaContactRepository;
+import br.com.erpcore.adapter.persistence.profile.CompanyProfileJpaRepository;
+import br.com.erpcore.adapter.persistence.profile.JpaCompanyProfileRepository;
+import br.com.erpcore.adapter.persistence.quote.JpaQuoteLinkRepository;
+import br.com.erpcore.adapter.persistence.quote.JpaQuoteRepository;
+import br.com.erpcore.adapter.persistence.quote.QuoteItemJpaRepository;
+import br.com.erpcore.adapter.persistence.quote.QuoteJpaRepository;
+import br.com.erpcore.adapter.persistence.quote.QuoteLinkJpaRepository;
+import br.com.erpcore.adapter.persistence.support.FieldColumns;
+import br.com.erpcore.adapter.persistence.vehicle.JpaVehicleRepository;
+import br.com.erpcore.adapter.persistence.vehicle.VehicleJpaRepository;
+import br.com.erpcore.application.contact.port.out.ContactRepository;
+import br.com.erpcore.application.profile.port.out.CompanyProfileRepository;
+import br.com.erpcore.application.quote.port.out.QuoteLinkRepository;
+import br.com.erpcore.application.quote.port.out.QuoteRepository;
+import br.com.erpcore.application.shared.port.out.FieldProtector;
+import br.com.erpcore.application.vehicle.port.out.VehicleRepository;
 import br.com.erpcore.adapter.persistence.tenancy.PostgresUnitOfWork;
 import br.com.erpcore.adapter.persistence.tenancy.ScopeVariables;
 import br.com.erpcore.application.audit.port.out.AuditEventRepository;
@@ -66,5 +84,35 @@ public class PersistenceConfiguration {
     @Bean
     AuditEventRepository auditEventRepository(EntityManager entityManager) {
         return new JpaAuditEventRepository(entityManager);
+    }
+
+    @Bean
+    FieldColumns fieldColumns(FieldProtector protector) {
+        return new FieldColumns(protector);
+    }
+
+    @Bean
+    CompanyProfileRepository companyProfileRepository(CompanyProfileJpaRepository jpa, FieldColumns columns) {
+        return new JpaCompanyProfileRepository(jpa, columns);
+    }
+
+    @Bean
+    ContactRepository contactRepository(ContactJpaRepository jpa, FieldColumns columns) {
+        return new JpaContactRepository(jpa, columns);
+    }
+
+    @Bean
+    VehicleRepository vehicleRepository(VehicleJpaRepository jpa, FieldColumns columns) {
+        return new JpaVehicleRepository(jpa, columns);
+    }
+
+    @Bean
+    QuoteRepository quoteRepository(QuoteJpaRepository quotes, QuoteItemJpaRepository items) {
+        return new JpaQuoteRepository(quotes, items);
+    }
+
+    @Bean
+    QuoteLinkRepository quoteLinkRepository(QuoteLinkJpaRepository jpa) {
+        return new JpaQuoteLinkRepository(jpa);
     }
 }
