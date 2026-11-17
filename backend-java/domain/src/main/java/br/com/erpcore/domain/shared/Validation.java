@@ -6,6 +6,7 @@ public final class Validation {
     public static final String TOO_SHORT = "TOO_SHORT";
     public static final String TOO_LONG = "TOO_LONG";
     public static final String INVALID_FORMAT = "INVALID_FORMAT";
+    public static final String OUT_OF_RANGE = "OUT_OF_RANGE";
 
     private Validation() {
     }
