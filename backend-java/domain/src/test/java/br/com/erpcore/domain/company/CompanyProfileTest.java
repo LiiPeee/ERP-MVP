@@ -3,7 +3,7 @@ package br.com.erpcore.domain.company;
 import static br.com.erpcore.domain.shared.DomainValidationAssertions.assertRejectedWith;
 import static org.assertj.core.api.Assertions.assertThat;
 
-import br.com.erpcore.domain.contact.PhoneNumber;
+import br.com.erpcore.domain.shared.PhoneNumber;
 import java.time.Instant;
 import java.util.UUID;
 import org.junit.jupiter.api.Test;

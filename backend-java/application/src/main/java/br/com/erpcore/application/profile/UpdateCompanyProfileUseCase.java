@@ -1,14 +1,14 @@
-package br.com.erpcore.application.company;
+package br.com.erpcore.application.profile;
 
 import br.com.erpcore.application.audit.AuditRecorder;
-import br.com.erpcore.application.company.port.out.CompanyProfileRepository;
+import br.com.erpcore.application.profile.port.out.CompanyProfileRepository;
 import br.com.erpcore.application.identity.OwnerGuard;
 import br.com.erpcore.application.shared.port.out.AccessScope;
 import br.com.erpcore.application.shared.port.out.UnitOfWork;
 import br.com.erpcore.domain.audit.AuditEventType;
 import br.com.erpcore.domain.company.CompanyId;
 import br.com.erpcore.domain.company.CompanyProfile;
-import br.com.erpcore.domain.contact.PhoneNumber;
+import br.com.erpcore.domain.shared.PhoneNumber;
 import br.com.erpcore.domain.identity.UserId;
 import java.util.Map;
 

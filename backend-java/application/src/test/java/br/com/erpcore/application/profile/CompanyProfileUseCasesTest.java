@@ -1,4 +1,4 @@
-package br.com.erpcore.application.company;
+package br.com.erpcore.application.profile;
 
 import static br.com.erpcore.application.support.ApplicationFixture.CORRELATION_ID;
 import static org.assertj.core.api.Assertions.assertThat;
@@ -86,6 +86,13 @@ class CompanyProfileUseCasesTest {
     @Test
     void givenNoBusinessPhone_whenUpdating_thenThePhoneIsAbsent() {
         fixture.updateCompanyProfileUseCase().execute(new UpdateCompanyProfileCommand(principal, "Oficina", null, null, null, 7, null, CORRELATION_ID));
+
+        assertThat(fixture.getCompanyProfileUseCase().execute(new GetCompanyProfileQuery(principal)).businessPhoneMasked()).isNull();
+    }
+
+    @Test
+    void givenABlankBusinessPhone_whenUpdating_thenItIsTreatedAsNoPhone() {
+        fixture.updateCompanyProfileUseCase().execute(new UpdateCompanyProfileCommand(principal, "Oficina", "   ", null, null, 7, null, CORRELATION_ID));
 
         assertThat(fixture.getCompanyProfileUseCase().execute(new GetCompanyProfileQuery(principal)).businessPhoneMasked()).isNull();
     }

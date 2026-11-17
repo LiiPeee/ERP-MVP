@@ -3,7 +3,7 @@ package br.com.erpcore.application.contact.port.out;
 import br.com.erpcore.domain.company.CompanyId;
 import br.com.erpcore.domain.contact.Contact;
 import br.com.erpcore.domain.contact.ContactId;
-import br.com.erpcore.domain.contact.PhoneNumber;
+import br.com.erpcore.domain.shared.PhoneNumber;
 import java.util.List;
 import java.util.Optional;
 

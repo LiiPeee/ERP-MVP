@@ -1,4 +1,4 @@
-package br.com.erpcore.domain.contact;
+package br.com.erpcore.domain.shared;
 
 import static br.com.erpcore.domain.shared.DomainValidationAssertions.assertRejectedWith;
 import static org.assertj.core.api.Assertions.assertThat;

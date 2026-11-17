@@ -1,7 +1,5 @@
-package br.com.erpcore.domain.contact;
+package br.com.erpcore.domain.shared;
 
-import br.com.erpcore.domain.shared.DomainValidationException;
-import br.com.erpcore.domain.shared.Validation;
 import java.util.regex.Pattern;
 
 /**

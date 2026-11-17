@@ -2,6 +2,7 @@ package br.com.erpcore.domain.contact;
 
 import br.com.erpcore.domain.company.CompanyId;
 import br.com.erpcore.domain.identity.Email;
+import br.com.erpcore.domain.shared.PhoneNumber;
 import java.time.Instant;
 import java.util.Optional;
 

@@ -1,4 +1,4 @@
-package br.com.erpcore.application.company.port.out;
+package br.com.erpcore.application.profile.port.out;
 
 import br.com.erpcore.domain.company.CompanyId;
 import br.com.erpcore.domain.company.CompanyProfile;

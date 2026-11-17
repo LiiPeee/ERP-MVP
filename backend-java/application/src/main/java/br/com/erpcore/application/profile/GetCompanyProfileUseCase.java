@@ -1,6 +1,6 @@
-package br.com.erpcore.application.company;
+package br.com.erpcore.application.profile;
 
-import br.com.erpcore.application.company.port.out.CompanyProfileRepository;
+import br.com.erpcore.application.profile.port.out.CompanyProfileRepository;
 import br.com.erpcore.application.company.port.out.CompanyRepository;
 import br.com.erpcore.application.identity.OwnerGuard;
 import br.com.erpcore.application.shared.port.out.AccessScope;

@@ -4,7 +4,7 @@ import static br.com.erpcore.application.contract.BusinessContractData.profile;
 import static br.com.erpcore.application.contract.ContractData.company;
 import static org.assertj.core.api.Assertions.assertThat;
 
-import br.com.erpcore.application.company.port.out.CompanyProfileRepository;
+import br.com.erpcore.application.profile.port.out.CompanyProfileRepository;
 import br.com.erpcore.domain.company.Company;
 import br.com.erpcore.domain.company.CompanyProfile;
 import org.junit.jupiter.api.Test;

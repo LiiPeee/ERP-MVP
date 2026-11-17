@@ -11,7 +11,7 @@ import br.com.erpcore.domain.company.CompanyId;
 import br.com.erpcore.domain.contact.Contact;
 import br.com.erpcore.domain.contact.ContactId;
 import br.com.erpcore.domain.contact.ContactName;
-import br.com.erpcore.domain.contact.PhoneNumber;
+import br.com.erpcore.domain.shared.PhoneNumber;
 import br.com.erpcore.domain.identity.Email;
 import br.com.erpcore.domain.identity.UserId;
 import java.time.Clock;

@@ -12,7 +12,7 @@ import br.com.erpcore.domain.audit.AuditEventType;
 import br.com.erpcore.domain.company.CompanyId;
 import br.com.erpcore.domain.contact.Contact;
 import br.com.erpcore.domain.contact.PhoneAlreadyRegisteredException;
-import br.com.erpcore.domain.contact.PhoneNumber;
+import br.com.erpcore.domain.shared.PhoneNumber;
 import br.com.erpcore.domain.shared.DomainValidationException;
 import java.util.List;
 import org.junit.jupiter.api.Test;
@@ -46,6 +46,12 @@ class ContactUseCasesTest {
     @Test
     void givenNoEmail_whenCreatingAContact_thenTheMaskedEmailIsAbsent() {
         assertThat(create(principal, "Cliente Fictício", "11987654321", null).emailMasked()).isNull();
+    }
+
+    @Test
+    void givenABlankEmail_whenCreatingAContact_thenItIsTreatedAsNoEmail() {
+        assertThat(create(principal, "Cliente Fictício", "11987654321", "   ").emailMasked()).isNull();
+        assertThat(fixture.contacts.all().get(0).email()).isEmpty();
     }
 
     @Test

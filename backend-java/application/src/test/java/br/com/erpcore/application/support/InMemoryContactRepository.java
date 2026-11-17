@@ -5,7 +5,7 @@ import br.com.erpcore.domain.company.CompanyId;
 import br.com.erpcore.domain.contact.Contact;
 import br.com.erpcore.domain.contact.ContactId;
 import br.com.erpcore.domain.contact.PhoneAlreadyRegisteredException;
-import br.com.erpcore.domain.contact.PhoneNumber;
+import br.com.erpcore.domain.shared.PhoneNumber;
 import java.text.Normalizer;
 import java.util.Comparator;
 import java.util.LinkedHashMap;

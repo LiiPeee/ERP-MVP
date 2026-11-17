@@ -1,6 +1,6 @@
 package br.com.erpcore.application.support;
 
-import br.com.erpcore.application.company.port.out.CompanyProfileRepository;
+import br.com.erpcore.application.profile.port.out.CompanyProfileRepository;
 import br.com.erpcore.domain.company.CompanyId;
 import br.com.erpcore.domain.company.CompanyProfile;
 import java.util.LinkedHashMap;

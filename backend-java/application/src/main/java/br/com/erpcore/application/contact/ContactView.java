@@ -1,7 +1,7 @@
 package br.com.erpcore.application.contact;
 
 import br.com.erpcore.domain.contact.Contact;
-import br.com.erpcore.domain.contact.PhoneNumber;
+import br.com.erpcore.domain.shared.PhoneNumber;
 import br.com.erpcore.domain.identity.Email;
 import java.time.Instant;
 import java.util.UUID;

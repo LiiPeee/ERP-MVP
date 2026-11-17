@@ -1,7 +1,7 @@
-package br.com.erpcore.application.company;
+package br.com.erpcore.application.profile;
 
 import br.com.erpcore.domain.company.CompanyProfile;
-import br.com.erpcore.domain.contact.PhoneNumber;
+import br.com.erpcore.domain.shared.PhoneNumber;
 
 /** O perfil como a API o devolve: o telefone comercial vai mascarado. */
 public record CompanyProfileView(String displayName, String businessPhoneMasked, String address, String openingHours,

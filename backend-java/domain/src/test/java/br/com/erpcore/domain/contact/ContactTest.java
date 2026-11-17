@@ -5,6 +5,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 
 import br.com.erpcore.domain.company.CompanyId;
 import br.com.erpcore.domain.identity.Email;
+import br.com.erpcore.domain.shared.PhoneNumber;
 import java.time.Instant;
 import java.util.Optional;
 import java.util.UUID;

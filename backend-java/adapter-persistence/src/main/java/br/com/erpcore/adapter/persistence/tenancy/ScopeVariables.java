@@ -18,6 +18,7 @@ public final class ScopeVariables {
                    set_config('app.user_id', :userId, true),
                    set_config('app.email', :email, true),
                    set_config('app.token_hash', :tokenHash, true),
+                   set_config('app.quote_id', :quoteId, true),
                    set_config('app.family_id', '', true)
             """;
 
@@ -31,15 +32,20 @@ public final class ScopeVariables {
 
     public void apply(AccessScope scope) {
         Values values = switch (scope) {
-            case AccessScope.Anonymous anonymous -> new Values("anonymous", NONE, NONE, NONE, NONE);
+            case AccessScope.Anonymous anonymous -> new Values("anonymous", NONE, NONE, NONE, NONE, NONE);
             case AccessScope.Registration registration -> new Values("registration",
-                    registration.companyId().value().toString(), NONE, registration.email().value(), NONE);
+                    registration.companyId().value().toString(), NONE, registration.email().value(), NONE, NONE);
             case AccessScope.CredentialLookup lookup -> new Values("credential_lookup", NONE, NONE,
-                    lookup.email().value(), NONE);
+                    lookup.email().value(), NONE, NONE);
             case AccessScope.RefreshTokenLookup lookup -> new Values("refresh_token_lookup", NONE, NONE, NONE,
-                    lookup.tokenHash().value());
+                    lookup.tokenHash().value(), NONE);
+            case AccessScope.QuoteLinkLookup lookup -> new Values("quote_link_lookup", NONE, NONE, NONE,
+                    lookup.tokenHash().value(), NONE);
+            case AccessScope.QuoteDecision decision -> new Values("quote_decision", decision.companyId().value().toString(),
+                    NONE, NONE, NONE, decision.quoteId().value().toString());
+            case AccessScope.QuoteExpiration expiration -> new Values("quote_expiration", NONE, NONE, NONE, NONE, NONE);
             case AccessScope.Tenant tenant -> new Values("tenant", tenant.companyId().value().toString(),
-                    tenant.userId().value().toString(), NONE, NONE);
+                    tenant.userId().value().toString(), NONE, NONE, NONE);
         };
         jdbc.sql(APPLY_SQL)
                 .param("scope", values.scope())
@@ -47,6 +53,7 @@ public final class ScopeVariables {
                 .param("userId", values.userId())
                 .param("email", values.email())
                 .param("tokenHash", values.tokenHash())
+                .param("quoteId", values.quoteId())
                 .query().listOfRows();
     }
 
@@ -55,6 +62,7 @@ public final class ScopeVariables {
         jdbc.sql(REMEMBER_FAMILY_SQL).param("familyId", familyId.toString()).query().listOfRows();
     }
 
-    private record Values(String scope, String companyId, String userId, String email, String tokenHash) {
+    private record Values(String scope, String companyId, String userId, String email, String tokenHash,
+                          String quoteId) {
     }
 }

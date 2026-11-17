@@ -1,4 +1,4 @@
-package br.com.erpcore.application.company;
+package br.com.erpcore.application.profile;
 
 import br.com.erpcore.application.identity.AuthenticatedPrincipal;
 

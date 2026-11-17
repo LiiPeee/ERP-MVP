@@ -1,6 +1,6 @@
 package br.com.erpcore.domain.company;
 
-import br.com.erpcore.domain.contact.PhoneNumber;
+import br.com.erpcore.domain.shared.PhoneNumber;
 import br.com.erpcore.domain.shared.DomainValidationException;
 import br.com.erpcore.domain.shared.Validation;
 import java.util.Optional;

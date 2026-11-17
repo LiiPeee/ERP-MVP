@@ -1,6 +1,6 @@
 package br.com.erpcore.application.contract;
 
-import br.com.erpcore.application.company.port.out.CompanyProfileRepository;
+import br.com.erpcore.application.profile.port.out.CompanyProfileRepository;
 import br.com.erpcore.application.shared.port.out.AccessScope;
 import br.com.erpcore.application.support.InMemoryCompanyProfileRepository;
 import br.com.erpcore.application.support.InMemoryUnitOfWork;
