@@ -31,6 +31,12 @@
             <version>${bouncycastle.version}</version>
         </dependency>
         <dependency>
+            <!-- Criptografia de campo (AES-256-GCM com contexto autenticado e rotação de chave) e índice cego (HMAC). -->
+            <groupId>com.google.crypto.tink</groupId>
+            <artifactId>tink</artifactId>
+            <version>${tink.version}</version>
+        </dependency>
+        <dependency>
             <!-- Emissão (NimbusJwtEncoder) e validação (NimbusJwtDecoder) do token de acesso. -->
             <groupId>org.springframework.security</groupId>
             <artifactId>spring-security-oauth2-jose</artifactId>

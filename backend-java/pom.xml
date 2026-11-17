@@ -39,6 +39,7 @@
         <maven-toolchains-plugin.version>3.3.0</maven-toolchains-plugin.version>
         <argLine>-Xms32m -Xmx320m -XX:MaxMetaspaceSize=256m</argLine>
         <bouncycastle.version>1.87</bouncycastle.version>
+        <tink.version>1.24.0</tink.version>
         <springdoc.version>3.2.0</springdoc.version>
         <openapi-generator.version>7.27.0</openapi-generator.version>
         <jacoco-maven-plugin.version>0.8.16</jacoco-maven-plugin.version>

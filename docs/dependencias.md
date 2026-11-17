@@ -22,6 +22,7 @@ Versões conferidas em 16/11/2026. Versões gerenciadas pelo Spring Boot 4.1.2 n
 | spring-security-crypto | `Argon2PasswordEncoder` | Argon2id sem implementar criptografia. |
 | bcprov-jdk18on 1.87 (BouncyCastle) | Primitivas do Argon2 | O `Argon2PasswordEncoder` do Spring Security exige (documentado). |
 | spring-security-oauth2-jose | Emite (`NimbusJwtEncoder`) e valida (`NimbusJwtDecoder`) o token | Uma só família de bibliotecas para emitir e validar. |
+| tink 1.24.0 (Google) | Criptografia de campo (AES-256-GCM com contexto autenticado e rotação de chave) e índice cego (HMAC-SHA256) para telefone, e-mail e placa | Escolhida na aprovação da Fase 1. O JCA cru deixaria formato, IV e rotação por nossa conta (regra: nunca criptografia feita à mão). Mantida pelo Google, muito usada. Traz protobuf-java e gson. |
 | spring-boot + logback-classic | Log estruturado em JSON e o ponto único de mascaramento | `StructuredLoggingJsonMembersCustomizer`. |
 
 ### Testes e qualidade (Maven)
