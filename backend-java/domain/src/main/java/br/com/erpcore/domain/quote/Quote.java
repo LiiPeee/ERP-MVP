@@ -60,6 +60,21 @@ public final class Quote {
         return new Quote(id, companyId, contactId, vehicleId, validityDays, normalizedNote(note), now);
     }
 
+    /** Reconstitui o orçamento como foi gravado. Não aplica transições: o estado guardado já foi validado. */
+    public static Quote restore(QuoteId id, CompanyId companyId, ContactId contactId, VehicleId vehicleId,
+                                int validityDays, String note, Instant createdAt, List<QuoteItem> items,
+                                QuoteStatus status, Instant sentAt, Instant expiresAt, Instant decidedAt,
+                                String decisionReason) {
+        Quote quote = new Quote(id, companyId, contactId, vehicleId, validityDays, note, createdAt);
+        quote.items = List.copyOf(items);
+        quote.status = status;
+        quote.sentAt = sentAt;
+        quote.expiresAt = expiresAt;
+        quote.decidedAt = decidedAt;
+        quote.decisionReason = decisionReason;
+        return quote;
+    }
+
     // ---------------------------------------------------------------- montagem
 
     /** Troca todos os itens. Só enquanto o orçamento ainda não foi enviado. */

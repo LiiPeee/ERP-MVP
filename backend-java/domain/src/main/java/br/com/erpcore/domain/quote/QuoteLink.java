@@ -31,6 +31,13 @@ public final class QuoteLink {
         return new QuoteLink(quoteId, companyId, tokenHash, now, expiresAt);
     }
 
+    public static QuoteLink restore(QuoteId quoteId, CompanyId companyId, TokenHash tokenHash, Instant issuedAt,
+                                    Instant expiresAt, Instant decidedAt) {
+        QuoteLink link = new QuoteLink(quoteId, companyId, tokenHash, issuedAt, expiresAt);
+        link.decidedAt = decidedAt;
+        return link;
+    }
+
     /** Pode ser aberto para consulta (inclusive depois da decisão, para mostrar o resultado). */
     public boolean isActiveAt(Instant now) {
         return now.isBefore(expiresAt);
