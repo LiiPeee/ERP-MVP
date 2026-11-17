@@ -48,7 +48,9 @@ public @interface ApplicationHttpTest {
                     "erp.web.rate-limit.login-per-ip", "1000",
                     "erp.web.rate-limit.login-per-email", "1000",
                     "erp.web.rate-limit.register-per-ip", "1000",
-                    "erp.web.rate-limit.refresh-per-ip", "1000")));
+                    "erp.web.rate-limit.refresh-per-ip", "1000",
+                    "erp.web.rate-limit.public-link-per-ip", "1000",
+                    "erp.web.rate-limit.public-link-per-token", "1000")));
         }
     }
 }

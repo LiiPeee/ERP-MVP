@@ -17,6 +17,10 @@ public final class PublicRoutes {
             new Route(HttpMethod.POST, "/api/auth/login"),
             new Route(HttpMethod.POST, "/api/auth/refresh"),
             new Route(HttpMethod.POST, "/api/auth/logout"),
+            // O link do orçamento: o token no caminho é a credencial. Ler (GET) nunca consome; só a decisão (POST).
+            new Route(HttpMethod.GET, "/api/public/quotes/*"),
+            new Route(HttpMethod.POST, "/api/public/quotes/*/approve"),
+            new Route(HttpMethod.POST, "/api/public/quotes/*/reject"),
             new Route(HttpMethod.GET, "/actuator/health"),
             new Route(HttpMethod.GET, "/actuator/health/**"));
 
@@ -30,6 +34,8 @@ public final class PublicRoutes {
             new Route(HttpMethod.GET, "/login"),
             new Route(HttpMethod.GET, "/register"),
             new Route(HttpMethod.GET, "/me"),
+            // A página que o cliente abre pelo link do orçamento.
+            new Route(HttpMethod.GET, "/o/*"),
             new Route(HttpMethod.GET, "/*.js"),
             new Route(HttpMethod.GET, "/*.css"),
             new Route(HttpMethod.GET, "/*.ico"),

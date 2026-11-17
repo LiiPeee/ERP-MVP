@@ -1,6 +1,107 @@
 {
   "components" : {
     "schemas" : {
+      "CompanyProfileView" : {
+        "properties" : {
+          "address" : {
+            "type" : "string"
+          },
+          "businessPhoneMasked" : {
+            "type" : "string"
+          },
+          "defaultValidityDays" : {
+            "format" : "int32",
+            "type" : "integer"
+          },
+          "displayName" : {
+            "type" : "string"
+          },
+          "openingHours" : {
+            "type" : "string"
+          },
+          "signatureMessage" : {
+            "type" : "string"
+          }
+        },
+        "type" : "object"
+      },
+      "ContactView" : {
+        "properties" : {
+          "createdAt" : {
+            "format" : "date-time",
+            "type" : "string"
+          },
+          "emailMasked" : {
+            "type" : "string"
+          },
+          "id" : {
+            "format" : "uuid",
+            "type" : "string"
+          },
+          "name" : {
+            "type" : "string"
+          },
+          "phoneMasked" : {
+            "type" : "string"
+          }
+        },
+        "type" : "object"
+      },
+      "CreateRequest" : {
+        "properties" : {
+          "contactId" : {
+            "format" : "uuid",
+            "type" : "string"
+          },
+          "items" : {
+            "items" : {
+              "$ref" : "#/components/schemas/ItemRequest"
+            },
+            "maxItems" : 100,
+            "minItems" : 0,
+            "type" : "array"
+          },
+          "note" : {
+            "maxLength" : 1000,
+            "minLength" : 0,
+            "type" : "string"
+          },
+          "validityDays" : {
+            "format" : "int32",
+            "type" : "integer"
+          },
+          "vehicleId" : {
+            "format" : "uuid",
+            "type" : "string"
+          }
+        },
+        "type" : "object"
+      },
+      "ItemRequest" : {
+        "properties" : {
+          "description" : {
+            "maxLength" : 300,
+            "minLength" : 0,
+            "type" : "string"
+          },
+          "kind" : {
+            "maxLength" : 30,
+            "minLength" : 0,
+            "type" : "string"
+          },
+          "quantity" : {
+            "maxLength" : 30,
+            "minLength" : 0,
+            "type" : "string"
+          },
+          "unitPrice" : {
+            "maxLength" : 30,
+            "minLength" : 0,
+            "type" : "string"
+          }
+        },
+        "type" : "object"
+      },
       "LoginRequest" : {
         "properties" : {
           "email" : {
@@ -41,27 +142,224 @@
         },
         "type" : "object"
       },
+      "PublicQuoteDecision" : {
+        "properties" : {
+          "status" : {
+            "type" : "string"
+          }
+        },
+        "type" : "object"
+      },
+      "PublicQuoteView" : {
+        "properties" : {
+          "expiresAt" : {
+            "format" : "date-time",
+            "type" : "string"
+          },
+          "items" : {
+            "items" : {
+              "$ref" : "#/components/schemas/QuoteItemView"
+            },
+            "type" : "array"
+          },
+          "shopName" : {
+            "type" : "string"
+          },
+          "status" : {
+            "type" : "string"
+          },
+          "total" : {
+            "type" : "string"
+          },
+          "vehicleLabel" : {
+            "type" : "string"
+          }
+        },
+        "type" : "object"
+      },
+      "QuoteItemView" : {
+        "properties" : {
+          "description" : {
+            "type" : "string"
+          },
+          "kind" : {
+            "type" : "string"
+          },
+          "lineTotal" : {
+            "type" : "string"
+          },
+          "quantity" : {
+            "type" : "string"
+          },
+          "unitPrice" : {
+            "type" : "string"
+          }
+        },
+        "type" : "object"
+      },
+      "QuoteQueue" : {
+        "properties" : {
+          "awaitingClient" : {
+            "items" : {
+              "$ref" : "#/components/schemas/QuoteSummary"
+            },
+            "type" : "array"
+          },
+          "closed" : {
+            "items" : {
+              "$ref" : "#/components/schemas/QuoteSummary"
+            },
+            "type" : "array"
+          },
+          "needsOwner" : {
+            "items" : {
+              "$ref" : "#/components/schemas/QuoteSummary"
+            },
+            "type" : "array"
+          }
+        },
+        "type" : "object"
+      },
+      "QuoteSentResult" : {
+        "properties" : {
+          "delivered" : {
+            "type" : "boolean"
+          },
+          "expiresAt" : {
+            "format" : "date-time",
+            "type" : "string"
+          },
+          "publicUrl" : {
+            "type" : "string"
+          },
+          "quoteId" : {
+            "format" : "uuid",
+            "type" : "string"
+          }
+        },
+        "type" : "object"
+      },
+      "QuoteSummary" : {
+        "properties" : {
+          "contactName" : {
+            "type" : "string"
+          },
+          "createdAt" : {
+            "format" : "date-time",
+            "type" : "string"
+          },
+          "expiresAt" : {
+            "format" : "date-time",
+            "type" : "string"
+          },
+          "id" : {
+            "format" : "uuid",
+            "type" : "string"
+          },
+          "sentAt" : {
+            "format" : "date-time",
+            "type" : "string"
+          },
+          "status" : {
+            "type" : "string"
+          },
+          "total" : {
+            "type" : "string"
+          },
+          "vehicleLabel" : {
+            "type" : "string"
+          }
+        },
+        "type" : "object"
+      },
+      "QuoteView" : {
+        "properties" : {
+          "contactId" : {
+            "format" : "uuid",
+            "type" : "string"
+          },
+          "contactName" : {
+            "type" : "string"
+          },
+          "contactPhoneMasked" : {
+            "type" : "string"
+          },
+          "createdAt" : {
+            "format" : "date-time",
+            "type" : "string"
+          },
+          "decidedAt" : {
+            "format" : "date-time",
+            "type" : "string"
+          },
+          "decisionReason" : {
+            "type" : "string"
+          },
+          "expiresAt" : {
+            "format" : "date-time",
+            "type" : "string"
+          },
+          "id" : {
+            "format" : "uuid",
+            "type" : "string"
+          },
+          "items" : {
+            "items" : {
+              "$ref" : "#/components/schemas/QuoteItemView"
+            },
+            "type" : "array"
+          },
+          "note" : {
+            "type" : "string"
+          },
+          "sentAt" : {
+            "format" : "date-time",
+            "type" : "string"
+          },
+          "status" : {
+            "type" : "string"
+          },
+          "total" : {
+            "type" : "string"
+          },
+          "validityDays" : {
+            "format" : "int32",
+            "type" : "integer"
+          },
+          "vehicleId" : {
+            "format" : "uuid",
+            "type" : "string"
+          },
+          "vehicleLabel" : {
+            "type" : "string"
+          }
+        },
+        "type" : "object"
+      },
       "RegisterRequest" : {
         "properties" : {
-          "companyName" : {
-            "maxLength" : 120,
+          "brand" : {
+            "maxLength" : 100,
             "minLength" : 0,
             "type" : "string"
           },
-          "email" : {
-            "maxLength" : 254,
+          "model" : {
+            "maxLength" : 100,
             "minLength" : 0,
             "type" : "string"
           },
-          "ownerName" : {
-            "maxLength" : 120,
+          "odometerKm" : {
+            "format" : "int32",
+            "type" : "integer"
+          },
+          "plate" : {
+            "maxLength" : 100,
             "minLength" : 0,
             "type" : "string"
           },
-          "password" : {
-            "maxLength" : 128,
-            "minLength" : 0,
-            "type" : "string"
+          "year" : {
+            "format" : "int32",
+            "type" : "integer"
           }
         },
         "type" : "object"
@@ -79,6 +377,29 @@
         },
         "type" : "object"
       },
+      "RejectRequest" : {
+        "properties" : {
+          "reason" : {
+            "maxLength" : 1000,
+            "minLength" : 0,
+            "type" : "string"
+          }
+        },
+        "type" : "object"
+      },
+      "ReviseRequest" : {
+        "properties" : {
+          "items" : {
+            "items" : {
+              "$ref" : "#/components/schemas/ItemRequest"
+            },
+            "maxItems" : 100,
+            "minItems" : 0,
+            "type" : "array"
+          }
+        },
+        "type" : "object"
+      },
       "SessionResponse" : {
         "properties" : {
           "accessToken" : {
@@ -87,6 +408,70 @@
           "expiresAt" : {
             "format" : "date-time",
             "type" : "string"
+          }
+        },
+        "type" : "object"
+      },
+      "UpdateRequest" : {
+        "properties" : {
+          "address" : {
+            "maxLength" : 300,
+            "minLength" : 0,
+            "type" : "string"
+          },
+          "businessPhone" : {
+            "maxLength" : 300,
+            "minLength" : 0,
+            "type" : "string"
+          },
+          "defaultValidityDays" : {
+            "format" : "int32",
+            "type" : "integer"
+          },
+          "displayName" : {
+            "maxLength" : 300,
+            "minLength" : 0,
+            "type" : "string"
+          },
+          "openingHours" : {
+            "maxLength" : 300,
+            "minLength" : 0,
+            "type" : "string"
+          },
+          "signatureMessage" : {
+            "maxLength" : 300,
+            "minLength" : 0,
+            "type" : "string"
+          }
+        },
+        "type" : "object"
+      },
+      "VehicleView" : {
+        "properties" : {
+          "brand" : {
+            "type" : "string"
+          },
+          "contactId" : {
+            "format" : "uuid",
+            "type" : "string"
+          },
+          "id" : {
+            "format" : "uuid",
+            "type" : "string"
+          },
+          "model" : {
+            "type" : "string"
+          },
+          "odometerKm" : {
+            "format" : "int32",
+            "type" : "integer"
+          },
+          "plateMasked" : {
+            "type" : "string"
+          },
+          "year" : {
+            "format" : "int32",
+            "type" : "integer"
           }
         },
         "type" : "object"
@@ -185,7 +570,7 @@
     },
     "/api/auth/register" : {
       "post" : {
-        "operationId" : "register",
+        "operationId" : "register_1",
         "requestBody" : {
           "content" : {
             "application/json" : {
@@ -212,6 +597,205 @@
         "tags" : [ "Auth" ]
       }
     },
+    "/api/company-profile" : {
+      "get" : {
+        "operationId" : "get",
+        "responses" : {
+          "200" : {
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/CompanyProfileView"
+                }
+              }
+            },
+            "description" : "OK"
+          }
+        },
+        "security" : [ {
+          "bearerAuth" : [ ]
+        } ],
+        "summary" : "O perfil da oficina que aparece para o cliente (telefone mascarado)",
+        "tags" : [ "Perfil da oficina" ]
+      },
+      "put" : {
+        "operationId" : "update",
+        "requestBody" : {
+          "content" : {
+            "application/json" : {
+              "schema" : {
+                "$ref" : "#/components/schemas/UpdateRequest"
+              }
+            }
+          },
+          "required" : true
+        },
+        "responses" : {
+          "200" : {
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/CompanyProfileView"
+                }
+              }
+            },
+            "description" : "OK"
+          }
+        },
+        "security" : [ {
+          "bearerAuth" : [ ]
+        } ],
+        "summary" : "Atualiza o perfil da oficina",
+        "tags" : [ "Perfil da oficina" ]
+      }
+    },
+    "/api/contacts" : {
+      "get" : {
+        "operationId" : "list",
+        "parameters" : [ {
+          "in" : "query",
+          "name" : "name",
+          "required" : false,
+          "schema" : {
+            "maxLength" : 120,
+            "minLength" : 0,
+            "type" : "string"
+          }
+        }, {
+          "in" : "query",
+          "name" : "limit",
+          "required" : false,
+          "schema" : {
+            "default" : 0,
+            "format" : "int32",
+            "type" : "integer"
+          }
+        } ],
+        "responses" : {
+          "200" : {
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "items" : {
+                    "$ref" : "#/components/schemas/ContactView"
+                  },
+                  "type" : "array"
+                }
+              }
+            },
+            "description" : "OK"
+          }
+        },
+        "security" : [ {
+          "bearerAuth" : [ ]
+        } ],
+        "summary" : "Busca clientes pelo nome (no máximo 50); telefone e e-mail voltam mascarados",
+        "tags" : [ "Clientes da oficina" ]
+      },
+      "post" : {
+        "operationId" : "create",
+        "requestBody" : {
+          "content" : {
+            "application/json" : {
+              "schema" : {
+                "$ref" : "#/components/schemas/CreateRequest"
+              }
+            }
+          },
+          "required" : true
+        },
+        "responses" : {
+          "201" : {
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/ContactView"
+                }
+              }
+            },
+            "description" : "Created"
+          }
+        },
+        "security" : [ {
+          "bearerAuth" : [ ]
+        } ],
+        "summary" : "Cadastra um cliente (telefone obrigatório, e-mail opcional)",
+        "tags" : [ "Clientes da oficina" ]
+      }
+    },
+    "/api/contacts/{contactId}/vehicles" : {
+      "get" : {
+        "operationId" : "list_1",
+        "parameters" : [ {
+          "in" : "path",
+          "name" : "contactId",
+          "required" : true,
+          "schema" : {
+            "format" : "uuid",
+            "type" : "string"
+          }
+        } ],
+        "responses" : {
+          "200" : {
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "items" : {
+                    "$ref" : "#/components/schemas/VehicleView"
+                  },
+                  "type" : "array"
+                }
+              }
+            },
+            "description" : "OK"
+          }
+        },
+        "security" : [ {
+          "bearerAuth" : [ ]
+        } ],
+        "summary" : "Os veículos de um cliente; a placa volta mascarada",
+        "tags" : [ "Veículos" ]
+      },
+      "post" : {
+        "operationId" : "register",
+        "parameters" : [ {
+          "in" : "path",
+          "name" : "contactId",
+          "required" : true,
+          "schema" : {
+            "format" : "uuid",
+            "type" : "string"
+          }
+        } ],
+        "requestBody" : {
+          "content" : {
+            "application/json" : {
+              "schema" : {
+                "$ref" : "#/components/schemas/RegisterRequest"
+              }
+            }
+          },
+          "required" : true
+        },
+        "responses" : {
+          "201" : {
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/VehicleView"
+                }
+              }
+            },
+            "description" : "Created"
+          }
+        },
+        "security" : [ {
+          "bearerAuth" : [ ]
+        } ],
+        "summary" : "Cadastra um veículo do cliente",
+        "tags" : [ "Veículos" ]
+      }
+    },
     "/api/me" : {
       "get" : {
         "operationId" : "me",
@@ -232,6 +816,313 @@
         } ],
         "summary" : "Quem sou eu: usuário, empresa e papel",
         "tags" : [ "Me" ]
+      }
+    },
+    "/api/public/quotes/{token}" : {
+      "get" : {
+        "operationId" : "view",
+        "parameters" : [ {
+          "in" : "path",
+          "name" : "token",
+          "required" : true,
+          "schema" : {
+            "type" : "string"
+          }
+        } ],
+        "responses" : {
+          "200" : {
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/PublicQuoteView"
+                }
+              }
+            },
+            "description" : "OK"
+          }
+        },
+        "summary" : "O orçamento como o cliente vê: só o necessário para decidir",
+        "tags" : [ "Link público do orçamento" ]
+      }
+    },
+    "/api/public/quotes/{token}/approve" : {
+      "post" : {
+        "operationId" : "approve",
+        "parameters" : [ {
+          "in" : "path",
+          "name" : "token",
+          "required" : true,
+          "schema" : {
+            "type" : "string"
+          }
+        } ],
+        "responses" : {
+          "200" : {
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/PublicQuoteDecision"
+                }
+              }
+            },
+            "description" : "OK"
+          }
+        },
+        "summary" : "O cliente aprova. Repetir não muda nada; depois de recusar, é recusado",
+        "tags" : [ "Link público do orçamento" ]
+      }
+    },
+    "/api/public/quotes/{token}/reject" : {
+      "post" : {
+        "operationId" : "reject",
+        "parameters" : [ {
+          "in" : "path",
+          "name" : "token",
+          "required" : true,
+          "schema" : {
+            "type" : "string"
+          }
+        } ],
+        "requestBody" : {
+          "content" : {
+            "application/json" : {
+              "schema" : {
+                "$ref" : "#/components/schemas/RejectRequest"
+              }
+            }
+          }
+        },
+        "responses" : {
+          "200" : {
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/PublicQuoteDecision"
+                }
+              }
+            },
+            "description" : "OK"
+          }
+        },
+        "summary" : "O cliente recusa, com motivo opcional. Repetir não muda nada; depois de aprovar, é recusado",
+        "tags" : [ "Link público do orçamento" ]
+      }
+    },
+    "/api/quotes" : {
+      "get" : {
+        "operationId" : "queue",
+        "responses" : {
+          "200" : {
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/QuoteQueue"
+                }
+              }
+            },
+            "description" : "OK"
+          }
+        },
+        "security" : [ {
+          "bearerAuth" : [ ]
+        } ],
+        "summary" : "A fila: o que precisa do dono, o que espera o cliente e o que já fechou",
+        "tags" : [ "Orçamentos" ]
+      },
+      "post" : {
+        "operationId" : "createDraft",
+        "requestBody" : {
+          "content" : {
+            "application/json" : {
+              "schema" : {
+                "$ref" : "#/components/schemas/CreateRequest"
+              }
+            }
+          },
+          "required" : true
+        },
+        "responses" : {
+          "201" : {
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/QuoteView"
+                }
+              }
+            },
+            "description" : "Created"
+          }
+        },
+        "security" : [ {
+          "bearerAuth" : [ ]
+        } ],
+        "summary" : "Cria um rascunho de orçamento; o total é calculado pelo servidor",
+        "tags" : [ "Orçamentos" ]
+      }
+    },
+    "/api/quotes/{quoteId}" : {
+      "get" : {
+        "operationId" : "get_1",
+        "parameters" : [ {
+          "in" : "path",
+          "name" : "quoteId",
+          "required" : true,
+          "schema" : {
+            "format" : "uuid",
+            "type" : "string"
+          }
+        } ],
+        "responses" : {
+          "200" : {
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/QuoteView"
+                }
+              }
+            },
+            "description" : "OK"
+          }
+        },
+        "security" : [ {
+          "bearerAuth" : [ ]
+        } ],
+        "summary" : "Um orçamento (telefone do cliente mascarado)",
+        "tags" : [ "Orçamentos" ]
+      }
+    },
+    "/api/quotes/{quoteId}/cancel" : {
+      "post" : {
+        "operationId" : "cancel",
+        "parameters" : [ {
+          "in" : "path",
+          "name" : "quoteId",
+          "required" : true,
+          "schema" : {
+            "format" : "uuid",
+            "type" : "string"
+          }
+        } ],
+        "responses" : {
+          "200" : {
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/QuoteView"
+                }
+              }
+            },
+            "description" : "OK"
+          }
+        },
+        "security" : [ {
+          "bearerAuth" : [ ]
+        } ],
+        "summary" : "Cancela o orçamento; o link deixa de funcionar",
+        "tags" : [ "Orçamentos" ]
+      }
+    },
+    "/api/quotes/{quoteId}/confirm" : {
+      "post" : {
+        "operationId" : "confirm",
+        "parameters" : [ {
+          "in" : "path",
+          "name" : "quoteId",
+          "required" : true,
+          "schema" : {
+            "format" : "uuid",
+            "type" : "string"
+          }
+        } ],
+        "responses" : {
+          "200" : {
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/QuoteSentResult"
+                }
+              }
+            },
+            "description" : "OK"
+          }
+        },
+        "security" : [ {
+          "bearerAuth" : [ ]
+        } ],
+        "summary" : "Confirma e envia ao cliente: gera o link de aprovação (aparece só nesta resposta)",
+        "tags" : [ "Orçamentos" ]
+      }
+    },
+    "/api/quotes/{quoteId}/items" : {
+      "put" : {
+        "operationId" : "reviseItems",
+        "parameters" : [ {
+          "in" : "path",
+          "name" : "quoteId",
+          "required" : true,
+          "schema" : {
+            "format" : "uuid",
+            "type" : "string"
+          }
+        } ],
+        "requestBody" : {
+          "content" : {
+            "application/json" : {
+              "schema" : {
+                "$ref" : "#/components/schemas/ReviseRequest"
+              }
+            }
+          },
+          "required" : true
+        },
+        "responses" : {
+          "200" : {
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/QuoteView"
+                }
+              }
+            },
+            "description" : "OK"
+          }
+        },
+        "security" : [ {
+          "bearerAuth" : [ ]
+        } ],
+        "summary" : "Troca todos os itens de um rascunho; a lista nova substitui a antiga",
+        "tags" : [ "Orçamentos" ]
+      }
+    },
+    "/api/quotes/{quoteId}/resend" : {
+      "post" : {
+        "operationId" : "resend",
+        "parameters" : [ {
+          "in" : "path",
+          "name" : "quoteId",
+          "required" : true,
+          "schema" : {
+            "format" : "uuid",
+            "type" : "string"
+          }
+        } ],
+        "responses" : {
+          "200" : {
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/QuoteSentResult"
+                }
+              }
+            },
+            "description" : "OK"
+          }
+        },
+        "security" : [ {
+          "bearerAuth" : [ ]
+        } ],
+        "summary" : "Reenvia um orçamento já enviado, com um link novo; o estado não muda",
+        "tags" : [ "Orçamentos" ]
       }
     }
   }

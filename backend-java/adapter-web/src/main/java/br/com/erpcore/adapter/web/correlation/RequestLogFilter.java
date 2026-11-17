@@ -14,7 +14,7 @@ import org.springframework.web.filter.OncePerRequestFilter;
 
 /**
  * Uma linha de log por requisição: método, caminho, status e duração. Nunca registra a query string, cabeçalhos
- * nem corpo. O correlation_id e o company_id saem no JSON porque estão no MDC quando a linha é escrita.
+ * nem corpo, e esconde o token do link público do caminho. O correlation_id e o company_id saem no JSON porque estão no MDC quando a linha é escrita.
  */
 @Component
 @Order(Ordered.HIGHEST_PRECEDENCE + 2)
@@ -30,7 +30,8 @@ final class RequestLogFilter extends OncePerRequestFilter {
             chain.doFilter(request, response);
         } finally {
             long millis = (System.nanoTime() - startedAt) / 1_000_000;
-            LOG.info("method={} path={} status={} duration_ms={}", request.getMethod(), request.getRequestURI(),
+            LOG.info("method={} path={} status={} duration_ms={}", request.getMethod(),
+                    LoggablePath.of(request.getRequestURI()),
                     response.getStatus(), millis);
         }
     }

@@ -46,4 +46,13 @@ class CorsAllowedOriginIT {
         assertThat(preflight("http://localhost:4200.site-malicioso.example").header("Access-Control-Allow-Origin")).isNull();
         assertThat(preflight("null").header("Access-Control-Allow-Origin")).isNull();
     }
+
+    @Test
+    void givenThePutMethod_whenPreflightingAnOwnerRoute_thenItIsAllowedButDeleteStillIsNot() {
+        Reply reply = new HttpApi(port).send("OPTIONS", "/api/company-profile", null, Map.of("Origin", "http://localhost:4200",
+                "Access-Control-Request-Method", "PUT", "Access-Control-Request-Headers", "authorization,content-type"));
+
+        assertThat(reply.status()).isEqualTo(200);
+        assertThat(reply.header("Access-Control-Allow-Methods")).contains("PUT").doesNotContain("DELETE");
+    }
 }

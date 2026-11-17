@@ -1,8 +1,7 @@
 package br.com.erpcore.adapter.web.me;
 
 import br.com.erpcore.adapter.web.correlation.CorrelationIds;
-import br.com.erpcore.adapter.web.security.TokenClaims;
-import br.com.erpcore.application.identity.AuthenticatedPrincipal;
+import br.com.erpcore.adapter.web.security.Principals;
 import br.com.erpcore.application.identity.CurrentContext;
 import br.com.erpcore.application.identity.GetCurrentContextQuery;
 import br.com.erpcore.application.identity.GetCurrentContextUseCase;
@@ -31,9 +30,8 @@ final class MeController {
     @Operation(summary = "Quem sou eu: usuário, empresa e papel")
     @SecurityRequirement(name = "bearerAuth")
     MeResponse me(@AuthenticationPrincipal Jwt token) {
-        AuthenticatedPrincipal principal = new AuthenticatedPrincipal(UUID.fromString(token.getSubject()),
-                UUID.fromString(token.getClaimAsString(TokenClaims.COMPANY)));
-        CurrentContext context = currentContext.execute(new GetCurrentContextQuery(principal, CorrelationIds.current()));
+        CurrentContext context = currentContext.execute(
+                new GetCurrentContextQuery(Principals.of(token), CorrelationIds.current()));
         return new MeResponse(context.userId(), context.email(), context.displayName(), context.companyId(),
                 context.companyName(), context.role());
     }

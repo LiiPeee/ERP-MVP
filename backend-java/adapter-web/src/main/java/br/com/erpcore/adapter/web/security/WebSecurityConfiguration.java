@@ -119,7 +119,7 @@ class WebSecurityConfiguration {
     private static CorsConfigurationSource corsSource(List<String> allowedOrigins) {
         CorsConfiguration configuration = new CorsConfiguration();
         configuration.setAllowedOrigins(allowedOrigins);
-        configuration.setAllowedMethods(List.of("GET", "POST"));
+        configuration.setAllowedMethods(List.of("GET", "POST", "PUT"));
         configuration.setAllowedHeaders(List.of("Authorization", "Content-Type", "X-XSRF-TOKEN", "X-Correlation-Id"));
         configuration.setAllowCredentials(true);
         configuration.setMaxAge(600L);

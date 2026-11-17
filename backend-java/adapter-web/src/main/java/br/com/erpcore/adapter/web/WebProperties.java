@@ -22,6 +22,9 @@ public record WebProperties(
             @DefaultValue("5") int registerPerIp,
             @DefaultValue("1h") Duration registerWindow,
             @DefaultValue("30") int refreshPerIp,
-            @DefaultValue("1m") Duration refreshWindow) {
+            @DefaultValue("1m") Duration refreshWindow,
+            @DefaultValue("60") int publicLinkPerIp,
+            @DefaultValue("20") int publicLinkPerToken,
+            @DefaultValue("1m") Duration publicLinkWindow) {
     }
 }

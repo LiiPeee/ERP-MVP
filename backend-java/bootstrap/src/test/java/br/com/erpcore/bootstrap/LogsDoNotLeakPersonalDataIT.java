@@ -165,4 +165,48 @@ class LogsDoNotLeakPersonalDataIT {
                 .anySatisfy(line -> assertThat(line).startsWith("{").contains("\"correlation_id\":\"corr-teste-123\"")
                         .contains("\"company_id\":\"" + companyId + "\"")));
     }
+
+    @Test
+    void givenAQuoteFlowWithAPhoneAPlateANameAndTheLink_whenReadingEveryLogEvent_thenNoneOfThemWasLogged() {
+        HttpApi api = new HttpApi(port);
+        String email = uniqueEmail("fluxo");
+        api.post("/api/auth/register", """
+                {"companyName":"Oficina Sintética","ownerName":"Dono Sintético","email":"%s","password":"%s"}
+                """.formatted(email, PASSWORD).strip(), Map.of());
+        String owner = api.post("/api/auth/login", loginJson(email, PASSWORD), Map.of()).json().get("accessToken").asString();
+        String name = "Cliente Muito Sintético";
+        String phoneDigits = "11955554444";
+        String plate = "QWE1R23";
+        String contactId = api.post("/api/contacts", """
+                {"name":"%s","phone":"(11) 95555-4444","email":"cliente.sintetico@exemplo.test"}""".formatted(name),
+                bearer(owner)).json().get("id").asString();
+        String vehicleId = api.post("/api/contacts/" + contactId + "/vehicles", """
+                {"plate":"%s","brand":"Fiat","model":"Uno","year":2014,"odometerKm":1000}""".formatted(plate),
+                bearer(owner)).json().get("id").asString();
+        String quoteId = api.post("/api/quotes", """
+                {"contactId":"%s","vehicleId":"%s","items":[{"description":"Troca de óleo","kind":"LABOR","quantity":"1","unitPrice":"80.00"}]}
+                """.formatted(contactId, vehicleId).strip(), bearer(owner)).json().get("id").asString();
+        String url = api.post("/api/quotes/" + quoteId + "/confirm", "{}", bearer(owner)).json().get("publicUrl").asString();
+        String linkToken = url.substring(url.lastIndexOf('/') + 1);
+        api.get("/api/contacts?name=Muito", bearer(owner));
+        api.get("/api/public/quotes/" + linkToken, Map.of());
+        api.get("/o/" + linkToken, Map.of());
+        api.post("/api/public/quotes/" + linkToken + "/approve", "{}", Map.of());
+        api.post("/api/public/quotes/" + linkToken + "/reject", "{}", Map.of());
+        api.get("/api/public/quotes/" + "Q".repeat(43), Map.of());
+        api.post("/api/contacts", """
+                {"name":"%s","phone":"(11) 95555-4444","email":null}""".formatted(name), bearer(owner));
+        api.post("/api/contacts/" + contactId + "/vehicles", """
+                {"plate":"%s","brand":"Fiat","model":"Uno","year":2014}""".formatted(plate), bearer(owner));
+
+        Awaitility.await().atMost(Duration.ofSeconds(5)).untilAsserted(() -> assertThat(everyTextOfEveryEvent())
+                .anyMatch(text -> text.contains("path=/api/public/quotes")));
+        for (String text : everyTextOfEveryEvent()) {
+            assertThat(PersonalDataMasker.mask(text)).as("o mascarador não teria o que trocar em: %s", text).isEqualTo(text);
+            for (String secret : List.of(name, phoneDigits, "95555-4444", plate, "cliente.sintetico", linkToken,
+                    "Q".repeat(43), owner)) {
+                assertThat(text).as("dado pessoal ou token em log").doesNotContain(secret);
+            }
+        }
+    }
 }

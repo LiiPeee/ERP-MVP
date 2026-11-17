@@ -57,6 +57,23 @@ nada (prévias do WhatsApp e rastreadores abrem links sozinhos); só a decisão 
 orçamento cancelado dão **a mesma resposta**. No banco, três escopos de acesso estreitos (`quote_link_lookup`, `quote_decision`,
 `quote_expiration`) limitam o que cada etapa enxerga e altera; ver `docs/adr/0009-link-publico-e-escopos-de-acesso.md`.
 
+Na borda HTTP (checkpoint 4):
+
+- **Rotas públicas** (lista explícita em `PublicRoutes`): `GET /api/public/quotes/{token}`, `POST .../approve`, `POST .../reject` e
+  a página `GET /o/{token}`. Todas as rotas de dono (`/api/quotes`, `/api/contacts`, `/api/company-profile`) exigem token e
+  entram na varredura de rotas (401 sem token, 403 com empresa alheia, ids de outra oficina = 404).
+- **Cabeçalhos:** `Cache-Control: no-store`, `X-Robots-Tag: noindex, nofollow, noarchive` e `Referrer-Policy: no-referrer`
+  em toda resposta de `/api/public/**` e `/o/**`, inclusive erros.
+- **Limites** (antes de qualquer consulta ao banco): por IP (60/min) e por hash do token (20/min); a chave do limitador é o
+  hash, nunca o token. Configuráveis em `erp.web.rate-limit.public-link-*`.
+- **Token fora dos logs:** o log de requisição troca o segmento do token por `{token}`; o mascarador central cobre token
+  de 43+ caracteres, telefone (`+55…`, `(DD) …`) e placa. Teste de logs percorre o fluxo inteiro.
+- **Erros sem eco do caminho:** o corpo de erro não repete a URL (`instance`), que no link público é o token. Achado por teste.
+- **CSRF** não se aplica ao POST público: não há cookie de sessão; a credencial é o token no caminho e a decisão é de
+  uso único e idempotente.
+- **Busca de clientes só por nome**; telefone e e-mail nunca vão na URL (a query string tampouco é logada).
+- Tarefa agendada `ExpireDueQuotesJob` (a cada 5 min, configurável) grava os vencidos; o domínio já recusa decisão fora do prazo.
+
 ## Cabeçalhos e navegador
 
 CSP `default-src 'self'` (sem `unsafe-inline` nem `unsafe-eval`), `frame-ancestors 'none'`, `X-Frame-Options: DENY`,

@@ -5,8 +5,10 @@ import br.com.erpcore.adapter.web.WebConfiguration;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.annotation.Import;
+import org.springframework.scheduling.annotation.EnableScheduling;
 
 @SpringBootApplication
+@EnableScheduling
 @Import({PersistenceConfiguration.class, WebConfiguration.class})
 public class ErpCoreApplication {
 

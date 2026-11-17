@@ -3,12 +3,22 @@ package br.com.erpcore.adapter.web.error;
 import br.com.erpcore.adapter.web.auth.RefreshCookies;
 import br.com.erpcore.adapter.web.correlation.CorrelationIds;
 import br.com.erpcore.adapter.web.ratelimit.TooManyRequestsException;
+import br.com.erpcore.domain.contact.ContactNotFoundException;
+import br.com.erpcore.domain.contact.PhoneAlreadyRegisteredException;
 import br.com.erpcore.domain.identity.AccessDeniedException;
 import br.com.erpcore.domain.identity.EmailAlreadyRegisteredException;
 import br.com.erpcore.domain.identity.InvalidCredentialsException;
 import br.com.erpcore.domain.identity.InvalidRefreshTokenException;
+import br.com.erpcore.domain.quote.InvalidQuoteTransitionException;
+import br.com.erpcore.domain.quote.QuoteAlreadyDecidedException;
+import br.com.erpcore.domain.quote.QuoteLinkUnavailableException;
+import br.com.erpcore.domain.quote.QuoteNotFoundException;
+import br.com.erpcore.domain.quote.QuoteUnavailableException;
 import br.com.erpcore.domain.shared.DomainValidationException;
+import br.com.erpcore.domain.vehicle.PlateAlreadyRegisteredException;
+import br.com.erpcore.domain.vehicle.VehicleNotFoundException;
 import jakarta.servlet.http.HttpServletResponse;
+import java.net.URI;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpHeaders;
@@ -30,6 +40,7 @@ import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExcep
 final class ApiExceptionHandler extends ResponseEntityExceptionHandler {
 
     private static final Logger LOG = LoggerFactory.getLogger(ApiExceptionHandler.class);
+    private static final URI NO_INSTANCE = URI.create("about:blank");
 
     private final RefreshCookies cookies;
 
@@ -66,6 +77,47 @@ final class ApiExceptionHandler extends ResponseEntityExceptionHandler {
     @ExceptionHandler(AccessDeniedException.class)
     ResponseEntity<ProblemDetail> accessDenied() {
         return ResponseEntity.status(HttpStatus.FORBIDDEN).body(problem(403, "Acesso negado", "ACCESS_DENIED"));
+    }
+
+    @ExceptionHandler({ContactNotFoundException.class, VehicleNotFoundException.class, QuoteNotFoundException.class})
+    ResponseEntity<ProblemDetail> notFound() {
+        return ResponseEntity.status(HttpStatus.NOT_FOUND).body(problem(404, "Não encontrado", "NOT_FOUND"));
+    }
+
+    @ExceptionHandler(PhoneAlreadyRegisteredException.class)
+    ResponseEntity<ProblemDetail> phoneTaken() {
+        return ResponseEntity.status(HttpStatus.CONFLICT)
+                .body(problem(409, "Já existe um cliente com este telefone", "PHONE_ALREADY_REGISTERED"));
+    }
+
+    @ExceptionHandler(PlateAlreadyRegisteredException.class)
+    ResponseEntity<ProblemDetail> plateTaken() {
+        return ResponseEntity.status(HttpStatus.CONFLICT)
+                .body(problem(409, "Já existe um veículo com esta placa", "PLATE_ALREADY_REGISTERED"));
+    }
+
+    @ExceptionHandler(InvalidQuoteTransitionException.class)
+    ResponseEntity<ProblemDetail> invalidQuoteState() {
+        return ResponseEntity.status(HttpStatus.CONFLICT)
+                .body(problem(409, "O orçamento não está em um estado que permita isto", "QUOTE_INVALID_STATE"));
+    }
+
+    @ExceptionHandler(QuoteUnavailableException.class)
+    ResponseEntity<ProblemDetail> quoteExpired() {
+        return ResponseEntity.status(HttpStatus.CONFLICT).body(problem(409, "O prazo do orçamento já passou", "QUOTE_EXPIRED"));
+    }
+
+    @ExceptionHandler(QuoteAlreadyDecidedException.class)
+    ResponseEntity<ProblemDetail> quoteAlreadyDecided() {
+        return ResponseEntity.status(HttpStatus.CONFLICT)
+                .body(problem(409, "Este orçamento já foi respondido de outra forma", "QUOTE_ALREADY_DECIDED"));
+    }
+
+    /** Link inexistente, vencido, cancelado ou malformado: a mesma resposta, para ninguém distinguir um do outro. */
+    @ExceptionHandler(QuoteLinkUnavailableException.class)
+    ResponseEntity<ProblemDetail> linkUnavailable() {
+        return ResponseEntity.status(HttpStatus.NOT_FOUND)
+                .body(problem(404, "Este link não está mais disponível", "LINK_UNAVAILABLE"));
     }
 
     @ExceptionHandler(TooManyRequestsException.class)
@@ -108,6 +160,8 @@ final class ApiExceptionHandler extends ResponseEntityExceptionHandler {
         problem.setTitle(title);
         problem.setProperty("code", code);
         problem.setProperty("correlationId", CorrelationIds.current());
+        // Sem isto o Spring preenche "instance" com o caminho da requisição, e no link público o caminho é o token.
+        problem.setInstance(NO_INSTANCE);
         return problem;
     }
 }

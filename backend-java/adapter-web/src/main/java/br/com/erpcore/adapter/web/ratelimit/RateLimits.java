@@ -42,6 +42,15 @@ public final class RateLimits {
         require("refresh-ip:" + clientAddress, limits.refreshPerIp(), limits.refreshWindow());
     }
 
+    /**
+     * O link público de orçamento: um limite por endereço (contra quem tenta adivinhar tokens) e um por token (contra
+     * quem martela um link só). A chave por token é o hash dele: a memória do limitador não guarda a credencial.
+     */
+    public void checkPublicLink(String clientAddress, String token) {
+        require("link-ip:" + clientAddress, limits.publicLinkPerIp(), limits.publicLinkWindow());
+        require("link-token:" + sha256(token == null ? "" : token), limits.publicLinkPerToken(), limits.publicLinkWindow());
+    }
+
     private void require(String key, int limit, Duration window) {
         RateLimitDecision decision = limiter.tryAcquire(key, limit, window);
         if (!decision.allowed()) {

@@ -304,7 +304,7 @@ class ApplicationConfiguration {
         return new RejectQuoteByLinkUseCase(unitOfWork, quotes, links, codec, audit, clock);
     }
 
-    /** Lotes de 100. A tarefa agendada que chama isto vem no ponto de verificação 4. */
+    /** Lotes de 100. Quem chama é a tarefa agendada {@code ExpireDueQuotesJob}. */
     @Bean
     ExpireDueQuotesUseCase expireDueQuotesUseCase(UnitOfWork unitOfWork, QuoteRepository quotes, AuditRecorder audit,
                                                   Clock clock) {

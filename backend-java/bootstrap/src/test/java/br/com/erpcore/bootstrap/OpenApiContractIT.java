@@ -41,7 +41,7 @@ class OpenApiContractIT {
     }
 
     @Test
-    void givenTheRunningApplication_whenReadingItsContract_thenEveryOperationOfPhaseZeroIsDescribed() {
+    void givenTheRunningApplication_whenReadingItsContract_thenEveryOperationOfThePhasesIsDescribed() {
         JsonNode paths = spec().get("paths");
 
         assertThat(spec().get("openapi").asString()).startsWith("3.");
@@ -50,7 +50,23 @@ class OpenApiContractIT {
         assertThat(paths.get("/api/auth/refresh").has("post")).isTrue();
         assertThat(paths.get("/api/auth/logout").has("post")).isTrue();
         assertThat(paths.get("/api/me").has("get")).isTrue();
-        assertThat(paths.size()).isEqualTo(5);
+        assertThat(paths.get("/api/company-profile").has("get")).isTrue();
+        assertThat(paths.get("/api/company-profile").has("put")).isTrue();
+        assertThat(paths.get("/api/contacts").has("get")).isTrue();
+        assertThat(paths.get("/api/contacts").has("post")).isTrue();
+        assertThat(paths.get("/api/contacts/{contactId}/vehicles").has("get")).isTrue();
+        assertThat(paths.get("/api/contacts/{contactId}/vehicles").has("post")).isTrue();
+        assertThat(paths.get("/api/quotes").has("get")).isTrue();
+        assertThat(paths.get("/api/quotes").has("post")).isTrue();
+        assertThat(paths.get("/api/quotes/{quoteId}").has("get")).isTrue();
+        assertThat(paths.get("/api/quotes/{quoteId}/items").has("put")).isTrue();
+        assertThat(paths.get("/api/quotes/{quoteId}/confirm").has("post")).isTrue();
+        assertThat(paths.get("/api/quotes/{quoteId}/resend").has("post")).isTrue();
+        assertThat(paths.get("/api/quotes/{quoteId}/cancel").has("post")).isTrue();
+        assertThat(paths.get("/api/public/quotes/{token}").has("get")).isTrue();
+        assertThat(paths.get("/api/public/quotes/{token}/approve").has("post")).isTrue();
+        assertThat(paths.get("/api/public/quotes/{token}/reject").has("post")).isTrue();
+        assertThat(paths.size()).isEqualTo(17);
     }
 
     @Test
@@ -67,11 +83,15 @@ class OpenApiContractIT {
     }
 
     @Test
-    void givenTheContract_whenLookingAtSecurity_thenOnlyTheContextRouteDeclaresTheBearerToken() {
+    void givenTheContract_whenLookingAtSecurity_thenOnlyTheOwnerRoutesDeclareTheBearerToken() {
         JsonNode paths = spec().get("paths");
 
         assertThat(paths.get("/api/me").get("get").get("security").toString()).contains("bearerAuth");
+        assertThat(paths.get("/api/quotes").get("post").get("security").toString()).contains("bearerAuth");
+        assertThat(paths.get("/api/contacts").get("get").get("security").toString()).contains("bearerAuth");
         assertThat(paths.get("/api/auth/login").get("post").has("security")).isFalse();
+        assertThat(paths.get("/api/public/quotes/{token}").get("get").has("security")).isFalse();
+        assertThat(paths.get("/api/public/quotes/{token}/approve").get("post").has("security")).isFalse();
         assertThat(spec().get("components").get("securitySchemes").get("bearerAuth").get("scheme").asString())
                 .isEqualTo("bearer");
     }
@@ -83,6 +103,28 @@ class OpenApiContractIT {
         assertThat(session.has("accessToken")).isTrue();
         assertThat(session.has("expiresAt")).isTrue();
         assertThat(session.toString()).doesNotContain("refresh");
+    }
+
+    @Test
+    void givenTheNewResponses_whenReadingTheirMediaType_thenTheyAreDeclaredAsJson() {
+        JsonNode paths = spec().get("paths");
+
+        for (String operation : new String[] {"/api/quotes:get:200", "/api/quotes:post:201",
+                "/api/quotes/{quoteId}/confirm:post:200", "/api/public/quotes/{token}:get:200",
+                "/api/public/quotes/{token}/approve:post:200", "/api/contacts:post:201"}) {
+            String[] parts = operation.split(":");
+            JsonNode content = paths.get(parts[0]).get(parts[1]).get("responses").get(parts[2]).get("content");
+            assertThat(content.has("application/json")).as("%s declara application/json", operation).isTrue();
+            assertThat(content.has("*/*")).as("%s não declara */*", operation).isFalse();
+        }
+    }
+
+    @Test
+    void givenThePublicQuoteSchema_whenReadingIt_thenItHasNoPersonalDataFields() {
+        String schema = spec().get("components").get("schemas").get("PublicQuoteView").toString();
+
+        assertThat(schema).doesNotContain("phone").doesNotContain("plate").doesNotContain("contactName")
+                .doesNotContain("email");
     }
 
     @Test

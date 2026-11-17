@@ -21,7 +21,9 @@ import org.springframework.test.context.TestPropertySource;
         "erp.web.rate-limit.login-per-ip=3",
         "erp.web.rate-limit.login-per-email=1",
         "erp.web.rate-limit.register-per-ip=2",
-        "erp.web.rate-limit.refresh-per-ip=2"})
+        "erp.web.rate-limit.refresh-per-ip=2",
+        "erp.web.rate-limit.public-link-per-ip=6",
+        "erp.web.rate-limit.public-link-per-token=3"})
 @DirtiesContext(classMode = ClassMode.BEFORE_EACH_TEST_METHOD)
 class RateLimitIT {
 
@@ -91,5 +93,41 @@ class RateLimitIT {
         }
 
         assertThat(api.get("/actuator/health", Map.of()).status()).isEqualTo(200);
+    }
+
+    @Test
+    void givenTooManyAttemptsOnTheSameLink_whenTryingAgain_thenItIsLimitedButAnotherLinkStillAnswers() {
+        HttpApi api = new HttpApi(port);
+        String link = "/api/public/quotes/" + "C".repeat(43);
+
+        for (int attempt = 0; attempt < 3; attempt++) {
+            assertThat(api.get(link, Map.of()).status()).isEqualTo(404);
+        }
+
+        assertLimited(api.get(link, Map.of()));
+        assertThat(api.get("/api/public/quotes/" + "D".repeat(43), Map.of()).status()).isEqualTo(404);
+    }
+
+    @Test
+    void givenTooManyDifferentLinksFromTheSameAddress_whenGuessing_thenTheAddressIsLimited() {
+        HttpApi api = new HttpApi(port);
+
+        for (int attempt = 0; attempt < 6; attempt++) {
+            assertThat(api.get("/api/public/quotes/" + String.valueOf((char) ('a' + attempt)).repeat(43), Map.of()).status())
+                    .isEqualTo(404);
+        }
+
+        assertLimited(api.get("/api/public/quotes/" + "z".repeat(43), Map.of()));
+        assertLimited(api.post("/api/public/quotes/" + "y".repeat(43) + "/approve", "{}", Map.of()));
+    }
+
+    @Test
+    void givenTheLinkLimitWasReached_whenCallingTheLoginRoute_thenItIsNotAffected() {
+        HttpApi api = new HttpApi(port);
+        for (int attempt = 0; attempt < 7; attempt++) {
+            api.get("/api/public/quotes/" + "E".repeat(43), Map.of());
+        }
+
+        assertThat(login(api, uniqueEmail("independente")).status()).isEqualTo(401);
     }
 }

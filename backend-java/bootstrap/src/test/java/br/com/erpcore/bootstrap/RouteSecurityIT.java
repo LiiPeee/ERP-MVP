@@ -59,7 +59,9 @@ class RouteSecurityIT {
             for (RequestMappingInfo info : mapping.getHandlerMethods().keySet()) {
                 Set<RequestMethod> methods = info.getMethodsCondition().getMethods();
                 for (String pattern : info.getPatternValues()) {
-                    String concrete = pattern.replaceAll("\\{[^}]*}", "x");
+                    // Um UUID no lugar de cada variável do caminho: com texto qualquer a requisição morreria em 400
+                    // antes da checagem de empresa.
+                    String concrete = pattern.replaceAll("\\{[^}]*}", UUID.randomUUID().toString());
                     if (methods.isEmpty()) {
                         routes.add(new Route("GET", concrete));
                     }
@@ -94,6 +96,23 @@ class RouteSecurityIT {
 
         assertThat(routes).contains("POST /api/auth/register", "POST /api/auth/login", "POST /api/auth/refresh",
                 "POST /api/auth/logout", "GET /api/me", "GET /actuator/health");
+        assertThat(routes).anyMatch(route -> route.equals("GET /api/quotes"))
+                .anyMatch(route -> route.equals("POST /api/quotes"))
+                .anyMatch(route -> route.matches("POST /api/quotes/[0-9a-f-]{36}/confirm"))
+                .anyMatch(route -> route.matches("POST /api/public/quotes/[0-9a-f-]{36}/approve"))
+                .anyMatch(route -> route.equals("GET /api/contacts"))
+                .anyMatch(route -> route.equals("PUT /api/company-profile"));
+    }
+
+    @Test
+    void givenTheLinkRoutes_whenListingThePublicOnes_thenOnlyTheThreeTokenRoutesAndTheirPageAreOpenAmongTheNewOnes() {
+        List<String> declared = PublicRoutes.ALL.stream().map(route -> route.method() + " " + route.pattern()).toList();
+
+        assertThat(declared).contains("GET /api/public/quotes/*", "POST /api/public/quotes/*/approve",
+                "POST /api/public/quotes/*/reject");
+        assertThat(declared).filteredOn(route -> route.contains("/api/quotes") || route.contains("/api/contacts")
+                || route.contains("/api/company-profile")).isEmpty();
+        assertThat(PublicRoutes.FRONTEND).anyMatch(route -> route.pattern().equals("/o/*"));
     }
 
     @Test
